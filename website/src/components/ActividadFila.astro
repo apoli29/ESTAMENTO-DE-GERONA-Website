@@ -1,0 +1,39 @@
+---
+import { Image } from 'astro:assets';
+import { TIPOS, ruta, imagenActividad, type Actividad } from '../lib/sitio';
+interface Props { a: Actividad; mostrarAnio?: boolean }
+const { a, mostrarAnio = false } = Astro.props;
+const conMiniatura = a.imagen && (a.tipo === 'navidad' || a.tipo === 'publicacion');
+---
+<li class="fila" data-filtro={TIPOS[a.tipo].filtro}>
+  <a class="fila__enlace" href={ruta(a)}>
+    <span class="fila__fecha t-dato">{a.fecha ?? (mostrarAnio ? String(a.anio) : 'Navidad ' + a.anio)}</span>
+    <span class="fila__tipo t-etiqueta">{TIPOS[a.tipo].singular}</span>
+    <span class="fila__titulo">{a.titulo}</span>
+    {conMiniatura ? (
+      <span class="fila__mini">
+        <Image src={imagenActividad(a.imagen!.archivo)} alt="" width={120} quality={75} />
+      </span>
+    ) : <span class="fila__mini fila__mini--vacia" aria-hidden="true"></span>}
+  </a>
+</li>
+
+<style>
+  .fila { list-style: none; border-bottom: 1px solid var(--linea); }
+  .fila__enlace {
+    display: grid; gap: var(--s2) var(--s5); align-items: start;
+    grid-template-columns: minmax(0, 1fr) 64px;
+    grid-template-areas: 'fecha mini' 'tipo mini' 'titulo mini';
+    padding: var(--s5) 0; color: var(--negro); text-decoration: none;
+  }
+  @media (min-width: 820px) {
+    .fila__enlace { grid-template-columns: 170px 150px minmax(0, 1fr) 72px; grid-template-areas: 'fecha tipo titulo mini'; align-items: baseline; }
+  }
+  .fila__fecha { grid-area: fecha; color: var(--tinta-2); }
+  .fila__tipo { grid-area: tipo; color: var(--teja); }
+  .fila__titulo { grid-area: titulo; font-family: var(--f-texto); font-size: 21px; line-height: 1.35; text-wrap: pretty; transition: color .2s ease; }
+  .fila__mini { grid-area: mini; align-self: start; justify-self: end; width: 64px; }
+  .fila__mini :global(img) { width: 64px; height: 80px; object-fit: cover; object-position: top; border: 1px solid var(--linea); background: var(--pergamino); }
+  .fila__enlace:hover .fila__titulo { color: var(--teja); }
+  .fila__enlace:hover .fila__titulo { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+</style>

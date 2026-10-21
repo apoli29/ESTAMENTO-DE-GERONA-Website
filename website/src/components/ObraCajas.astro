@@ -1,0 +1,85 @@
+---
+/* "Lo que hace la Corporación": cajas en horizontal, cerradas al principio.
+   Al abrir una caja, su espada gira y se clava hacia abajo y aparece el texto en columna estrecha. */
+import { romano } from '../lib/sitio';
+interface Props { items: { _etiqueta: string; texto: string }[]; id: string }
+const { items, id } = Astro.props;
+const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const ESPADA = 'M50 7.4a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8ZM48.9 12h2.2v5h-2.2ZM43 17h14v2.2H43ZM48.4 19.2h3.2V39L50 44l-1.6-5Z';
+---
+<ul class="cajas" data-cajas>
+  {items.map((o, i) => (
+    <li class="caja">
+      <button class="caja__boton" type="button" aria-expanded="false" aria-controls={`${id}-${i}`} id={`${id}-${i}-b`}>
+        <span class="caja__num">{romano(i + 1)}</span>
+        <span class="caja__clave">{o._etiqueta}</span>
+        <svg class="caja__espada" viewBox="40 5 20 41" width="20" height="41" aria-hidden="true"><path d={ESPADA} /></svg>
+      </button>
+      <div class="caja__panel" id={`${id}-${i}`} role="region" aria-labelledby={`${id}-${i}-b`}>
+        <div class="caja__interior">
+          <p class="caja__texto">{may(o.texto)}</p>
+        </div>
+      </div>
+    </li>
+  ))}
+</ul>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-cajas]').forEach((lista) => {
+    lista.querySelectorAll<HTMLButtonElement>('.caja__boton').forEach((b) => {
+      // Una caja abierta a la vez: al abrir una, se cierra la anterior.
+      b.addEventListener('click', () => {
+        const abrir = b.getAttribute('aria-expanded') !== 'true';
+        lista.querySelectorAll<HTMLButtonElement>('.caja__boton').forEach((o) => {
+          const v = o === b && abrir;
+          o.setAttribute('aria-expanded', String(v));
+          o.closest('.caja')?.classList.toggle('esta-abierta', v);
+        });
+      });
+    });
+  });
+</script>
+
+<style>
+  /* Tres filas (3 + 3 + 1) con aire entre cada caja de la misma fila */
+  .cajas { list-style: none; display: grid; grid-template-columns: 1fr; gap: var(--s5) var(--s7); align-items: start; }
+  @media (min-width: 640px) { .cajas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 960px) { .cajas { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s6) var(--s8); } }
+
+  .caja { position: relative; border-top: 1px solid var(--negro); border-bottom: 1px solid var(--linea); transition: background-color .5s ease; }
+  /* Hilo superior que se dibuja al abrir */
+  .caja::before {
+    content: ''; position: absolute; left: 0; right: 0; top: -1px; height: 2px; background: var(--teja);
+    transform: scaleX(0); transform-origin: left; transition: transform .6s cubic-bezier(.2, .7, .1, 1);
+  }
+  .caja.esta-abierta { background: var(--piedra-clara); }
+  .caja.esta-abierta::before { transform: scaleX(1); }
+
+  .caja__boton {
+    width: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: 'num clave espada';
+    gap: var(--s4); align-items: center; text-align: left;
+    padding: var(--s5) var(--s5); background: none; border: 0; cursor: pointer; color: var(--negro);
+  }
+  .caja__num { grid-area: num; min-width: 2.2em; font-family: var(--f-display); font-size: 18px; line-height: 1; color: var(--teja); }
+  .caja__clave { grid-area: clave; color: var(--castano); font-family: var(--f-texto); font-size: 22px; line-height: 1.25; transition: color .3s ease; }
+  .caja__boton:hover .caja__clave { color: var(--teja); }
+
+  /* La espada: en reposo, horizontal apuntando a la derecha; al abrir, gira y se clava hacia abajo. */
+  .caja__espada {
+    grid-area: espada; width: 18px; height: auto; fill: var(--negro);
+    transform: rotate(-90deg); transform-origin: 50% 40%;
+    transition: transform .9s cubic-bezier(.16, 1, .3, 1), fill .3s ease;
+  }
+  .caja__boton:hover .caja__espada { transform: rotate(-90deg) translateY(4px); fill: var(--teja); }
+  .caja.esta-abierta .caja__espada { transform: rotate(0deg) translateY(6px); fill: var(--teja); }
+
+  .caja__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s cubic-bezier(.2, .7, .1, 1); }
+  .caja.esta-abierta .caja__panel { grid-template-rows: 1fr; }
+  .caja__interior { overflow: hidden; }
+  .caja__texto {
+    padding: 0 var(--s5) var(--s6); font-family: var(--f-texto); font-size: 19px; line-height: 1.5; color: var(--tinta);
+    text-align: justify; hyphens: auto; -webkit-hyphens: auto;
+    opacity: 0; transform: translateY(-6px); transition: opacity .4s ease, transform .6s cubic-bezier(.2, .7, .1, 1);
+  }
+  .caja.esta-abierta .caja__texto { opacity: 1; transform: none; transition-delay: .15s; }
+</style>

@@ -1,0 +1,330 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Venera from '../components/Venera.astro';
+import ActividadTarjeta from '../components/ActividadTarjeta.astro';
+import ObraCajas from '../components/ObraCajas.astro';
+import consejo from '../data/consejo.json';
+import hc from '../data/historia-compacta.json';
+import { actividades, foto, imagenActividad, ruta, CREDITOS } from '../lib/sitio';
+
+const C = hc.corporacion;
+const F = hc.cofradia;
+const recientes = actividades.filter((a) => a.tipo !== 'navidad').slice(0, 4);
+const felicitaciones = actividades.filter((a) => a.tipo === 'navidad');
+const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+---
+<Base>
+  <!-- Portada: imagen a sangre que se funde con la sección I -->
+  <section class="portada sobre-negro" aria-labelledby="portada-titulo">
+    <Image class="portada__foto" src={foto('hero.jpg')} alt="La Catedral de Gerona sobre los tejados de la ciudad, vista desde la muralla" widths={[960, 1600, 2400, 3200]} sizes="100vw" quality={90} loading="eager" fetchpriority="high" />
+    <div class="portada__velo" aria-hidden="true"></div>
+    <div class="envoltura portada__contenido">
+      <p class="t-dato portada__dato">Gerona · 1386</p>
+      <h1 id="portada-titulo" class="portada__titulo">Seis siglos en Gerona</h1>
+      <p class="portada__entradilla">Fundada por el Infante Don Juan, Duque de Gerona, el 28 de agosto de 1386.</p>
+    </div>
+  </section>
+
+  <!-- I · Origen -->
+  <section class="seccion banda-negra sobre-negro origen-seccion" aria-labelledby="origen">
+    <div class="envoltura capitulo">
+      <div class="rotulo">
+        <span class="rotulo__num" aria-hidden="true">I</span>
+        <h2 id="origen" class="rotulo__nombre">Origen</h2>
+      </div>
+      <div class="origen">
+        <p class="origen__texto">
+          La Corporación fue fundada como Cofradía de San Jorge y Santa Isabel por el Infante Don Juan, Duque de Gerona, Príncipe heredero de la Corona de Aragón, el 28 de Agosto de 1.386, creyendo hacer, según dice en el documento fundacional, una obra “saludable y provechosa”.
+          Asociaba la nobleza de la ciudad y la de los distintos Vegueríos de Gerona.
+        </p>
+        <div class="origen__pie">
+          <a class="enlace-mayor" href="/historia/la-corporacion/">La historia de la Corporación</a>
+          <a class="enlace-mayor" href="/historia/la-cofradia/">La Cofradía de San Jorge</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- II · Los distintivos -->
+  <section class="seccion banda-piedra" aria-labelledby="distintivos">
+    <div class="envoltura distintivos">
+      <div class="distintivos__cabeza">
+        <div class="distintivos__emblema" data-giro>
+          <Venera tamano="100%" animada titulo="La venera: Cruz de San Jorge con cuatro espadas de plata" />
+        </div>
+        <div class="rotulo rotulo--centro">
+          <span class="rotulo__num" aria-hidden="true">II</span>
+          <h2 id="distintivos" class="rotulo__nombre">Los distintivos</h2>
+        </div>
+        <p class="t-entradilla distintivos__venera">{may(C.distintivos.venera)}.</p>
+      </div>
+      <div class="distintivos__columnas">
+        <div class="distintivos__col">
+          <h3 class="relacion__clave">La venera</h3>
+          <p class="distintivos__texto">{may(C.distintivos.ensenas[0].texto)}</p>
+        </div>
+        <div class="distintivos__col">
+          <h3 class="relacion__clave">La banda</h3>
+          <p class="distintivos__texto">{C.distintivos.banda}</p>
+        </div>
+        <div class="distintivos__col">
+          <h3 class="relacion__clave">Antiguamente</h3>
+          <p class="distintivos__texto">{C.distintivos.antiguamente}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- III · Lo que hacemos -->
+  <section class="seccion" aria-labelledby="obra">
+    <div class="envoltura">
+      <div class="capitulo cabeza">
+        <div class="rotulo">
+          <span class="rotulo__num" aria-hidden="true">III</span>
+          <h2 id="obra" class="rotulo__nombre">Lo que hace la Corporación</h2>
+        </div>
+        <p class="t-entradilla cabeza__nota">{C.proposito}</p>
+      </div>
+      <ObraCajas items={C.obra} id="obra-portada" />
+      <div class="obra__fotos">
+        <figure class="figura">
+          <Image src={foto('catedral-interior-tono.jpg')} alt="Interior de la Catedral de Gerona" widths={[480, 800, 1200]} sizes="(min-width: 960px) 45vw, 50vw" />
+          <figcaption>{CREDITOS['catedral-interior.jpg']}</figcaption>
+        </figure>
+        <figure class="figura">
+          <Image src={foto('capilla-san-jorge-tono.jpg')} alt="Retablo de una capilla de la Catedral de Gerona" widths={[480, 800, 1200]} sizes="(min-width: 960px) 45vw, 50vw" />
+          <figcaption>{CREDITOS['capilla-san-jorge.jpg']}</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- IV · Actividades -->
+  <section class="seccion" aria-labelledby="actividades">
+    <div class="envoltura">
+      <div class="capitulo cabeza">
+        <div class="rotulo">
+          <span class="rotulo__num" aria-hidden="true">IV</span>
+          <h2 id="actividades" class="rotulo__nombre">Actividades</h2>
+        </div>
+        <p class="t-entradilla cabeza__nota">Recitales del Concurso Internacional de Música Maria Canals, conferencias y publicaciones patrocinadas.</p>
+      </div>
+      <ul class="rejilla-tarjetas">
+        {recientes.map((a) => <ActividadTarjeta a={a} />)}
+      </ul>
+      <div class="actividades__pie">
+        <a class="enlace-mayor" href="/actividades/">Ver todas las actividades</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- V · Felicitaciones de Navidad -->
+  <section class="seccion banda-negra sobre-negro" aria-labelledby="navidad">
+    <div class="envoltura">
+      <div class="navidad__cabeza">
+        <div class="rotulo">
+          <span class="rotulo__num" aria-hidden="true">V</span>
+          <h2 id="navidad" class="rotulo__nombre">Felicitaciones de Navidad</h2>
+        </div>
+        <p class="t-cuerpo navidad__lema">El Veguer-Presidente y el Consejo del Real Estamento Militar del Principado de Gerona y Cofradía de San Jorge le desean Feliz Navidad y Venturoso Año Nuevo.</p>
+      </div>
+    </div>
+    <ul class="navidad__tira" aria-label="Felicitaciones de 2025 a 2016">
+      {felicitaciones.map((a) => (
+        <li class="navidad__item">
+          <a href={ruta(a)} class="navidad__enlace">
+            <Image src={imagenActividad(a.imagen!.archivo)} alt={a.titulo} widths={[280, 440]} sizes="240px" />
+            <span class="t-dato">{a.anio}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- VI · La Cofradía -->
+  <section class="seccion banda-piedra" aria-labelledby="cofradia">
+    <div class="envoltura cofradia">
+      <figure class="figura cofradia__figura">
+        <Image src={foto('lismann-girona-1928.jpg')} alt="Dibujo de Gerona desde el río Onyar, con la torre de la Catedral al fondo" widths={[480, 800, 1200]} sizes="(min-width: 960px) 40vw, 100vw" />
+        <figcaption>{CREDITOS['lismann-girona-1928.jpg']}</figcaption>
+      </figure>
+      <div class="cofradia__texto">
+        <div class="rotulo">
+          <span class="rotulo__num" aria-hidden="true">VI</span>
+          <h2 id="cofradia" class="rotulo__nombre">La Cofradía de San Jorge</h2>
+        </div>
+        <p class="t-titulo2">{F.entradilla}</p>
+        <p class="t-cuerpo">{F.caracter}</p>
+        <blockquote class="cofradia__cita">
+          <p class="cita">{F.conclusion}</p>
+        </blockquote>
+        <a class="enlace-mayor" href="/historia/la-cofradia/">Actas, ordinaciones y privilegios</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- VII · Consejo -->
+  <section class="seccion consejo" id="consejo" aria-labelledby="consejo-titulo">
+    <div class="envoltura">
+      <div class="consejo__cabeza">
+        <div class="rotulo">
+          <span class="rotulo__num" aria-hidden="true">VII</span>
+          <h2 id="consejo-titulo" class="rotulo__nombre">Consejo</h2>
+        </div>
+      </div>
+
+      <div class="consejo__honor">
+        {consejo.honor.map((h) => (
+          <div class="consejo__honor-item">
+            <p class="t-etiqueta t-secundario">{h.cargo}</p>
+            <p class="t-titulo2">{h.nombre.join(' ')}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="filete-doble consejo__filete" aria-hidden="true"></div>
+
+      <ul class="consejo__nomina">
+        {consejo.consejo.map((m) => (
+          <li class="consejo__miembro">
+            <p class="t-etiqueta consejo__cargo">{m.grupo ? <><span class="t-secundario">{m.grupo}</span><br /></> : null}{m.cargo}</p>
+            {m.nombres.map((n) => <p class="consejo__nombre">{n}</p>)}
+          </li>
+        ))}
+      </ul>
+
+      <div class="consejo__capellanes">
+        <p class="t-etiqueta t-secundario">{consejo.capellanes.titulo}</p>
+        <ul class="consejo__nomina consejo__nomina--dos">
+          {consejo.capellanes.miembros.map((m) => (
+            <li class="consejo__miembro">
+              <p class="t-etiqueta consejo__cargo">{m.cargo}</p>
+              {m.nombres.map((n) => <p class="consejo__nombre">{n}</p>)}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // La venera gira con el desplazamiento (un cuarto de vuelta, lento) hasta quedar en su sitio.
+  // Además, si el ratón traza círculos sobre ella, la venera le sigue; al salir se asienta
+  // en el cuarto de vuelta más cercano (la cruz es simétrica, así que queda igual).
+  const emblema = document.querySelector<HTMLElement>('[data-giro]');
+  if (emblema && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let scroll = 0, mano = 0, manoObjetivo = 0, anguloPrevio: number | null = null;
+    const calcularScroll = () => {
+      const r = emblema.getBoundingClientRect();
+      const vh = innerHeight;
+      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.65 + r.height / 2)));
+      const suave = 1 - Math.pow(1 - p, 2);
+      scroll = (1 - suave) * -90;
+      emblema.style.opacity = String(0.3 + 0.7 * Math.min(1, p * 1.4));
+      return suave;
+    };
+    const pintar = () => {
+      const suave = calcularScroll();
+      mano += (manoObjetivo - mano) * 0.12;
+      emblema.style.transform = `rotate(${scroll + mano}deg) scale(${0.9 + 0.1 * suave})`;
+      requestAnimationFrame(pintar);
+    };
+    requestAnimationFrame(pintar);
+    const angulo = (e: PointerEvent) => {
+      const r = emblema.getBoundingClientRect();
+      return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI;
+    };
+    emblema.addEventListener('pointermove', (e) => {
+      const a = angulo(e);
+      if (anguloPrevio !== null) {
+        let d = a - anguloPrevio;
+        if (d > 180) d -= 360; else if (d < -180) d += 360;
+        manoObjetivo += d / 5; // giro suave: la venera gira cinco veces menos que el ratón
+      }
+      anguloPrevio = a;
+    });
+    emblema.addEventListener('pointerleave', () => {
+      anguloPrevio = null;
+      manoObjetivo = Math.round(manoObjetivo / 90) * 90;
+    });
+  }
+</script>
+
+<style>
+  /* Portada */
+  .portada { position: relative; min-height: 100svh; display: grid; place-items: center; overflow: hidden; background: var(--negro); color: var(--pergamino); text-align: center; }
+  .portada :global(.portada__foto) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+  /* Velo: oscurece la imagen para la lectura y la funde con el negro de la sección I */
+  .portada__velo {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(26, 23, 20, .58) 0%, rgba(26, 23, 20, .4) 36%, rgba(26, 23, 20, .66) 72%, var(--negro) 100%);
+  }
+  .portada__contenido { position: relative; display: grid; justify-items: center; gap: var(--s5); padding-top: var(--s9); padding-bottom: var(--s10); }
+  .portada__dato { color: var(--plata); letter-spacing: .12em; }
+  .portada__titulo { font-family: var(--f-display); font-size: clamp(52px, 8.4vw, 116px); line-height: 1; letter-spacing: -.01em; text-wrap: balance; max-width: 12ch; }
+  .portada__entradilla { font-family: var(--f-texto); font-style: italic; font-size: clamp(19px, 1.8vw, 23px); line-height: 1.5; color: var(--espada); max-width: 40ch; text-wrap: balance; }
+
+  /* I · Origen */
+  .origen-seccion { padding-top: var(--s7); }
+  .origen__texto { font-family: var(--f-display); font-size: clamp(28px, 3.1vw, 42px); line-height: 1.24; text-wrap: pretty; color: var(--pergamino); }
+  .origen__pie { display: flex; flex-wrap: wrap; gap: var(--s4) var(--s7); margin-top: var(--s7); }
+
+  /* II · Distintivos: emblema y título centrados; debajo, tres columnas estrechas y largas, justificadas */
+  .distintivos { display: grid; gap: var(--s8); justify-items: center; }
+  .distintivos__cabeza { display: grid; gap: var(--s5); justify-items: center; text-align: center; }
+  .distintivos__emblema { width: 152px; margin-bottom: var(--s3); will-change: transform; }
+  .distintivos__venera { max-width: 40ch; text-align: center; }
+  .distintivos__columnas { display: grid; gap: var(--s7); width: 100%; max-width: 30ch; }
+  @media (min-width: 900px) { .distintivos__columnas { grid-template-columns: repeat(3, minmax(0, 23ch)); justify-content: center; max-width: none; gap: var(--s8); } }
+  .distintivos__col { display: grid; gap: var(--s4); align-content: start; padding-top: var(--s5); border-top: 1px solid var(--negro); }
+  .distintivos__texto { font-size: 16px; line-height: 1.7; color: var(--tinta); text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+
+  /* Cabecera de sección a todo el ancho (III, IV) */
+  .cabeza { margin-bottom: var(--s7); align-items: end; }
+  .cabeza__nota { max-width: 46ch; }
+
+  /* III · Obra */
+  .obra__fotos { display: grid; grid-template-columns: 1fr 1fr; gap: var(--medianil); margin-top: var(--s8); }
+  .obra__fotos :global(img) { aspect-ratio: 4 / 5; object-fit: cover; }
+
+  /* IV · Actividades */
+  .rejilla-tarjetas { list-style: none; display: grid; gap: var(--s7) var(--medianil); grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
+  .actividades__pie { margin-top: var(--s7); }
+
+  /* V · Navidad */
+  .navidad__cabeza { display: grid; gap: var(--s6); margin-bottom: var(--s7); }
+  @media (min-width: 960px) { .navidad__cabeza { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--s8); align-items: end; } }
+  .navidad__lema { font-family: var(--f-texto); font-style: italic; font-size: 21px; line-height: 1.5; color: var(--pergamino); max-width: 52ch; }
+  .navidad__tira {
+    list-style: none; display: flex; gap: var(--s5); overflow-x: auto; scroll-snap-type: x mandatory;
+    padding: 0 var(--margen) var(--s4); scroll-padding: 0 var(--margen);
+    scrollbar-color: var(--tinta-2) transparent;
+  }
+  @media (min-width: 1384px) { .navidad__tira { padding-left: calc((100vw - var(--max)) / 2); scroll-padding-left: calc((100vw - var(--max)) / 2); } }
+  .navidad__item { flex: none; scroll-snap-align: start; }
+  .navidad__enlace { display: grid; gap: var(--s3); color: var(--plata); text-decoration: none; }
+  .navidad__enlace :global(img) { width: auto; height: 320px; background: var(--pergamino); transition: transform .3s ease; }
+  .navidad__enlace:hover { color: var(--pergamino); }
+  .navidad__enlace:hover :global(img) { transform: translateY(-4px); }
+
+  /* VI · Cofradía */
+  .cofradia { display: grid; gap: var(--s7); align-items: start; }
+  @media (min-width: 960px) { .cofradia { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s8); } }
+  .cofradia__figura :global(img) { max-height: 760px; object-fit: contain; object-position: left top; width: auto; }
+  .cofradia__texto { display: grid; gap: var(--s5); align-content: start; }
+  .cofradia__cita { margin: var(--s3) 0; padding-left: var(--s5); border-left: 2px solid var(--teja); }
+
+  /* VII · Consejo */
+  .consejo__cabeza { margin-bottom: var(--s7); }
+  .consejo__honor { display: grid; gap: var(--s6); grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
+  .consejo__honor-item { display: grid; gap: var(--s3); }
+  .consejo__filete { margin: var(--s7) 0; }
+  .consejo__nomina { list-style: none; display: grid; gap: 0 var(--medianil); grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
+  .consejo__nomina--dos { margin-top: var(--s4); }
+  .consejo__miembro { padding: var(--s5) 0; border-top: 1px solid var(--linea); display: grid; gap: var(--s2); align-content: start; }
+  .consejo__cargo { color: var(--teja); line-height: 1.5; }
+  .consejo__nombre { font-family: var(--f-texto); font-size: 19px; line-height: 1.4; text-wrap: pretty; }
+  .consejo__capellanes { margin-top: var(--s7); }
+</style>

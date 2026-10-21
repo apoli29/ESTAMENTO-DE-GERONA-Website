@@ -1,0 +1,143 @@
+---
+import '../styles/global.css';
+import Cabecera from '../components/Cabecera.astro';
+import Pie from '../components/Pie.astro';
+interface Props { titulo?: string; lang?: string }
+const { titulo, lang = 'es' } = Astro.props;
+const nombre = 'Real Estamento Militar del Principado de Gerona';
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo ? `${titulo} · ${nombre}` : `${nombre} · Cofradía de San Jorge`}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#2B1F18" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <Cabecera />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Pie />
+    <script>
+      // Desplazamiento suave y algo más lento que el nativo (≈20 %), para un ritmo pausado.
+      import Lenis from 'lenis';
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const lenis = new Lenis({ lerp: 0.08, wheelMultiplier: 0.8, anchors: { offset: -96 }, autoRaf: true });
+        (window as any).lenis = lenis;
+      }
+
+      // Momento único de la venera: las espadas se recogen al entrar en pantalla.
+      const veneras = document.querySelectorAll('[data-venera]');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entradas) => {
+          for (const e of entradas) if (e.isIntersecting) { e.target.classList.add('esta-visible'); io.unobserve(e.target); }
+        }, { threshold: 0.45 });
+        veneras.forEach((v) => io.observe(v));
+      } else veneras.forEach((v) => v.classList.add('esta-visible'));
+
+      // Animaciones básicas: los bloques de contenido aparecen suavemente al entrar en pantalla,
+      // escalonados cuando entran varios a la vez.
+      if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const SELECTOR = [
+          '.rotulo', '.t-display', '.t-entradilla', '.t-titulo2', '.t-cuerpo', '.cita', '.origen__texto', '.origen__pie',
+          '.relacion__fila', '.distintivos__col', '.caja', '.tarjeta', '.navidad__item', '.figura', '.filtros', '.anio__titulo',
+          '.consejo__honor-item', '.consejo__miembro', '.libros__item', '.disp__item', '.clases__item', '.boton', '.enlace-mayor',
+        ].map((s) => 'main ' + s).join(',');
+        const todos = [...document.querySelectorAll<HTMLElement>(SELECTOR)]
+          .filter((el) => !el.closest('.portada, .hportada'));
+        const elegidos = todos.filter((el) => !todos.some((otro) => otro !== el && otro.contains(el)));
+        const io = new IntersectionObserver((entradas) => {
+          let i = 0;
+          for (const e of entradas) {
+            if (!e.isIntersecting) continue;
+            const el = e.target as HTMLElement;
+            el.style.setProperty('--retraso', Math.min(i++ * 80, 480) + 'ms');
+            el.classList.add('revelado');
+            io.unobserve(el);
+          }
+        }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+        elegidos.forEach((el) => { el.classList.add('revela'); io.observe(el); });
+      }
+
+      // Enlaces con espada: mientras la espada avanza suelta un rastro continuo de tinta que el
+      // "viento" arrastra hacia atrás. El subrayado lo forman sólo esas gotas: crece exactamente
+      // hasta donde ha caído la última, de modo que ninguna se pierde.
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll<HTMLElement>('.enlace-mayor').forEach((enlace) => {
+          enlace.classList.add('con-tinta');
+          let activo = false;
+          let ronda = 0;
+          let revelado = 0;
+          let ultimaX = 0;
+          const revelar = (px: number) => { revelado = px; enlace.style.setProperty('--revelado', px + 'px'); };
+          const gotear = () => {
+            if (!activo) return;
+            const espada = getComputedStyle(enlace, '::after');
+            const x = parseFloat(espada.left);
+            const ancho = parseFloat(espada.width);
+            const inicio = parseFloat(getComputedStyle(enlace, '::before').left);
+            const largo = enlace.offsetWidth - 2 * inicio;
+            // Gotas según el recorrido (una cada ~1,5 px), no según el tiempo: cuando la espada frena
+            // al final no se acumula tinta. Pasado el fin del texto deja de gotear y el trazo se completa.
+            if (x + ancho * 0.35 - 5 > inicio + largo) {
+              activo = false;
+              const mia = ronda;
+              setTimeout(() => { if (mia === ronda) revelar(largo); }, 300);
+              return;
+            }
+            if (x - ultimaX >= 1.5) {
+              ultimaX = x;
+              const y0 = parseFloat(espada.top) + parseFloat(espada.height) / 2;
+              const x0 = x + ancho * (0.35 + Math.random() * 0.6);
+              const destino = x0 - (5 + Math.random() * 9);
+              if (destino >= inicio && destino <= inicio + largo) {
+                const tam = 3.4 + Math.random() * 2;
+                const gota = document.createElement('span');
+                gota.className = 'enlace-mayor__gota';
+                gota.style.cssText = `left:${x0}px;top:${y0}px;width:${tam}px;height:${tam}px`;
+                enlace.appendChild(gota);
+                const dx = destino - x0;
+                const dy = enlace.offsetHeight - 5.5 - y0;
+                const mia = ronda;
+                gota.animate([
+                  { transform: 'translate(0, 0) scale(1)' },
+                  { transform: `translate(${dx * 0.5}px, ${dy * 0.45}px) scale(.75, 3)`, offset: 0.5 },
+                  { transform: `translate(${dx}px, ${dy}px) scale(1.4, .5)` },
+                ], { duration: 230 + Math.random() * 90, easing: 'cubic-bezier(.4, 0, .7, 1)' }).onfinish = () => {
+                  if (mia === ronda) revelar(Math.max(revelado, destino - inicio + 1));
+                  gota.remove();
+                };
+              }
+            }
+            if (x < enlace.offsetWidth - ancho - 1) requestAnimationFrame(gotear);
+            else activo = false;
+          };
+          const empezar = () => {
+            if (activo) return;
+            ronda++; activo = true; ultimaX = 0;
+            enlace.classList.remove('recogiendo');
+            revelar(0);
+            requestAnimationFrame(gotear);
+          };
+          const parar = () => {
+            ronda++; activo = false;
+            enlace.querySelectorAll('.enlace-mayor__gota').forEach((g) => g.remove());
+            enlace.classList.add('recogiendo');
+            revelar(0);
+          };
+          enlace.addEventListener('pointerenter', empezar);
+          enlace.addEventListener('focus', empezar);
+          enlace.addEventListener('pointerleave', parar);
+          enlace.addEventListener('blur', parar);
+        });
+      }
+    </script>
+  </body>
+</html>

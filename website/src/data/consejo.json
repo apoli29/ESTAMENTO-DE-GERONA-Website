@@ -1,0 +1,25 @@
+{
+  "honor": [
+    { "cargo": "Jefe Supremo", "nombre": ["Su Majestad el Rey Don Felipe VI", "(Q.D.G.)"] },
+    { "cargo": "Cofrade Mayor", "nombre": ["Su Alteza Real la Princesa de Gerona,", "de Asturias y de Viana"] }
+  ],
+  "consejo": [
+    { "cargo": "Veguer Presidente", "nombres": ["Ilmo. Sr. Marqués de Dou"] },
+    { "grupo": "Vegueres Vicepresidentes", "cargo": "Veguer de Gerona", "nombres": ["Iltre. Sr. Don Xavier de Ribot y Molinet"] },
+    { "grupo": "Vegueres Vicepresidentes", "cargo": "Veguer de Barcelona", "nombres": ["Excmo. Sr. Don Juan Gualberto de Balanzó y de Solá"] },
+    { "cargo": "Delegado en Castilla", "nombres": ["Excmo. Sr. Duque de Linares, G. de E."] },
+    { "cargo": "Secretario General", "nombres": ["Iltre. Sr. Don José Mª del Pozo y Fina"] },
+    { "cargo": "Vicesecretario General", "nombres": ["Iltre. Sr. Don Borja de Travy y Solá"] },
+    { "cargo": "Fiscal", "nombres": ["Iltmo. Sr. Dr. Don Santiago de Llobet y Masachs"] },
+    { "cargo": "Clavario", "nombres": ["Iltre. Sr. Don Ignacio de Delás y de Ugarte"] },
+    { "cargo": "Jefe de Protocolo", "nombres": ["Iltre. Sr. Don Javier de Cruïlles de Peratallada y Vidal"] },
+    { "cargo": "Vocales", "nombres": ["Ilmo. Sr. Dr. Don Jordi Mestres y López", "Iltre. Sr. Don Marcos Serra y Gómez-Nicolau", "Iltre. Sra. Doña María de Toca y Andreu"] }
+  ],
+  "capellanes": {
+    "titulo": "Capellanes de la Cofradía de San Jorge",
+    "miembros": [
+      { "cargo": "Consiliario", "nombres": ["Ilmo. y Rvdmo. Dr. Don Joan Baburés y Noguer, Pbro."] },
+      { "cargo": "Asistente", "nombres": ["Iltmo. y Rvdmo. Sr. Dr. Don Pere Bellvert y Morente, Pbtro."] }
+    ]
+  }
+}

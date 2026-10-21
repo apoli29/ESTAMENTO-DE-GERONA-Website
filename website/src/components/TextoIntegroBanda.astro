@@ -1,0 +1,28 @@
+---
+/* Banda de cierre: firma del texto original + acceso al texto íntegro (ES / CA) */
+interface Props { obra: 'la-corporacion' | 'la-cofradia'; firma: string[] }
+const { obra, firma } = Astro.props;
+---
+<section class="seccion banda-negra sobre-negro ti">
+  <div class="envoltura capitulo">
+    <div class="rotulo">
+      <span class="rotulo__etiqueta">Texto íntegro</span>
+      <div class="ti__firma">
+        {firma.map((l) => <p>{l}</p>)}
+      </div>
+    </div>
+    <div class="ti__acciones">
+      <p class="cita">El texto completo, tal como fue escrito, en una sola página de lectura.</p>
+      <div class="ti__botones">
+        <a class="boton" href={`/historia/${obra}/texto-integro/`}>Leer el texto íntegro</a>
+        <a class="boton boton--linea" href={`/historia/${obra}/text-integre/`} hreflang="ca" lang="ca">Llegir-lo en català</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ti__firma { margin-top: var(--s3); font-family: var(--f-texto); font-style: italic; color: var(--plata); display: grid; gap: var(--s1); }
+  .ti__acciones { display: grid; gap: var(--s6); }
+  .ti__botones { display: flex; flex-wrap: wrap; gap: var(--s4); }
+</style>

@@ -1,0 +1,55 @@
+---
+import Logo from './Logo.astro';
+import sitio from '../data/sitio.json';
+import contacto from '../data/contacto.json';
+---
+<footer class="pie banda-negra sobre-negro">
+  <div class="filete" aria-hidden="true"></div>
+  <div class="envoltura pie__cuerpo">
+    <div class="pie__marca">
+      <a class="pie__sello" href="/" aria-label="Inicio"><Logo version="sello-blanco" ancho={168} /></a>
+    </div>
+    <div class="pie__columnas">
+      <div>
+        <p class="t-etiqueta pie__titulo">{contacto.titulo}</p>
+        <a class="pie__email" href={`mailto:${contacto.email}`}>{contacto.email}</a>
+      </div>
+      <nav aria-label="Pie de página">
+        <p class="t-etiqueta pie__titulo">Sitio</p>
+        <ul class="pie__lista">
+          <li><a href="/historia/la-corporacion/">La Corporación</a></li>
+          <li><a href="/historia/la-cofradia/">La Cofradía de San Jorge</a></li>
+          <li><a href="/actividades/">Actividades</a></li>
+          <li><a href="/#consejo">Consejo</a></li>
+          <li><a href="/enlaces/">Enlaces</a></li>
+          <li><a href="/contacto/">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <div class="envoltura"><div class="pie__base">
+    <p class="t-dato">{sitio.pie[0]} · {sitio.pie[1]}</p>
+    <ul class="pie__legal">
+      <li><a href="/aviso-legal/">{sitio.legal.aviso}</a></li>
+      <li><a href="/privacidad/">{sitio.legal.privacidad}</a></li>
+    </ul>
+  </div></div>
+</footer>
+
+<style>
+  .pie { margin-top: 0; }
+  .pie__cuerpo { display: grid; gap: var(--s7); padding-top: var(--s8); padding-bottom: var(--s8); }
+  @media (min-width: 900px) { .pie__cuerpo { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); } }
+  .pie__columnas { display: grid; gap: var(--s6); grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+  .pie__sello { display: inline-flex; }
+  .pie__titulo { color: var(--plata); margin-bottom: var(--s4); }
+  .pie__email { font-family: var(--f-texto); font-size: 19px; overflow-wrap: anywhere; color: var(--pergamino); text-decoration-color: var(--teja); word-break: break-word; }
+  .pie__email:hover { color: var(--plata); }
+  .pie__lista { list-style: none; display: grid; gap: var(--s2); }
+  .pie a { color: var(--pergamino); }
+  .pie__lista a { text-decoration: none; }
+  .pie__lista a:hover, .pie__legal a:hover { color: var(--plata); text-decoration: underline; text-decoration-color: var(--teja); }
+  .pie__base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s3) var(--s6); padding-top: var(--s5); padding-bottom: var(--s6); border-top: 1px solid var(--linea-clara); color: var(--plata); }
+  .pie__legal { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); font-size: 13px; }
+  .pie__legal a { text-decoration: none; }
+</style>

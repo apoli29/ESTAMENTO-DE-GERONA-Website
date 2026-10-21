@@ -1,0 +1,45 @@
+---
+/* Tarjeta de actividad para las rejillas horizontales (portada y anales).
+   Portada: el logotipo de Maria Canals si lo hay; en las demás, la venera (decisión del cliente, oct. 2026). */
+import { Image } from 'astro:assets';
+import Venera from './Venera.astro';
+import { TIPOS, ruta, imagenActividad, type Actividad } from '../lib/sitio';
+interface Props { a: Actividad; mostrarAnio?: boolean }
+const { a, mostrarAnio = false } = Astro.props;
+const esLogo = a.imagen?.archivo === 'maria-canals-logo.png';
+---
+<li class="tarjeta" data-filtro={TIPOS[a.tipo].filtro}>
+  <a class="tarjeta__enlace" href={ruta(a)}>
+    <span class:list={['tarjeta__media', { 'tarjeta__media--logo': esLogo }]}>
+      {esLogo
+        ? <Image src={imagenActividad(a.imagen!.archivo)} alt="" widths={[320, 560]} sizes="(min-width: 1200px) 300px, (min-width: 640px) 45vw, 90vw" />
+        : <Venera tamano={88} />}
+    </span>
+    <span class="tarjeta__meta">
+      <span class="t-dato tarjeta__fecha">{a.fecha ?? (mostrarAnio ? String(a.anio) : 'Navidad ' + a.anio)}</span>
+      <span class="t-etiqueta tarjeta__tipo">{TIPOS[a.tipo].singular}</span>
+    </span>
+    <span class="tarjeta__titulo">{a.titulo}</span>
+  </a>
+</li>
+
+<style>
+  .tarjeta { list-style: none; }
+  .tarjeta__enlace { display: grid; gap: var(--s3); color: var(--negro); text-decoration: none; }
+  .tarjeta__media {
+    display: grid; place-items: center; aspect-ratio: 4 / 3; overflow: hidden;
+    background: var(--piedra-clara); border-top: 1px solid var(--negro); padding: var(--s5);
+  }
+  .tarjeta__media :global(img) {
+    width: 100%; height: 100%; object-fit: contain;
+    transition: transform .7s cubic-bezier(.2, .7, .1, 1);
+  }
+  .tarjeta__media--logo :global(img) { width: 70%; }
+  .tarjeta__media :global(.venera) { opacity: .9; transition: transform .7s cubic-bezier(.2, .7, .1, 1); }
+  .tarjeta__enlace:hover .tarjeta__media :global(img), .tarjeta__enlace:hover .tarjeta__media :global(.venera) { transform: scale(1.04); }
+  .tarjeta__meta { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s4); align-items: baseline; margin-top: var(--s2); }
+  .tarjeta__fecha { color: var(--tinta-2); }
+  .tarjeta__tipo { color: var(--teja); }
+  .tarjeta__titulo { color: var(--castano); font-family: var(--f-texto); font-size: 20px; line-height: 1.35; text-wrap: pretty; transition: color .3s ease; }
+  .tarjeta__enlace:hover .tarjeta__titulo { color: var(--teja); }
+</style>

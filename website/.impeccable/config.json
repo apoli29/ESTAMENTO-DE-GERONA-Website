@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "geist",
+        "createdAt": "2026-10-20T19:53:49.402Z",
+        "reason": "Brand spec: 'Estamento de gerona - Visual IDT' (section VI Tipografía) mandates Geist for body/navigation; user instructed strict adherence to the identity"
+      }
+    ]
+  }
+}

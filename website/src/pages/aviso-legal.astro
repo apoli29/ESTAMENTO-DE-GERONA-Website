@@ -1,0 +1,8 @@
+---
+import Base from '../layouts/Base.astro';
+import TextoLegal from '../components/TextoLegal.astro';
+import legal from '../data/legal.json';
+---
+<Base titulo="Aviso legal">
+  <TextoLegal titulo={legal.aviso.title} bloques={legal.aviso.blocks} />
+</Base>

@@ -1,0 +1,127 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../../layouts/Base.astro';
+import HistoriaCabecera from '../../../components/HistoriaCabecera.astro';
+import TextoIntegroBanda from '../../../components/TextoIntegroBanda.astro';
+import Venera from '../../../components/Venera.astro';
+import ObraCajas from '../../../components/ObraCajas.astro';
+import hc from '../../../data/historia-compacta.json';
+import historia from '../../../data/historia.json';
+import { foto, CREDITOS } from '../../../lib/sitio';
+const C = hc.corporacion;
+const H = historia.corporacion.es;
+const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+---
+<Base titulo="La Corporación">
+  <HistoriaCabecera titulo="La Corporación" imagen={foto('catedral-jardin.jpg')} alt="La Catedral de Gerona al atardecer" />
+
+  <!-- I · Cronología -->
+  <section class="seccion" aria-labelledby="cronologia">
+    <div class="envoltura capitulo capitulo--fijo">
+      <div class="rotulo">
+        <span class="rotulo__num" aria-hidden="true">I</span>
+        <h2 id="cronologia" class="rotulo__nombre">Cronología</h2>
+        <p class="rotulo__nota">{C.proposito}</p>
+      </div>
+      <ol class="relacion cronologia">
+        {C.cronologia.map((h) => (
+          <li class="relacion__fila">
+            <span class="relacion__clave">{h._etiqueta}</span>
+            <p class="relacion__valor">{h.texto}{h.nota && <span class="nota">{h.nota}</span>}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- II · Sede -->
+  <section class="seccion banda-piedra" aria-labelledby="sede">
+    <div class="envoltura sede">
+      <figure class="figura sede__foto">
+        <Image src={foto('capilla-san-jorge.jpg')} alt="Retablo de una capilla de la Catedral de Gerona" widths={[480, 800, 1200]} sizes="(min-width: 960px) 36vw, 100vw" />
+        <figcaption>{CREDITOS['capilla-san-jorge.jpg']}</figcaption>
+      </figure>
+      <div class="sede__texto">
+        <div class="rotulo">
+          <span class="rotulo__num" aria-hidden="true">II</span>
+          <h2 id="sede" class="rotulo__nombre">Sede</h2>
+        </div>
+        <div class="relacion">
+          {C.sede.map((s) => (
+            <div class="relacion__fila">
+              <span class="relacion__clave">{s._etiqueta}</span>
+              <p class="relacion__valor">{may(s.texto)}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- III · La obra -->
+  <section class="seccion" aria-labelledby="obra">
+    <div class="envoltura">
+      <div class="rotulo obra__cabeza">
+        <span class="rotulo__num" aria-hidden="true">III</span>
+        <h2 id="obra" class="rotulo__nombre">Lo que hace la Corporación</h2>
+      </div>
+      <ObraCajas items={C.obra} id="obra-historia" />
+    </div>
+  </section>
+
+  <!-- IV · Distintivos y uniformidad -->
+  <section class="seccion banda-piedra" id="distintivos" aria-labelledby="distintivos-titulo">
+    <div class="envoltura capitulo">
+      <div class="rotulo">
+        <span class="rotulo__num" aria-hidden="true">IV</span>
+        <h2 id="distintivos-titulo" class="rotulo__nombre">Distintivos y uniformidad</h2>
+        <div class="dist__emblema">
+          <Venera tamano={132} titulo="La venera de la Corporación" />
+          <div class="filete" aria-hidden="true"></div>
+        </div>
+      </div>
+      <div class="dist">
+        <p class="t-cuerpo">{C.distintivos.antiguamente}</p>
+        <p class="t-cuerpo">{C.distintivos.banda}</p>
+        <div class="dist__tabla">
+          <h3 class="t-etiqueta dist__titulo">Enseñas reglamentarias</h3>
+          <div class="relacion">
+            {C.distintivos.ensenas.map((e) => (
+              <div class="relacion__fila">
+                <span class="relacion__clave">{e._etiqueta}</span>
+                <p class="relacion__valor">{may(e.texto)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div class="dist__tabla">
+          <h3 class="t-etiqueta dist__titulo">Uniformidad</h3>
+          <div class="relacion">
+            {C.distintivos.uniformidad.map((e) => (
+              <div class="relacion__fila">
+                <span class="relacion__clave">{e._etiqueta}</span>
+                <p class="relacion__valor">{e.texto}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <TextoIntegroBanda obra="la-corporacion" firma={H.signature} />
+</Base>
+
+<style>
+  .cronologia { list-style: none; }
+  .sede { display: grid; gap: var(--s7); align-items: start; }
+  @media (min-width: 960px) { .sede { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s8); } }
+  .sede__foto :global(img) { aspect-ratio: 4 / 5; object-fit: cover; }
+  .sede__texto { display: grid; gap: var(--s6); }
+  .obra__cabeza { margin-bottom: var(--s7); }
+  .dist__emblema { display: grid; gap: var(--s5); width: 132px; margin-top: var(--s6); }
+  .dist { display: grid; gap: var(--s5); }
+  .dist .t-cuerpo + .t-cuerpo { margin-top: 0; }
+  .dist__tabla { margin-top: var(--s5); }
+  .dist__titulo { margin-bottom: var(--s4); }
+</style>

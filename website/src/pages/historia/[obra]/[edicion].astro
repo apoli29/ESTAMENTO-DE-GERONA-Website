@@ -1,0 +1,90 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Venera from '../../../components/Venera.astro';
+import historia from '../../../data/historia.json';
+import { romano } from '../../../lib/sitio';
+
+type Obra = 'la-corporacion' | 'la-cofradia';
+type Edicion = 'texto-integro' | 'text-integre';
+export function getStaticPaths() {
+  const obras: Obra[] = ['la-corporacion', 'la-cofradia'];
+  const ediciones: Edicion[] = ['texto-integro', 'text-integre'];
+  return obras.flatMap((obra) => ediciones.map((edicion) => ({ params: { obra, edicion } })));
+}
+const { obra, edicion } = Astro.params as { obra: Obra; edicion: Edicion };
+const lang = edicion === 'text-integre' ? 'ca' : 'es';
+const texto = (historia as any)[obra === 'la-corporacion' ? 'corporacion' : 'cofradia'][lang];
+const otra = edicion === 'text-integre' ? 'texto-integro' : 'text-integre';
+
+/* Rótulos de interfaz (texto nuevo) */
+const R = lang === 'ca'
+  ? { etiqueta: 'Text íntegre', volver: obra === 'la-corporacion' ? 'La Corporación' : 'La Cofradía de San Jorge', otra: 'Leer en castellano', fin: 'Fi del text' }
+  : { etiqueta: 'Texto íntegro', volver: obra === 'la-corporacion' ? 'La Corporación' : 'La Cofradía de San Jorge', otra: 'Llegir en català', fin: 'Fin del texto' };
+
+let capitulo = 0;
+const bloques = texto.blocks.map((b: { type: string; text: string }) => (b.type === 'h' ? { ...b, num: romano(++capitulo) } : b));
+---
+<Base titulo={`${texto.title} · ${R.etiqueta}`} lang={lang}>
+  <div class="pergamino">
+    <article class="envoltura libro">
+      <header class="libro__cabeza">
+        <nav class="libro__nav t-dato" aria-label="Edición">
+          <a href={`/historia/${obra}/`} lang="es">← {R.volver}</a>
+          <a href={`/historia/${obra}/${otra}/`} hreflang={lang === 'ca' ? 'es' : 'ca'} lang={lang === 'ca' ? 'es' : 'ca'}>{R.otra}</a>
+        </nav>
+        <Venera tamano={56} />
+        <p class="t-etiqueta libro__etiqueta">{R.etiqueta}</p>
+        <h1 class="t-display libro__titulo">{texto.title}</h1>
+        {texto.intro && <p class="t-entradilla libro__intro">{texto.intro}</p>}
+        <div class="filete filete--medio libro__filete" aria-hidden="true"></div>
+      </header>
+
+      <div class="libro__cuerpo">
+        {bloques.map((b: any, i: number) =>
+          b.type === 'h' ? (
+            <h2 class="libro__capitulo"><span class="libro__num">{b.num}</span>{b.text.replace(/[:.]$/, '')}</h2>
+          ) : (
+            <p class:list={['libro__parrafo', { capitular: i === 0 }]}>{b.text}</p>
+          )
+        )}
+      </div>
+
+      <footer class="libro__firma">
+        {texto.signature.map((l: string) => <p>{l}</p>)}
+        <p class="t-dato libro__fin">{R.fin}</p>
+      </footer>
+    </article>
+  </div>
+</Base>
+
+<style>
+  /* Pergamino: color plano del sistema + grano de papel muy sutil (sin degradados ni sombras) */
+  .pergamino {
+    background-color: var(--pergamino);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .3 0 0 0 0 .22 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .42 0 0 0 0 .25 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)' opacity='.14'/%3E%3C/svg%3E");
+    padding: var(--entre-secciones) 0 var(--s10);
+  }
+  .libro { max-width: calc(68ch + 2 * var(--margen)); }
+  .libro__cabeza { display: grid; justify-items: center; text-align: center; gap: var(--s4); margin-bottom: var(--s8); }
+  .libro__nav { width: 100%; display: flex; justify-content: space-between; gap: var(--s4); margin-bottom: var(--s7); }
+  .libro__nav a { color: var(--tinta-2); }
+  .libro__nav a:hover { color: var(--teja); }
+  .libro__etiqueta { color: var(--teja); margin-top: var(--s3); }
+  .libro__titulo { font-size: clamp(40px, 5vw, 64px); }
+  .libro__intro { text-align: center; }
+  .libro__filete { width: 120px; margin-top: var(--s4); }
+
+  .libro__cuerpo { font-family: var(--f-texto); font-size: 19px; line-height: 1.75; color: var(--tinta); hyphens: auto; }
+  .libro__parrafo { text-wrap: pretty; text-align: justify; }
+  .libro__parrafo + .libro__parrafo { text-indent: 1.6em; margin-top: .2em; }
+  .libro__capitulo {
+    display: grid; justify-items: center; gap: var(--s2); text-align: center;
+    margin: var(--s8) 0 var(--s6); font-family: var(--f-display); font-size: 30px; line-height: 1.2; color: var(--castano);
+  }
+  .libro__num { font-size: 22px; color: var(--teja); }
+  .libro__capitulo + .libro__parrafo { text-indent: 0; }
+  .libro__firma { margin-top: var(--s8); text-align: right; font-family: var(--f-texto); font-style: italic; color: var(--tinta); display: grid; gap: var(--s1); }
+  .libro__fin { margin-top: var(--s7); text-align: center; font-style: normal; color: var(--tinta-2); }
+  @media (max-width: 600px) { .libro__parrafo { text-align: left; } .libro__cuerpo { font-size: 18px; } }
+</style>

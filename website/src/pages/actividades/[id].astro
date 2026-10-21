@@ -1,0 +1,158 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import { actividades, TIPOS, ruta, imagenActividad, transcripcionDe, urlPanfleto, formatoPanfleto, type Actividad } from '../../lib/sitio';
+
+export function getStaticPaths() {
+  return actividades.map((a, i) => ({ params: { id: a.id }, props: { a, anterior: actividades[i + 1] ?? null, siguiente: actividades[i - 1] ?? null } }));
+}
+interface Props { a: Actividad; anterior: Actividad | null; siguiente: Actividad | null }
+const { a, anterior, siguiente } = Astro.props;
+// Las transcripciones solo se publican una vez verificadas (estado "verificado"); en desarrollo se muestran para revisión.
+const tBruta = transcripcionDe(a);
+const t = tBruta && (tBruta.estado === 'verificado' || import.meta.env.DEV) ? tBruta : null;
+const texto = a.cuerpo ?? a.resumen;
+// El resumen del listado antiguo se conserva cuando no está contenido en el texto de detalle.
+const resumenAparte = a.cuerpo ? a.resumen.filter((r) => !a.cuerpo!.join(' ').includes(r)) : [];
+const esNavidad = a.tipo === 'navidad';
+const esLogo = a.imagen?.archivo === 'maria-canals-logo.png';
+
+let pesoPanfleto = '';
+if (a.panfleto) {
+  const f = path.resolve('public/descargas/panfletos', a.panfleto.archivo);
+  if (fs.existsSync(f)) {
+    const kb = fs.statSync(f).size / 1024;
+    pesoPanfleto = kb > 1024 ? `${(kb / 1024).toFixed(1).replace('.', ',')} MB` : `${Math.round(kb)} KB`;
+  }
+}
+---
+<Base titulo={a.titulo.replace(/^"|"$/g, '')}>
+  <article class="seccion detalle">
+    <div class="envoltura">
+      <nav class="miga t-dato" aria-label="Ruta">
+        <a href="/actividades/">Actividades</a>
+        <span aria-hidden="true">/</span>
+        <a href={`/actividades/#anio-${a.anio}`}>{a.anio}</a>
+      </nav>
+
+      <div class="capitulo detalle__cuerpo">
+        <aside class="detalle__ficha">
+          <p class="t-etiqueta detalle__tipo">{TIPOS[a.tipo].singular}</p>
+          {a.fecha && <p class="t-dato">{a.fecha}</p>}
+          {a.panfleto && (
+            <a class="boton detalle__descarga" href={urlPanfleto(a.panfleto.archivo)} download>
+              Descargar panfleto
+              <span class="boton__dato">{formatoPanfleto(a.panfleto.archivo)}{pesoPanfleto && ` · ${pesoPanfleto}`}</span>
+            </a>
+          )}
+        </aside>
+
+        <div class="detalle__principal">
+          <h1 class="t-titulo1 detalle__titulo">{a.titulo}</h1>
+          {resumenAparte.map((r) => <p class="t-entradilla">{r}</p>)}
+
+          {texto.length > 0 && (
+            <div class="detalle__texto">
+              {texto.map((p) => <p class="t-cuerpo">{p}</p>)}
+            </div>
+          )}
+
+          {a.imagen && !esLogo && (
+            <figure class:list={['figura', 'detalle__imagen', { 'detalle__imagen--navidad': esNavidad }]}>
+              <Image src={imagenActividad(a.imagen.archivo)} alt={esNavidad ? `${a.titulo}: tarjeta completa` : `Cubierta de ${a.titulo}`} widths={[480, 800, 1200]} sizes="(min-width: 960px) 640px, 100vw" />
+            </figure>
+          )}
+          {esLogo && (
+            <figure class="figura detalle__logo">
+              <Image src={imagenActividad(a.imagen!.archivo)} alt="Concurs Internacional de Música Maria Canals" width={183} />
+            </figure>
+          )}
+
+          {t && (
+            <section class="documento" aria-labelledby="documento-titulo">
+              <div class="filete-doble" aria-hidden="true"></div>
+              <h2 id="documento-titulo" class="t-etiqueta documento__titulo">
+                {esNavidad ? 'Texto de la felicitación' : 'Texto del panfleto'}
+                {t.idioma === 'ca' && <span class="t-secundario"> · en catalán, como en el original</span>}
+              </h2>
+              <div class="documento__lineas" lang={t.idioma}>
+                {t.lineas.map((l: string, i: number) => <p class:list={['documento__linea', { 'documento__linea--primera': i === 0 }]}>{l}</p>)}
+              </div>
+              {t.datos && (
+                <dl class="documento__datos" lang={t.idioma}>
+                  {t.datos.map((d: { etiqueta: string; valor: string }) => (<><dt class="t-etiqueta">{d.etiqueta}</dt><dd>{d.valor}</dd></>))}
+                </dl>
+              )}
+              {t.pie && (
+                <div class="documento__pie">
+                  {t.pie.map((l: string) => <p>{l}</p>)}
+                </div>
+              )}
+              {t.entidades && t.entidades.some((e: any) => e.rol) && (
+                <ul class="documento__entidades" lang={t.idioma}>
+                  {t.entidades.filter((e: any) => e.rol).map((e: any) => (
+                    <li><span class="t-etiqueta t-secundario">{e.rol}</span> {e.nombre}</li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          )}
+        </div>
+      </div>
+
+      <nav class="vecinos" aria-label="Otras actividades">
+        {anterior ? (
+          <a class="vecinos__enlace" href={ruta(anterior)}>
+            <span class="t-etiqueta t-secundario">Anterior</span>
+            <span class="vecinos__titulo">{anterior.titulo}</span>
+            <span class="t-dato t-secundario">{anterior.fecha ?? anterior.anio}</span>
+          </a>
+        ) : <span></span>}
+        {siguiente ? (
+          <a class="vecinos__enlace vecinos__enlace--siguiente" href={ruta(siguiente)}>
+            <span class="t-etiqueta t-secundario">Siguiente</span>
+            <span class="vecinos__titulo">{siguiente.titulo}</span>
+            <span class="t-dato t-secundario">{siguiente.fecha ?? siguiente.anio}</span>
+          </a>
+        ) : <span></span>}
+      </nav>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .miga { display: flex; gap: var(--s3); margin-bottom: var(--s7); color: var(--tinta-2); }
+  .miga a { color: var(--tinta-2); }
+  .miga a:hover { color: var(--teja); }
+  .detalle__ficha { display: grid; gap: var(--s3); align-content: start; }
+  @media (min-width: 960px) { .detalle__ficha { position: sticky; top: 120px; } }
+  .detalle__tipo { color: var(--teja); }
+  .detalle__descarga { margin-top: var(--s4); justify-self: start; }
+  .detalle__principal { display: grid; gap: var(--s7); min-width: 0; }
+  .detalle__titulo { max-width: 22ch; }
+  .detalle__texto { display: grid; gap: var(--s4); }
+  .detalle__texto .t-cuerpo + .t-cuerpo { margin-top: 0; }
+  .detalle__imagen :global(img) { max-width: 640px; border: 1px solid var(--linea); background: #fff; }
+  .detalle__imagen--navidad :global(img) { max-width: 560px; }
+  .detalle__logo :global(img) { width: 183px; }
+
+  .documento { display: grid; gap: var(--s5); background: var(--piedra-clara); padding: var(--s6); max-width: 760px; }
+  .documento__titulo { color: var(--tinta-2); }
+  .documento__lineas { display: grid; gap: var(--s3); }
+  .documento__linea { font-family: var(--f-texto); font-size: 19px; line-height: 1.45; color: var(--tinta); text-wrap: pretty; }
+  .documento__linea--primera { font-size: 24px; color: var(--negro); }
+  .documento__datos { display: grid; grid-template-columns: auto 1fr; gap: var(--s2) var(--s5); margin: 0; padding-top: var(--s4); border-top: 1px solid var(--linea); }
+  .documento__datos dt { color: var(--tinta-2); line-height: 1.9; }
+  .documento__datos dd { margin: 0; font-family: var(--f-texto); font-size: 18px; }
+  .documento__pie { display: grid; gap: var(--s2); padding-top: var(--s4); border-top: 1px solid var(--linea); font-family: var(--f-texto); font-style: italic; color: var(--tinta); }
+  .documento__pie p:not(:first-child) { font-size: 15px; color: var(--tinta-2); }
+  .documento__entidades { list-style: none; display: grid; gap: var(--s2); padding-top: var(--s4); border-top: 1px solid var(--linea); font-size: 15px; }
+
+  .vecinos { display: grid; grid-template-columns: 1fr 1fr; gap: var(--medianil); margin-top: var(--entre-secciones); border-top: 1px solid var(--negro); }
+  .vecinos__enlace { display: grid; gap: var(--s2); padding: var(--s5) 0; color: var(--negro); text-decoration: none; align-content: start; }
+  .vecinos__enlace--siguiente { text-align: right; justify-items: end; }
+  .vecinos__titulo { font-family: var(--f-texto); font-size: 19px; line-height: 1.35; max-width: 34ch; }
+  .vecinos__enlace:hover .vecinos__titulo { color: var(--teja); }
+</style>

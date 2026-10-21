@@ -1,0 +1,41 @@
+---
+/* Texto legal tal cual: la primera línea de cada bloque numerado se muestra como título */
+interface Bloque { type: string; text: string }
+interface Props { titulo: string; bloques: Bloque[] }
+const { titulo, bloques } = Astro.props;
+type Pieza = { kind: 'h' | 'p' | 'ul'; text?: string; items?: string[] };
+const piezas: Pieza[] = [];
+for (const b of bloques) {
+  if (b.type === 'li') {
+    const ult = piezas[piezas.length - 1];
+    if (ult?.kind === 'ul') ult.items!.push(b.text); else piezas.push({ kind: 'ul', items: [b.text] });
+    continue;
+  }
+  const lineas = b.text.split('\n');
+  const esTitulo = /^(\d+\.\s|¿)|^(Cookies utilizadas en este sitio)$/.test(lineas[0]) && lineas.length > 1;
+  if (esTitulo) {
+    piezas.push({ kind: 'h', text: lineas[0] });
+    piezas.push({ kind: 'p', text: lineas.slice(1).join(' ') });
+  } else piezas.push({ kind: 'p', text: lineas.join(' ') });
+}
+---
+<section class="seccion">
+  <div class="envoltura capitulo">
+    <div class="rotulo"><span class="rotulo__etiqueta">Información legal</span></div>
+    <div class="legal">
+      <h1 class="t-titulo1">{titulo}</h1>
+      {piezas.map((p) =>
+        p.kind === 'h' ? <h2 class="t-titulo3 legal__h">{p.text}</h2>
+        : p.kind === 'ul' ? <ul class="legal__lista">{p.items!.map((i) => <li>{i}</li>)}</ul>
+        : <p class="t-cuerpo">{p.text}</p>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .legal { display: grid; gap: var(--s4); }
+  .legal .t-cuerpo + .t-cuerpo { margin-top: 0; }
+  .legal__h { margin-top: var(--s5); }
+  .legal__lista { padding-left: var(--s5); display: grid; gap: var(--s2); color: var(--tinta); max-width: var(--medida); }
+</style>

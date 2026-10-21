@@ -1,0 +1,19 @@
+---
+/* Logotipo oficial: se reproduce siempre desde los archivos originales (sistema visual, VIII). */
+import horizontalColor from '../assets/marca/horizontal-color.svg?raw';
+import horizontalNegativo from '../assets/marca/horizontal-negativo.svg?raw';
+import selloColor from '../assets/marca/sello-color.svg?raw';
+import selloBlanco from '../assets/marca/sello-blanco.svg?raw';
+interface Props { version?: 'horizontal' | 'horizontal-negativo' | 'sello' | 'sello-blanco'; ancho?: number; clase?: string }
+const { version = 'horizontal', ancho = 220, clase = '' } = Astro.props;
+const fuentes = { horizontal: horizontalColor, 'horizontal-negativo': horizontalNegativo, sello: selloColor, 'sello-blanco': selloBlanco };
+// Quita el manifiesto C2PA incrustado y fija tamaño/accesibilidad.
+const svg = fuentes[version]
+  .replace(/<metadata>[\s\S]*?<\/metadata>/, '')
+  .replace(/\swidth="[^"]*"\s+height="[^"]*"/, ` width="${ancho}" role="img" aria-label="Real Estamento Militar del Principado de Gerona · Cofradía de San Jorge"`);
+---
+<span class:list={['logo', clase]} set:html={svg} />
+<style>
+  .logo { display: inline-block; line-height: 0; }
+  .logo :global(svg) { height: auto; max-width: 100%; }
+</style>

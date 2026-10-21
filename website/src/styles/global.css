@@ -1,0 +1,246 @@
+/* Real Estamento Militar del Principado de Gerona — sistema visual
+   Fuente: "Estamento de gerona - Visual IDT" (versión final, octubre 2026). */
+
+:root {
+  /* Color — I. heráldicos (no se alteran) */
+  --rojo: #A3201F;
+  --negro: #1A1714;
+  --castano: #2B1F18; /* fondo de la cabecera (feedback oct. 2026) */
+  /* II. acción */
+  --teja: #A3201F; /* acento de interfaz = rojo heráldico; el naranja se retiró (feedback oct. 2026) */
+  /* III. soportes */
+  --pergamino: #F3EDE2;
+  --piedra: #E3D8C5;
+  --piedra-clara: #E9E1D3;
+  --plata: #C9C3B8;
+  --tinta: #3A332C;
+  --tinta-2: #5C534A;
+  --espada: #E6E1D7;
+  --sobre-teja: #FBF8F2;
+  --linea: rgba(26, 23, 20, .16);
+  --linea-fuerte: rgba(26, 23, 20, .3);
+  --linea-clara: rgba(243, 237, 226, .22);
+
+  /* Tipografía */
+  --f-display: 'Libre Caslon Display', 'Libre Caslon Text', Georgia, serif;
+  --f-texto: 'Libre Caslon Text', Georgia, serif;
+  --f-sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Espaciado — base 4 px */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px;
+  --s6: 32px; --s7: 48px; --s8: 64px; --s9: 96px; --s10: 128px;
+
+  /* Retícula */
+  --max: 1240px;
+  --margen: 24px;
+  --medianil: 16px;
+  --entre-secciones: 64px;
+  --medida: 68ch;
+  --cabecera: 88px; /* alto de la barra de la cabecera, sin el filete */
+
+  /* Dibujos de la marca reutilizables en CSS */
+  --cruz: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23A3201F' d='M29 0H71V29H100V71H71V100H29V71H0V29H29Z'/%3E%3C/svg%3E");
+  /* Trazo de tinta irregular (subrayado a mano) */
+  --trazo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 10' preserveAspectRatio='none'%3E%3Cpath d='M2 5.6C6 4.6 12 4.4 22 4.9C48 6 70 3.9 98 4.6C126 5.3 150 6.4 178 5.4C200 4.6 222 4.2 238 5.2L238 6C222 5.6 202 6.6 178 7.2C150 8.1 126 6.9 98 6.5C72 6.1 50 8.2 22 7.4C12 7.1 6 7.6 2 6.6Z'/%3E%3C/svg%3E");
+  --espada-h: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36.6 14'%3E%3Cpath d='M2.4 4.6a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8ZM4.6 5.9h5v2.2h-5ZM9.6 0h2.2v14h-2.2ZM11.8 5.4H31.6L36.6 7L31.6 8.6H11.8Z'/%3E%3C/svg%3E");
+}
+@media (min-width: 768px) { :root { --margen: 48px; --medianil: 24px; } }
+@media (min-width: 1100px) { :root { --cabecera: 97px; } }
+@media (min-width: 1200px) { :root { --margen: 72px; --entre-secciones: 96px; } }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+/* Desplazamiento suave (Lenis, ver Base.astro) */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+body {
+  margin: 0;
+  background: var(--pergamino);
+  color: var(--negro);
+  font-family: var(--f-sans);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img, svg { display: block; max-width: 100%; }
+img { height: auto; }
+p { margin: 0; }
+h1, h2, h3, h4 { margin: 0; font-weight: 400; }
+ul, ol { margin: 0; padding: 0; }
+a { color: var(--teja); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--negro); }
+:focus-visible { outline: 2px solid var(--teja); outline-offset: 3px; }
+.sobre-negro :focus-visible { outline-color: var(--plata); }
+::selection { background: var(--teja); color: var(--pergamino); }
+
+.visualmente-oculto {
+  position: absolute !important; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+.saltar {
+  position: absolute; left: var(--s4); top: -100px; z-index: 50;
+  background: var(--negro); color: var(--pergamino); padding: var(--s3) var(--s4);
+}
+.saltar:focus { top: var(--s4); }
+
+/* ——— Retícula ——— */
+.envoltura { width: 100%; max-width: calc(var(--max) + 2 * var(--margen)); margin: 0 auto; padding: 0 var(--margen); }
+.seccion { padding: var(--entre-secciones) 0; }
+.seccion + .seccion:not(.banda-piedra):not(.banda-negra) { border-top: 1px solid var(--linea); }
+.banda-piedra { background: var(--piedra-clara); }
+.banda-negra { background: var(--negro); color: var(--pergamino); }
+
+/* Patrón de sección del sistema: columna de rótulo (I · Nombre) + contenido en dos columnas */
+.capitulo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s6) var(--s8);
+  align-items: start;
+}
+@media (min-width: 960px) {
+  .capitulo { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); }
+  .capitulo--fijo > .rotulo { position: sticky; top: 112px; }
+}
+/* Rótulo: numeral romano como antetítulo + título de sección real (Caslon Display) */
+.rotulo { display: flex; flex-direction: column; gap: var(--s4); }
+.rotulo__num { display: flex; align-items: center; gap: var(--s3); font-family: var(--f-display); font-size: 22px; line-height: 1; color: var(--teja); }
+.rotulo__num::after { content: ''; width: 40px; height: 1px; background: currentColor; opacity: .6; }
+.rotulo__nombre { font-family: var(--f-display); font-size: clamp(36px, 4vw, 54px); line-height: 1.08; letter-spacing: -.005em; text-wrap: balance; }
+.rotulo__etiqueta { font-size: 12px; line-height: 16px; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; }
+.rotulo--centro { align-items: center; text-align: center; }
+/* Sobre fondo oscuro el rojo no contrasta: numeral en plata */
+:is(.banda-negra, .sobre-negro) .rotulo__num { color: var(--plata); }
+.rotulo__nota { margin-top: var(--s3); font-size: 16px; line-height: 1.6; color: var(--tinta-2); max-width: 34ch; text-wrap: pretty; }
+.banda-negra .rotulo__nota { color: var(--plata); }
+
+/* ——— Tipografía ——— */
+.t-display { font-family: var(--f-display); font-size: clamp(44px, 5.6vw, 72px); line-height: 1.05; letter-spacing: -.005em; text-wrap: balance; }
+.t-titulo1 { font-family: var(--f-display); font-size: clamp(34px, 4vw, 48px); line-height: 1.12; text-wrap: balance; }
+.t-titulo2 { font-family: var(--f-texto); font-size: 28px; line-height: 1.28; text-wrap: balance; }
+.t-titulo3 { font-family: var(--f-texto); font-size: 22px; line-height: 1.35; }
+.t-entradilla { font-family: var(--f-texto); font-style: italic; font-size: 21px; line-height: 1.52; color: var(--tinta); max-width: 52ch; text-wrap: pretty; }
+.t-cuerpo { font-size: 17px; line-height: 1.65; color: var(--tinta); max-width: var(--medida); text-wrap: pretty; }
+.t-cuerpo + .t-cuerpo { margin-top: 1em; }
+.t-etiqueta { font-size: 12px; line-height: 16px; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; }
+.t-dato { font-family: var(--f-mono); font-size: 13px; line-height: 18px; }
+.t-secundario { color: var(--tinta-2); }
+.banda-negra .t-entradilla, .banda-negra .t-cuerpo { color: var(--pergamino); }
+/* Títulos sobre fondos claros: castaño (feedback oct. 2026); sobre fondos oscuros, pergamino */
+.rotulo__nombre, .t-display, .t-titulo1, .t-titulo2, .t-titulo3 { color: var(--castano); }
+:is(.banda-negra, .sobre-negro) :is(.rotulo__nombre, .t-display, .t-titulo1, .t-titulo2, .t-titulo3) { color: var(--pergamino); }
+.banda-negra .t-secundario { color: var(--plata); }
+
+.cita { font-family: var(--f-texto); font-style: italic; font-size: clamp(24px, 2.6vw, 30px); line-height: 1.3; text-wrap: balance; }
+.cita-fuente { margin-top: var(--s3); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; color: var(--tinta-2); }
+.banda-negra .cita-fuente { color: var(--plata); }
+
+/* Capitular — solo en el primer párrafo de textos históricos largos */
+.capitular::first-letter {
+  float: left; font-family: var(--f-display); color: var(--teja);
+  font-size: 5.4em; line-height: .8; padding: .06em .12em 0 0;
+}
+
+/* ——— El filete (la banda de la Corporación) ——— */
+.filete { height: 12px; background: var(--negro); display: flex; align-items: center; }
+.filete::before { content: ''; height: 2px; width: 100%; background: var(--rojo); }
+.filete--medio { height: 6px; }
+.filete--medio::before { height: 1px; }
+.filete-doble { display: flex; flex-direction: column; gap: 2px; }
+.filete-doble::before, .filete-doble::after { content: ''; height: 1px; background: var(--negro); }
+.filete-doble::after { background: var(--rojo); }
+
+/* ——— Botones y enlaces ——— */
+.boton {
+  display: inline-flex; align-items: center; gap: var(--s3);
+  min-height: 48px; padding: 0 var(--s5);
+  background: var(--teja); color: var(--sobre-teja);
+  font-family: var(--f-sans); font-size: 14px; font-weight: 500; letter-spacing: .04em;
+  text-decoration: none; border: 0; cursor: pointer;
+  transition: background-color .2s ease;
+}
+.boton:hover { background: var(--negro); color: var(--pergamino); }
+.banda-negra .boton:hover { background: var(--pergamino); color: var(--negro); }
+.boton--linea { background: transparent; color: var(--negro); box-shadow: inset 0 0 0 1px var(--negro); }
+.boton--linea:hover { background: var(--negro); color: var(--pergamino); }
+.banda-negra .boton--linea { color: var(--pergamino); box-shadow: inset 0 0 0 1px var(--linea-clara); }
+.boton__dato { font-family: var(--f-mono); font-size: 12px; opacity: .8; font-weight: 400; letter-spacing: 0; }
+
+/* Enlace mayor: la espada espera a la izquierda, a la altura del texto; al pasar el ratón
+   lo recorre despacio hasta la derecha y va dejando detrás un trazo de tinta irregular. */
+.enlace-mayor {
+  --espada-w: 42px; --hueco: 16px; --ritmo: 1.2s cubic-bezier(.65, 0, .35, 1);
+  position: relative; display: inline-block;
+  padding: 2px calc(var(--espada-w) + var(--hueco)) 10px;
+  font-family: var(--f-texto); font-size: 19px; line-height: 1.3; color: var(--negro); text-decoration: none;
+}
+.enlace-mayor::before {
+  content: ''; position: absolute; bottom: 1px; height: 9px;
+  left: calc(var(--espada-w) + var(--hueco)); right: calc(var(--espada-w) + var(--hueco));
+  background: var(--teja);
+  -webkit-mask: var(--trazo) 0 0 / 100% 100% no-repeat; mask: var(--trazo) 0 0 / 100% 100% no-repeat;
+  clip-path: inset(0 100% 0 0); transition: clip-path var(--ritmo);
+}
+.enlace-mayor::after {
+  content: ''; position: absolute; left: 0; top: calc(2px + .65em - 8px); width: var(--espada-w); height: 16px; background: var(--teja);
+  -webkit-mask: var(--espada-h) center / contain no-repeat; mask: var(--espada-h) center / contain no-repeat;
+  transition: left var(--ritmo);
+}
+.enlace-mayor:hover::before, .enlace-mayor:focus-visible::before { clip-path: inset(0 0 0 0); }
+.enlace-mayor:hover::after, .enlace-mayor:focus-visible::after { left: calc(100% - var(--espada-w)); }
+/* Con JS, el subrayado lo dibujan las gotas que caen (ver Base.astro) */
+.enlace-mayor.con-tinta::before, .enlace-mayor.con-tinta:hover::before, .enlace-mayor.con-tinta:focus-visible::before {
+  clip-path: inset(0 calc(100% - var(--revelado, 0px)) 0 0); transition: clip-path .08s linear;
+}
+.enlace-mayor.con-tinta.recogiendo::before { transition: clip-path var(--ritmo); }
+/* Gotas de tinta (ver Base.astro) */
+.enlace-mayor__gota { position: absolute; pointer-events: none; margin: -1px 0 0 -1px; background: var(--teja); border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%; }
+.banda-negra .enlace-mayor { color: var(--pergamino); }
+
+/* ——— Lista de hechos (etiqueta + texto) ——— */
+.relacion { border-top: 1px solid var(--negro); }
+.relacion__fila {
+  display: grid; gap: var(--s2) var(--s5); padding: var(--s5) 0;
+  border-bottom: 1px solid var(--linea); grid-template-columns: 1fr;
+}
+@media (min-width: 720px) { .relacion__fila { grid-template-columns: minmax(0, 180px) minmax(0, 1fr); } }
+.relacion__clave { font-family: var(--f-texto); font-size: 20px; line-height: 1.3; color: var(--teja); }
+/* Miniatura de la cruz (símbolo) como marca de tópico */
+.relacion__clave:not(.relacion__clave--mono)::before, .con-cruz::before {
+  content: ''; display: inline-block; flex: none; width: .5em; height: .5em; margin-right: .5em; vertical-align: .08em;
+  background: var(--cruz) center / contain no-repeat;
+}
+.relacion__clave--mono { font-family: var(--f-mono); font-size: 13px; line-height: 1.9; color: var(--tinta-2); }
+.relacion__valor { color: var(--tinta); text-wrap: pretty; max-width: var(--medida); }
+.relacion__valor .nota { display: block; margin-top: var(--s2); color: var(--tinta-2); font-size: 15px; }
+.banda-negra .relacion { border-top-color: var(--pergamino); }
+.banda-negra .relacion__fila { border-bottom-color: var(--linea-clara); }
+.banda-negra .relacion__valor { color: var(--pergamino); }
+
+/* ——— Figuras ——— */
+.figura { margin: 0; }
+.figura img { width: 100%; }
+.figura figcaption { margin-top: var(--s2); font-family: var(--f-mono); font-size: 12px; line-height: 1.5; color: var(--tinta-2); }
+.banda-negra .figura figcaption { color: var(--plata); }
+
+/* ——— Movimiento ——— */
+/* Aparición al entrar en pantalla (clases puestas por Base.astro; sin JS todo se ve tal cual) */
+.revela:not(.revelado) { opacity: 0; }
+.revela.revelado { animation: revelar 1s cubic-bezier(.16, 1, .3, 1) var(--retraso, 0ms) backwards; }
+.figura.revela { overflow: hidden; }
+.figura.revela.revelado img { animation: revelar-foto 1.8s cubic-bezier(.16, 1, .3, 1) var(--retraso, 0ms) backwards; }
+@keyframes revelar { from { opacity: 0; transform: translateY(28px); } }
+@keyframes revelar-foto { from { transform: scale(1.08); } }
+
+/* Entrada de las portadas al cargar */
+.portada__contenido > *, .hportada__contenido > * { animation: revelar 1.3s cubic-bezier(.16, 1, .3, 1) backwards; }
+.portada__contenido > :nth-child(2), .hportada__contenido > :nth-child(2) { animation-delay: .15s; }
+.portada__contenido > :nth-child(3) { animation-delay: .3s; }
+.portada__foto, .hportada__foto { animation: revelar-foto 2.6s cubic-bezier(.16, 1, .3, 1) backwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

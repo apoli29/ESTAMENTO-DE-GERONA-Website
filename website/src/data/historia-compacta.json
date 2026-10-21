@@ -1,0 +1,141 @@
+{
+  "corporacion": {
+    "entradilla": "La Corporación fue fundada como Cofradía de San Jorge y Santa Isabel por el Infante Don Juan, Duque de Gerona, Príncipe heredero de la Corona de Aragón, el 28 de Agosto de 1.386",
+    "lema": "“saludable y provechosa”",
+    "cronologia": [
+      { "_etiqueta": "1386", "texto": "La Corporación fue fundada como Cofradía de San Jorge y Santa Isabel por el Infante Don Juan, Duque de Gerona, Príncipe heredero de la Corona de Aragón, el 28 de Agosto de 1.386, creyendo hacer, según dice en el documento fundacional, una obra “saludable y provechosa”.", "nota": "Asociaba la nobleza de la ciudad y la de los distintos Vegueríos de Gerona." },
+      { "_etiqueta": "Siglos XVI y XVII", "texto": "Alcanzó notable esplendor durante los siglos XVI y XVII en las justas y torneos de la ciudad, decayendo en siglos posteriores, debido a absentismos y traslados de sus miembros y de muchas familias de la nobleza." },
+      { "_etiqueta": "Carlos II", "texto": "Durante el Reinado del Señor Don Carlos II se innovaron sus estatutos y se ampliaron las Ordenanzas, adoptándose el color negro fileteado de rojo de su banda, colores del estado noble y de San Jorge." },
+      { "_etiqueta": "Alfonso XIII", "texto": "Últimamente, en tiempo de S.M. el Rey Don Alfonso XIII, de feliz memoria, se reorganizó nuevamente y asumió su Real distinción con el nombre de “Real Estamento Militar del Principado de Gerona, Cofradía de San Jorge”, que recuerda aquella regia merced, la calidad de noble de sus miembros y el origen religioso de la fundación." },
+      { "_etiqueta": "Hoy", "texto": "El ingreso de sus miembros se amplió a todas las provincias españolas, y continua el carácter asociativo fraternal de la fundación primitiva.", "nota": "En la actualidad se honra con tener por Jefe Supremo a S.M. Católica el Rey de España, nuestro Augusto Señor Don Felipe VI (q.D.g.); y como Cofrade Mayor a S.A.R. la Princesa de Gerona." }
+    ],
+    "sede": [
+      { "_etiqueta": "Sede", "texto": "Tiene su sede en la Catedral de Gerona, en la Capilla de San Jorge" },
+      { "_etiqueta": "Sede asociativa", "texto": "la sede asociativa actual se encuentra en la Iglesia de Nuestra Sreñora de los Dolores, en la Plaza de la Merced de Gerona." }
+    ],
+    "obra": [
+      { "_etiqueta": "Caridad", "texto": "obras de caridad y beneficencia de la Diócesis" },
+      { "_etiqueta": "Estudios", "texto": "ha patrocinado premios para estudios históricos locales que versasen sobre la Cofradía, la ciudad de Gerona y su provincia." },
+      { "_etiqueta": "Capilla", "texto": "está restaurando su Capilla titular de San Jorge en el ábside de este templo" },
+      { "_etiqueta": "Catedral", "texto": "Ha provisto de artísticos bancos la hermosa Capilla capitular de San Pedro, asi como de la nave central de la Catedral" },
+      { "_etiqueta": "Historia", "texto": "ha propiciado la historia de la Corporación desde su fundación hasta nuestros días" },
+      { "_etiqueta": "Conferencias", "texto": "organiza en Gerona conferencias sobre temas históricos locales" },
+      { "_etiqueta": "Música", "texto": "participa y promociona actos musicales." }
+    ],
+    "proposito": "Procura ser en todo momento útil y ejemplarizante, es decir, tal como deseó su regio y lejano fundador, “saludable y provechosa”.",
+    "distintivos": {
+      "antiguamente": "Sus distintivos, antiguamente, al igual que muchas corporaciones, habían sido un manto blanco con la Cruz de San Jorge roja.",
+      "banda": "Luego se usó la banda negra fileteada en su centro de rojo que, tal como hemos dicho, eran los colores de la nobleza y de San Jorge, respectivamente.",
+      "venera": "la venera de la Corporación, la Cruz de San Jorge en esmalte rojo cargada de cuatro espadas de plata apuntando al centro",
+      "ensenas": [
+        { "_etiqueta": "Caballeros", "texto": "para los Caballeros, la banda mencionada, de la que pende la venera de la Corporación, la Cruz de San Jorge en esmalte rojo cargada de cuatro espadas de plata apuntando al centro; la misma algo mayor como insignia de pecho, y para la solapa otra más pequeña." },
+        { "_etiqueta": "Damas", "texto": "Para las Damas, lazo con los colores de la banda, del que pende la misma venera." }
+      ],
+      "uniformidad": [
+        { "_etiqueta": "Caballeros", "texto": "Para los Caballeros, uniforme de gala (profesional o corporativo), frac con la banda debajo del chaleco, o chaqué." },
+        { "_etiqueta": "Damas", "texto": "Para las Damas: vestido oscuro y mantilla." }
+      ]
+    }
+  },
+  "cofradia": {
+    "entradilla": "La primera noticia que tenemos de la Cofradía se remonta al año 1386.",
+    "origen": "Fue fundada bajo la advocación de San Jorge y Santa Isabel por el infante Don Juan, duque de Gerona y conde de Cervera a semejanza de la instituida quince años antes en Barcelona por el Rey Ceremonioso para agrupar a los caballeros del Principado.",
+    "encabezamiento": "Confratrie St. Georgii militis in ecclesia Monastery fratrum minor Civitae Gerundae.",
+    "encabezamiento_fuente": "En el documento original de su fundación que está en el Archivo de la Corona de Aragón",
+    "caracter": "Su carácter nobiliario aparece más tarde cuando en relación con la Diputación del General y mediante alguna subvención, promueve anualmente una fiesta caballeresca de justas y torneos para mantener vivo en la nobleza el espíritu militar.",
+    "libros": {
+      "intro": "Han llegado hasta nosotros y a través de algunas peripecias tres libros de actas de la Cofradía (llamada ahora de San Jorge), uno de ellos comenzado el siglo XVI y los otros dos del siglo XVII.",
+      "items": [
+        { "_etiqueta": "1588 — 1613", "texto": "Este tercer volumen o sea el más antiguo fue encontrado hace pocos años en la Biblioteca del Palacio de Peralada y comienza en el año de 1588, finalizando en el 1613." },
+        { "_etiqueta": "1614 — 1640", "texto": "De los que consultó el Sr. Pelayo Negre comienza el primero en el 1614 y finaliza en 1640.", "nota": "De ellos el primero pertenecía al Archivo Diocesano de Gerona" },
+        { "_etiqueta": "1643 — 1709", "texto": "El segundo de dichos libros comienza en 1643 y finaliza en 1709 en plena Guerra de Sucesión.", "nota": "el segundo al Archivo municipal de Gerona, regalo del Sr. Concejal Don Joaquín Escatllar Bonet." }
+      ],
+      "lagunas": "Hay algunos periodos en blanco: 1640-1643, 1649-1658, 1695-1698 y 1700-1706.",
+      "lagunas_nota": "Se debe notar que las fechas antes mencionadas coinciden con periodos de guerras y tribulaciones en Gerona, como la Guerra del Segadors, la peste negra, la invasión de Gerona por el duque de Noailles y la Guerra de Sucesión.",
+      "negre": "Cuando el Sr. Don Pelayo Negre publicó en los beneméritos “Anales del Instituto de Estudios Gerundenses” su trabajo sobre “La Cofradía de San Jorge y la Nobleza gerundense”, no tuvo en su poder más que los dos tomos del siglo XVII."
+    },
+    "ordinaciones": [
+      { "_etiqueta": "1628", "texto": "A lo largo de las páginas de las actas vemos proceder a la redacción de unos estatutos que en 1628 se encargan a los señores Bernardo March y Jalpí, Miquel Vives, Jerónimo del Real y J.A. Savarrés, que fueron aprobados en 1631" },
+      { "_etiqueta": "Torneo", "texto": "El torneo o fiesta caballeresco-militar se celebraba el domingo después de la fiesta de Reyes y era subvencionada por la Diputación del General de Cataluña." },
+      { "_etiqueta": "1643", "texto": "Dichas “ordinacions” se modificaron en el año 1643 y el acento de las fiestas se cargó entonces en la procesión de Jueves Santo, en su paso o misterio del Santo Sepulcro" },
+      { "_etiqueta": "1667", "texto": "En 1667 volvieron a modificarse las ordenanzas en el sentido de la no alternancia de los estamentos y establecer las precedencias entre los cofrades por razón de edad, y estableciendo la paridad de caballeros y ciudadanos en cualquier “embajada” o comisión." }
+    ],
+    "casa_general": "La casa del “General” está todavía situada en la “Plaça del Vi” esquina calle Ciutadans, pudiéndose observar en ella los escudos antiguos de la Generalitat con la cruz de San Jorge.",
+    "cargos_fiesta": "Allí se procede a la extracción de los nuevos Prior y Clavario así como del “mantenedor”, “aventureros”, “maestres de campo” y de unos oficiales para la fiesta que habría de celebrarse al siguiente año, ya fuera torneo ya justa",
+    "disposiciones_intro": "mediante las siguientes disposiciones:",
+    "disposiciones": [
+      "1ª) El día de San Antonio (17 de enero) debía procederse a la extracción de Prior y Clavario que reunieran los siguientes requisitos; 30 años cumplidos, casados y con domicilio en la ciudad. En caso de no aceptar debería pagar 24 reales a favor de la Cofradía.",
+      "2ª) Un día de la primera quincena de Cuaresma debían extraerse “a sort de rodolí” los nombres de los ocho cofrades portantes del paso. Están excluidos los mayores de 60 años, como también los oficiales reales, jurados o quienes tuvieren otro cargo en virtud del cual no pudieran portar el misterio, en cambio los cofrades ausentes estaban obligados como los demás.",
+      "3ª) Los ocho portantes de un año estaban dispensados al año siguiente.",
+      "4ª) De los ocho portantes, solo seis de ellos como máximo podían pertenecer a un estamento; los dos restantes debían pertenecer forzosamente al otro, es decir si se habían extraído seis caballeros debía extraerse dos ciudadanos y viceversa.",
+      "5ª) Si alguno de los portantes aducía justa causa para ser exonerado era sustituido mediante forma reglada y compensación económica.",
+      "6ª) Los ocho portantes asistían a la procesión con un vestido de paño negro. Se portaba el misterio a turnos de cuatro y los otros cuatro vigilaban el buen orden."
+    ],
+    "conclusion": "Queda claro pues, que la fiesta de la Cofradía consistía entre 1588 y 1640 fundamentalmente en los torneos o justas y a partir de las nuevas ordenanzas de 1643 la ceremonia principal era la asistencia a la procesión de Jueves Santo componiendo el paso del Santo Sepulcro.",
+    "assejador": "El único vestigio que quedó de los ejercicios militares fue la existencia del campo de entrenamiento o “assejador dels cavallers” situado cerca del Monasterio del Carmen donde podían ejercitarse con el caballo y las armas.",
+    "clases": {
+      "intro": "Las dos distintas clases sociales cuyos componentes tenían derecho por igual a solicitar el ingreso en la Cofradía de San Jorge son pues los “militares” y los “ciudadanos”.",
+      "items": [
+        { "_etiqueta": "Militares", "texto": "Los militares (o caballeros) podían ser de inmemorial o también de rescripto regio y de entre éstos el Rey nombraba los que pertenecerían a la más alta distinción como Nobles en sentido estricto y uso del tratamiento de Don." },
+        { "_etiqueta": "Nobles", "texto": "Los nobles en sentido estricto se consideran el grado superior de los militares, disfrutaban del tratamiento del “Don” del que carecían las otras clases y pagaban el doble que los militares y ciudadanos." },
+        { "_etiqueta": "Ciudadanos", "texto": "Para pertenecer a la clase de ciudadanos, bastaba estar insaculado como ciudadano de mano mayor en la bolsa de cargos del Ayuntamiento de Gerona." }
+      ],
+      "abiertas": "Hay que tener en cuenta que estas clases no eran cerradas sino abiertas pues continuamente aparecían nuevos Ciudadanos Honrados y era habitual la ascensión de éstos a la categoría de “Caballero investido de cíngulo militar” y de éstos últimos a la de Noble.",
+      "casta": "si la nobleza fue una clase privilegiada, no fue jamás una casta cerrada; fue renovándose constantemente y muchas familias de cuna muy humilde dieron origen a ilustrísimos linajes."
+    },
+    "privilegios_ciudadanos": [
+      { "_etiqueta": "1510", "texto": "el rey Don Fernando en su privilegio de 1510, en el que también equiparaba a los ciudadanos honrados de Gerona con los de Barcelona." },
+      { "_etiqueta": "1654", "texto": "En virtud del privilegio concedido por Don Felipe IV el 5 de noviembre de 1654 y a petición de Francisco de Burgués, ciudadano honrado de Gerona y síndico de los consejeros y universidad de la misma ciudad, se otorgó que todos los descendientes por línea recta masculina que entonces o después, estuvieran insaculados en la bolsa de mano mayor, gozasen perpetuamente de aquellos honores, gracias y prerrogativas de que gozaban los Ciudadanos Honrados de Barcelona." },
+      { "_etiqueta": "1693", "texto": "Hay un privilegio sustancialmente idéntico y concedido por el rey Carlos II en el real palacio de Madrid el 18 de noviembre de 1693 en el que amplia y aclara el anterior, basado en los méritos contraídos por dichos ciudadanos durante los sitios mantenidos por los ejércitos franceses en 1653, 1674 y 1684", "nota": "Con este privilegio se igualó por completo, salvo la representación en Cortes, la nobleza ciudadana gerundense con la de origen militar." }
+    ],
+    "generosidad": {
+      "definicion": "Los privilegios militares característicos de Gerona son los llamados privilegios de “Generosidad” (equivalente a militar en cuanto a su participación en las Cortes por dicho brazo) que sin embargo no exigían la ceremonia de investidura del cíngulo militar.",
+      "contexto": "El Rey recompensó el apoyo de los payeses concediendo esos privilegios en cabezas de herederos de las más significadas familias de la “montanya” (Garrotxa, Selva y parte del Ampundán).",
+      "admision": "El Real Estamento Militar del Principado de Gerona admite en su seno a todos aquellos que pueden probar esta descendencia.",
+      "admision_nota": "Esa tradición en nuestra Corporación ha tenido como ventaja suministrarnos valiosas genealogías de la comarca, necesarias para enlazarse con los concesionarios.",
+      "linea_hembra": "Estos privilegios se concedieron “a vosotros y vuestros hijos y descendientes...” sin añadir la coletilla habitual “por línea recta de varón”, lo cual dio origen a una reivindicación de la calidad de generoso por parte de descendientes por línea de hembra."
+    },
+    "registro": [
+      {
+        "_anio": "1486",
+        "encabezado": "Así en la confirmación de 1486 por parte de Fernando II (“El Católico”) se relacionan los privilegios de",
+        "grupos": [
+          { "nombres": "Joan Carreras, Joan Aulina, Bartomeu Bruguera, Bartomeu Vehí, Pere Vehí, Pere Carbonell, Pere Budellers, Bartomeu Malloles, Sebastiá Malloles, Pere Carreras de Munt, Andreu Benejau “alias Riera”, Pere Guillén Figuera, Antoni Casadevall, Pere Reixach y Pere Albusa", "lugar": "todos ellos de Serinyá" },
+          { "nombres": "Guillem Bonet, Joan Benejau, Bartomeu Roset y Guillem Roset", "lugar": "estos cuatro últimos de Faràs" },
+          { "nombres": "Jaume Ferrer de Fontcuberta, Blai de Falgás, Joan de Falgas, Salvador Mir y Bernat Mir", "lugar": "estos cuatro últimos de Sagaró" },
+          { "nombres": "Joan Terrats y Antoni Terrats", "lugar": "ambos de Queixàs" },
+          { "nombres": "Bartomeu Orts y Mateu Orts", "lugar": "ambos de Beuda" },
+          { "nombres": "Bartomeu Traver “alias Sunyer de Canet” y Juan Traver", "lugar": "ambos de Usall" },
+          { "nombres": "Bernat Pou y Pere Casadevall de Bruguers", "lugar": "ambos de Meiá" },
+          { "nombres": "Jaume Mir “alias Petit” de Argelaguer", "lugar": null },
+          { "nombres": "Pere Gayolá de La Miana", "lugar": null }
+        ]
+      },
+      {
+        "_anio": "1493",
+        "encabezado": "El Rey también concedió este mismo privilegio en 1493",
+        "items": ["Joan de Almar, de Gerona", "Mateu Calm de Vilamala de Sant Esteve de Sahull (Bas)", "Pere Dalmau de Rosas", "Jaume Figuera de La Junquera", "Antonio Gomis “alias Bofia” de Cerviá", "Gaspar Griver de Mieras", "Joan Maymó de Figueras", "Pere Maymó de Perelada", "Pere Maynou de Besalú", "Jaume Moler de Salbá", "Rafael Morer de Gerona", "Joan Pardo de Figueras", "Joan Per de León de Perpiñan", "Miquel Piques de Olot", "Guillem Poch de Figueres", "Pere Solmir de Cerviá"]
+      },
+      {
+        "_anio": "1503",
+        "encabezado": "En 1503 le concedía a",
+        "items": ["Juan de Corts de Vilert de Besalú", "Miquel Figueres de Farás", "Bernat Tort de Perelada", "Joan Trager de Ceret", "Miquel Cases de Sagaró", "Tomás Ripoll de Beuda", "Joan Portell de Meiá en Besalú", "Esteve Pujol de Banyoles"]
+      },
+      {
+        "_anio": "1511",
+        "encabezado": "y por último en 1511 a",
+        "items": ["Miquel Ombert notario de Hostoles"]
+      }
+    ],
+    "ciudadanos_1693": {
+      "encabezado": "Se citan en este privilegio personalmente al entonces jurado primero del estamento de ciudadanos Jerónimo Fontdevila, así como a",
+      "items": ["Jacinto Camps", "Rafael Masdeu", "Francisco Pont y Llombart", "Juan Pablo Perpinyá", "Marco Antonio Ferrer", "José Moret y sus tres hermanos", "José Durán", "Juan Bautista Perpinyá", "Francisco Guitard", "Jerónimo Colomer y Pasqual", "Francisco Romaguera", "Narciso Vilar y sus hermanos", "Pedro Ignacio Deu", "José Ginesta", "Narciso Frigola y Folcrá"]
+    },
+    "nobles_xvi_xvii": {
+      "texto": "Además de estos privilegios del siglo XV y principios del siglo XVI existen otros de finales del XVI y principios del XVII (época de Felipe II y Felipe III).",
+      "familias": ["los Albertí (de Llagostera)", "los Xammar (de Medinyá, Cerviá y Riumors)", "los Vinyals (de Flassá)"],
+      "nota": "La relación completa de las familias que están en este caso no se ha hecho por cuanto deberían repasarse todos los privilegios de un cierto periodo."
+    },
+    "siglo_xx": "Posteriormente a la guerra de Sucesión, la Cofradía siguió reuniéndose privadamente asistiendo a la Procesión del Corpus y Jueves Santo, hasta que en un estado residual a principios del siglo XX, un grupo de personas de Gerona entre las que se encontraban miembros de las familias de Vehí, Traver, Ciurana, etc.., agrupados alrededor del Coronel Don Francisco del Pozo y de Travy rehicieron la Cofradía y se incorporaron al Real Estamento Militar del Principado de Gerona, de nueva creación, que se dotó de ordenanzas e insignias para concurrir a sus ceremonias tradicionales."
+  }
+}

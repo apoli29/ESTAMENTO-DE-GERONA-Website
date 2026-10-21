@@ -1,0 +1,46 @@
+[
+  {
+    "grupo": null,
+    "enlaces": [
+      { "nombre": "Obispado de Gerona", "url": "http://www.bisbatgirona.cat" }
+    ]
+  },
+  {
+    "grupo": "Casa Real:",
+    "enlaces": [
+      { "nombre": "Casa de su Majestad el Rey", "url": "http://www.casareal.es" },
+      { "nombre": "Fundación Reina Sofía", "url": "http://www.fundacionreinasofia.es" },
+      { "nombre": "Fundación Princesa de Asturias", "url": "http://www.fpa.es" },
+      { "nombre": "Patrimonio Nacional", "url": "http://www.patrimonionacional.es" },
+      { "nombre": "Fundación Institucional española", "url": "http://www.fies.es" }
+    ]
+  },
+  {
+    "grupo": "Corporaciones nobiliarias españolas:",
+    "enlaces": [
+      { "nombre": "Diputación de la Grandeza", "url": "http://www.diputaciondelagrandeza.es" },
+      { "nombre": "Soberana y Militar Orden Hospitalaria de San Juan de Jerusalén de Rodas y de Malta", "url": "http://www.orderofmalta.int" },
+      { "nombre": "Orden Ecuestre del Santo Sepulcro de Jerusalén. Lugartenencia de España Oriental", "url": "http://www.oessj.org" },
+      { "nombre": "Orden de Caballería del Santo Sepulcro de Jerusalén. Lugartenencia de España Occidental – Capítulo noble de Castilla y León", "url": "http://www.ordendelsantosepulcro.org" },
+      { "nombre": "Real Maestranza de Caballería de Ronda", "url": "http://www.rmcr.org" },
+      { "nombre": "Real Maestranza de Caballería de Sevilla", "url": "http://www.realmaestranza.com" },
+      { "nombre": "Real Maestranza de Caballería de Zaragoza", "url": "http://www.rmcz.com" },
+      { "nombre": "Real Maestranza de Caballería de Valencia", "url": "http://www.rmcv.es" },
+      { "nombre": "Real Cuerpo de la Nobleza de Madrid", "url": "http://www.rcnoblezademadrid.es" },
+      { "nombre": "Cuerpo de la nobleza del Principado de Asturias", "url": "http://www.cuerpodelanoblezadeasturias.es" },
+      { "nombre": "Solar de Tejada", "url": "http://www.solardetejada.es" },
+      { "nombre": "Muy Noble, Antiguo e Ilustre Solar, Señorío y Villa de Valdeosera", "url": "http://www.solardevaldeosera.com" },
+      { "nombre": "Real Asociación de Hidalgos de España", "url": "http://www.hidalgosdeespana.com" },
+      { "nombre": "Cuerpo de la Nobleza del Antiguo Reino de Galicia", "url": "http://www.noblezadegalicia.org" },
+      { "nombre": "Sacra y Militar Orden Constantiniana de San Jorge", "url": "https://ordenconstantiniana.org" }
+    ]
+  },
+  {
+    "grupo": "Archivos:",
+    "enlaces": [
+      { "nombre": "Real Academia de la Historia", "url": "http://www.rah.es" },
+      { "nombre": "Portal de Archivos Españoles", "url": "http://pares.mcu.es" },
+      { "nombre": "Societat Catalana de Genealogia", "url": "http://www.scgenealogia.org" }
+    ]
+  }
+]

@@ -1,0 +1,320 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../../layouts/Base.astro';
+import HistoriaCabecera from '../../../components/HistoriaCabecera.astro';
+import TextoIntegroBanda from '../../../components/TextoIntegroBanda.astro';
+import hc from '../../../data/historia-compacta.json';
+import historia from '../../../data/historia.json';
+import { foto, CREDITOS } from '../../../lib/sitio';
+const F = hc.cofradia;
+const H = historia.cofradia.es;
+const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+---
+<Base titulo="La Cofradía de San Jorge">
+  <HistoriaCabecera titulo="La Cofradía de San Jorge" imagen={foto('sala-gotica-malbork.jpg')} alt="Pintura del siglo XIX: caballeros en una sala gótica abovedada" posicion="50% 0%" />
+
+  <!-- Entrada -->
+  <section class="seccion entrada">
+    <div class="envoltura capitulo">
+      <div aria-hidden="true"></div>
+      <div class="entrada__texto">
+        <p class="t-titulo2">{F.entradilla}</p>
+        <p class="t-cuerpo">{F.origen}</p>
+        <blockquote class="latin">
+          <p class="cita" lang="la">{F.encabezamiento}</p>
+          <p class="cita-fuente">{F.encabezamiento_fuente}</p>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- I · Los libros de actas -->
+  <section class="seccion banda-piedra" aria-labelledby="libros">
+    <div class="envoltura capitulo capitulo--fijo">
+      <div class="rotulo">
+        <span class="rotulo__num" aria-hidden="true">I</span>
+        <h2 id="libros" class="rotulo__nombre">Los libros de actas</h2>
+        <p class="rotulo__nota">{F.libros.intro}</p>
+      </div>
+      <div>
+        <ol class="libros">
+          {F.libros.items.map((l) => (
+            <li class="libros__item">
+              <span class="libros__periodo">{l._etiqueta}</span>
+              <p class="libros__texto">{l.texto}</p>
+              {l.nota && <p class="libros__nota">{may(l.nota)}</p>}
+            </li>
+          ))}
+        </ol>
+        <div class="lagunas">
+          <p class="t-titulo3">{F.libros.lagunas}</p>
+          <p class="t-cuerpo">{F.libros.lagunas_nota}</p>
+          <p class="t-cuerpo t-secundario">{F.libros.negre}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- II · Torneos, procesión y ordinaciones -->
+  <section class="seccion" aria-labelledby="fiesta">
+    <div class="envoltura capitulo">
+      <div class="rotulo">
+        <span class="rotulo__num" aria-hidden="true">II</span>
+        <h2 id="fiesta" class="rotulo__nombre">Torneos, procesión y ordinaciones</h2>
+        <p class="rotulo__nota">{F.caracter}</p>
+      </div>
+      <div class="fiesta">
+        <div class="relacion">
+          {F.ordinaciones.map((o) => (
+            <div class="relacion__fila">
+              <span class="relacion__clave">{o._etiqueta}</span>
+              <p class="relacion__valor">{o.texto}</p>
+            </div>
+          ))}
+        </div>
+        <div class="fiesta__general">
+          <figure class="figura">
+            <Image src={foto('claustro-catedral-1900.jpg')} alt="Claustro de la Catedral de Gerona, con un pozo en el centro, hacia 1900" widths={[480, 1024]} sizes="(min-width: 960px) 30vw, 100vw" />
+            <figcaption>{CREDITOS['claustro-catedral-1900.jpg']}</figcaption>
+          </figure>
+          <div class="fiesta__general-texto">
+            <p class="t-cuerpo">{F.casa_general}</p>
+            <p class="t-cuerpo">{F.cargos_fiesta}.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- III · Las disposiciones de 1643 -->
+  <section class="seccion banda-negra sobre-negro" aria-labelledby="disposiciones">
+    <div class="envoltura">
+      <div class="disp__cabeza">
+        <div class="rotulo">
+          <span class="rotulo__num" aria-hidden="true">III</span>
+          <h2 id="disposiciones" class="rotulo__nombre">El paso del Santo Sepulcro · 1643</h2>
+        </div>
+        <p class="cita">{F.ordinaciones[2].texto} {F.disposiciones_intro}</p>
+      </div>
+      <ol class="disp">
+        {F.disposiciones.map((d) => {
+          const m = d.match(/^(\d)ª\)\s*([\s\S]*)$/)!;
+          return (
+            <li class="disp__item">
+              <span class="disp__num" aria-hidden="true">{m[1]}ª</span>
+              <p class="disp__texto"><span class="visualmente-oculto">{m[1]}ª) </span>{m[2]}</p>
+            </li>
+          );
+        })}
+      </ol>
+      <div class="disp__pie">
+        <p class="t-cuerpo">{F.conclusion}</p>
+        <p class="t-cuerpo t-secundario">{F.assejador}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- IV · Los cofrades -->
+  <section class="seccion" aria-labelledby="cofrades">
+    <div class="envoltura capitulo">
+      <div class="rotulo">
+        <span class="rotulo__num" aria-hidden="true">IV</span>
+        <h2 id="cofrades" class="rotulo__nombre">Los cofrades</h2>
+        <p class="rotulo__nota">{F.clases.intro}</p>
+      </div>
+      <div class="cofrades">
+        <ul class="clases">
+          {F.clases.items.map((c) => (
+            <li class="clases__item">
+              <h3 class="t-titulo3 clases__nombre">{c._etiqueta}</h3>
+              <p class="clases__texto">{c.texto}</p>
+            </li>
+          ))}
+        </ul>
+        <p class="t-cuerpo">{F.clases.abiertas}</p>
+        <blockquote class="cofrades__cita"><p class="cita">… {F.clases.casta}</p></blockquote>
+
+        <h3 class="t-etiqueta cofrades__sub">Privilegios de los Ciudadanos Honrados</h3>
+        <div class="relacion">
+          {F.privilegios_ciudadanos.map((p) => (
+            <div class="relacion__fila">
+              <span class="relacion__clave">{p._etiqueta}</span>
+              <p class="relacion__valor">{may(p.texto)}{p.nota && <span class="nota">{p.nota}</span>}</p>
+            </div>
+          ))}
+        </div>
+        <details class="desplegable">
+          <summary>{F.ciudadanos_1693.encabezado}…</summary>
+          <ul class="nombres">
+            <li>Jerónimo Fontdevila</li>
+            {F.ciudadanos_1693.items.map((n) => <li>{n}</li>)}
+          </ul>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- V · Privilegios de generosidad -->
+  <section class="seccion banda-piedra" id="registro" aria-labelledby="generosidad">
+    <div class="envoltura capitulo">
+      <div class="rotulo">
+        <span class="rotulo__num" aria-hidden="true">V</span>
+        <h2 id="generosidad" class="rotulo__nombre">Privilegios de generosidad</h2>
+        <p class="rotulo__nota">{F.generosidad.contexto}</p>
+      </div>
+      <div class="gen">
+        <p class="t-titulo2">{F.generosidad.admision}</p>
+        <p class="t-cuerpo">{F.generosidad.admision_nota}</p>
+        <p class="t-cuerpo">{F.generosidad.definicion}</p>
+        <p class="t-cuerpo">{F.generosidad.linea_hembra}</p>
+
+        <div class="registro">
+          <div class="registro__cabeza">
+            <h3 class="t-etiqueta">Registro de concesiones</h3>
+            <label class="registro__buscar">
+              <span class="visualmente-oculto">Buscar un apellido o un lugar</span>
+              <input type="search" placeholder="Buscar apellido o lugar" data-buscar autocomplete="off" />
+            </label>
+          </div>
+
+          {F.registro.map((r) => (
+            <div class="registro__anio" data-bloque>
+              <p class="registro__ano">{r._anio}</p>
+              <div>
+                <p class="registro__encabezado">{r.encabezado}…</p>
+                {'grupos' in r && r.grupos ? (
+                  <ul class="registro__grupos">
+                    {r.grupos.map((g) => (
+                      <li class="registro__grupo" data-fila>
+                        <span class="registro__nombres">{g.nombres}</span>
+                        {g.lugar && <span class="registro__lugar t-dato">{g.lugar}</span>}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <ul class="nombres">
+                    {('items' in r ? r.items : []).map((n: string) => <li data-fila>{n}</li>)}
+                  </ul>
+                )}
+              </div>
+            </div>
+          ))}
+          <p class="registro__vacio t-secundario" hidden data-sin-resultados>Ningún nombre ni lugar coincide con la búsqueda.</p>
+        </div>
+
+        <div class="nobles">
+          <p class="t-cuerpo">{F.nobles_xvi_xvii.texto}</p>
+          <ul class="nombres nombres--familias">
+            {F.nobles_xvi_xvii.familias.map((f) => <li>{may(f)}</li>)}
+          </ul>
+          <p class="t-cuerpo t-secundario">{F.nobles_xvi_xvii.nota}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VI · Siglo XX -->
+  <section class="seccion" aria-labelledby="sigloxx">
+    <div class="envoltura capitulo">
+      <div class="rotulo">
+        <span class="rotulo__num" aria-hidden="true">VI</span>
+        <h2 id="sigloxx" class="rotulo__nombre">Del siglo XVIII al siglo XX</h2>
+      </div>
+      <p class="t-titulo3 sigloxx">{F.siglo_xx}</p>
+    </div>
+  </section>
+
+  <TextoIntegroBanda obra="la-cofradia" firma={H.signature} />
+</Base>
+
+<script>
+  const campo = document.querySelector<HTMLInputElement>('[data-buscar]');
+  const normal = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  campo?.addEventListener('input', () => {
+    const q = normal(campo.value.trim());
+    let total = 0;
+    document.querySelectorAll<HTMLElement>('[data-bloque]').forEach((b) => {
+      let enBloque = 0;
+      b.querySelectorAll<HTMLElement>('[data-fila]').forEach((f) => {
+        const ok = !q || normal(f.textContent || '').includes(q);
+        f.classList.toggle('es-coincidencia', !!q && ok);
+        f.hidden = !ok; if (ok) enBloque++;
+      });
+      b.hidden = enBloque === 0; total += enBloque;
+    });
+    document.querySelector<HTMLElement>('[data-sin-resultados]')!.hidden = total > 0;
+  });
+</script>
+
+<style>
+  .entrada__texto { display: grid; gap: var(--s5); }
+  .latin { margin: var(--s3) 0 0; padding-left: var(--s5); border-left: 2px solid var(--teja); }
+
+  .libros { list-style: none; border-top: 1px solid var(--negro); }
+  .libros__item { display: grid; gap: var(--s2) var(--s6); padding: var(--s5) 0; border-bottom: 1px solid var(--linea); }
+  @media (min-width: 720px) { .libros__item { grid-template-columns: 200px minmax(0, 1fr); } .libros__nota { grid-column: 2; } }
+  .libros__periodo { font-family: var(--f-mono); font-size: 22px; color: var(--teja); letter-spacing: -.01em; }
+  .libros__texto { color: var(--tinta); }
+  .libros__nota { font-size: 15px; color: var(--tinta-2); }
+  .lagunas { display: grid; gap: var(--s4); margin-top: var(--s7); max-width: var(--medida); }
+  .lagunas .t-cuerpo + .t-cuerpo { margin-top: 0; }
+
+  .fiesta { display: grid; gap: var(--s7); }
+  .fiesta__general { display: grid; gap: var(--s6); align-items: start; }
+  @media (min-width: 720px) { .fiesta__general { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); } }
+  .fiesta__general-texto { display: grid; gap: var(--s4); }
+  .fiesta__general-texto .t-cuerpo + .t-cuerpo { margin-top: 0; }
+
+  .disp__cabeza { display: grid; gap: var(--s6); margin-bottom: var(--s7); }
+  @media (min-width: 960px) { .disp__cabeza { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--s8); } }
+  .disp { list-style: none; display: grid; gap: 1px; background: var(--linea-clara); border: 1px solid var(--linea-clara); grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
+  .disp__item { background: var(--negro); padding: var(--s6) var(--s5); display: grid; gap: var(--s4); align-content: start; }
+  .disp__num { font-family: var(--f-display); font-size: 48px; line-height: 1; color: var(--teja); }
+  .disp__texto { color: var(--pergamino); font-size: 16px; line-height: 1.6; text-wrap: pretty; }
+  .disp__pie { display: grid; gap: var(--s4); margin-top: var(--s7); max-width: var(--medida); margin-left: auto; }
+  .disp__pie .t-cuerpo + .t-cuerpo { margin-top: 0; }
+
+  .cofrades { display: grid; gap: var(--s6); }
+  .cofrades .t-cuerpo + .t-cuerpo { margin-top: 0; }
+  .clases { list-style: none; display: grid; gap: var(--medianil); grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+  .clases__item { padding: var(--s5); border: 1px solid var(--linea); display: grid; gap: var(--s3); align-content: start; }
+  .clases__nombre { color: var(--teja); }
+  .clases__texto { font-size: 15px; line-height: 1.6; color: var(--tinta); }
+  .cofrades__cita { margin: 0; padding-left: var(--s5); border-left: 2px solid var(--teja); }
+  .cofrades__sub { margin-top: var(--s5); }
+
+  .desplegable { border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
+  .desplegable summary { cursor: pointer; padding: var(--s4) 0; font-family: var(--f-texto); font-size: 18px; list-style: none; display: flex; gap: var(--s3); align-items: baseline; }
+  .desplegable summary::before { content: '+'; color: var(--teja); font-family: var(--f-mono); }
+  .desplegable[open] summary::before { content: '−'; }
+  .desplegable summary::-webkit-details-marker { display: none; }
+  .desplegable .nombres { padding-bottom: var(--s5); }
+
+  .nombres { list-style: none; columns: 2 220px; column-gap: var(--s6); }
+  .nombres li { break-inside: avoid; padding: 6px 0; border-bottom: 1px solid var(--linea); font-family: var(--f-texto); font-size: 17px; }
+  .nombres--familias { columns: 1; }
+
+  .gen { display: grid; gap: var(--s5); }
+  .gen .t-cuerpo + .t-cuerpo { margin-top: 0; }
+  .registro { margin-top: var(--s6); background: var(--pergamino); padding: var(--s6) var(--s5); border-top: 2px solid var(--teja); }
+  @media (min-width: 720px) { .registro { padding: var(--s6); } }
+  .registro__cabeza { display: flex; flex-wrap: wrap; gap: var(--s4); justify-content: space-between; align-items: center; margin-bottom: var(--s5); }
+  .registro__buscar input {
+    min-height: 44px; width: min(320px, 100%); padding: 0 var(--s4);
+    font: 400 16px var(--f-sans); color: var(--negro); background: #fff; border: 1px solid var(--linea-fuerte); border-radius: 0;
+  }
+  .registro__buscar input:focus { outline: 2px solid var(--teja); outline-offset: 0; }
+  .registro__anio { display: grid; gap: var(--s3) var(--s6); padding: var(--s5) 0; border-top: 1px solid var(--negro); }
+  @media (min-width: 720px) { .registro__anio { grid-template-columns: 90px minmax(0, 1fr); } }
+  .registro__ano { font-family: var(--f-mono); font-size: 22px; color: var(--teja); }
+  .registro__encabezado { color: var(--tinta-2); font-size: 15px; margin-bottom: var(--s3); }
+  .registro__grupos { list-style: none; }
+  .registro__grupo { display: grid; gap: var(--s1); padding: var(--s3) 0; border-bottom: 1px solid var(--linea); }
+  .registro__nombres { font-family: var(--f-texto); font-size: 17px; line-height: 1.5; }
+  .registro__lugar { color: var(--tinta-2); }
+  .es-coincidencia { background: rgba(163, 32, 31, .07); }
+  .nobles { display: grid; gap: var(--s4); margin-top: var(--s6); }
+  .nobles .t-cuerpo + .t-cuerpo { margin-top: 0; }
+
+  .sigloxx { max-width: 46ch; text-wrap: pretty; }
+</style>

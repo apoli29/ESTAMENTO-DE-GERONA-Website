@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import Venera from '../components/Venera.astro';
+import contacto from '../data/contacto.json';
+---
+<Base titulo="Contacto">
+  <section class="seccion contacto">
+    <div class="envoltura capitulo">
+      <div class="rotulo">
+        <span class="rotulo__etiqueta">Contacto</span>
+        <Venera tamano={64} clase="contacto__venera" />
+      </div>
+      <div class="contacto__texto">
+        <h1 class="t-display">{contacto.titulo}</h1>
+        <p class="t-entradilla">{contacto.texto}</p>
+        <a class="contacto__email" href={`mailto:${contacto.email}`}>{contacto.email}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contacto { min-height: 52vh; }
+  .contacto :global(.contacto__venera) { margin-top: var(--s6); }
+  .contacto__texto { display: grid; gap: var(--s6); }
+  .contacto__email { font-family: var(--f-display); font-size: clamp(26px, 3.6vw, 46px); line-height: 1.15; color: var(--negro); text-decoration-color: var(--teja); text-underline-offset: 8px; overflow-wrap: anywhere; }
+  .contacto__email:hover { color: var(--teja); }
+</style>

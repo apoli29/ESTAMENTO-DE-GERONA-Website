@@ -1,0 +1,282 @@
+{
+  "_nota": "Transcripción literal del texto impreso en cada panfleto/felicitación (mayúsculas, puntuación y erratas tal cual). Los saltos de línea de maquetación se han unido. 'logotipo' = texto que forma parte de un logotipo. Estado 'pendiente' = requiere verificación humana en verificacion-transcripciones.html.",
+  "2026-recital-piano": {
+    "fuente": "INV. CAST Mod.pdf (= image.png)",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "RECITAL PIANISTA SORPRESA",
+      "DEL 71 CONCURSO INTERNACIONAL DE PIANO",
+      "MARIA CANALS",
+      "VIERNES 20 DE MARZO - 20H",
+      "AUDITORI VIADER",
+      "CASA DE CULTURA DE GIRONA",
+      "ACCÉSO LIBRE"
+    ],
+    "entidades": [
+      { "rol": null, "nombre": "Cofradía de San Jorge", "logotipo": true },
+      { "rol": null, "nombre": "Casa de Cultura de la Diputació de Girona", "logotipo": true }
+    ]
+  },
+  "2026-conferencia-besalu": {
+    "fuente": "IMG-20260202-WA0010.jpg",
+    "idioma": "ca",
+    "estado": "pendiente",
+    "lineas": [
+      "CONFERÈNCIA:",
+      "IGNASI CASANOVAS-PERMANYER I EL PRIVILEGI DE GENEROSITAT A LA SOTSVEGUERIA DE BESALÚ",
+      "A càrrec del:",
+      "Prof. Jordi Mestres",
+      "Autor del llibre “Genealogies Gironines” sobre els orígens de 100 protagonistes de la història de Girona.",
+      "Catedràtic de Química a l’Institut de Química Computacional i Catàlisi de la Universitat de Girona (UdG).",
+      "Fundador i director científic de l’empresa biotecnològica Chemotargets, SL."
+    ],
+    "datos": [
+      { "etiqueta": "DIA:", "valor": "Dissabte 21 de febrer de 2026" },
+      { "etiqueta": "HORA:", "valor": "12:00 h" },
+      { "etiqueta": "LLOC:", "valor": "Besalú - Sala Gòtica (Palau de la Cúria Reial)" }
+    ],
+    "entidades": [
+      { "rol": "Organitza:", "nombre": "AMICS DE BESALÚ I EL SEU COMTAT", "logotipo": true },
+      { "rol": "Amb el suport de:", "nombre": "Ajuntament de la Comtal Vila de Besalú", "logotipo": true }
+    ]
+  },
+  "2025-recital-piano": {
+    "fuente": "Captura de pantalla 2025-03-06 a las 10.44.38.png",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "RECITAL DE PIANO",
+      "JOVEN PIANISTA",
+      "DEL 70 CONCURSO INTERNACIONAL DE PIANO",
+      "VIERNES 28 DE MARZO - 20H",
+      "AUDITORIO VIADER",
+      "CASA DE CULTURA DE GIRONA",
+      "ACCESO LIBRE (plazas limitadas)"
+    ],
+    "entidades": [
+      { "rol": null, "nombre": "Maria Canals Barcelona", "logotipo": true },
+      { "rol": "Organiza:", "nombre": "Cofradía de San Jorge", "logotipo": true },
+      { "rol": "Con el apoyo:", "nombre": "CCG Casa de Cultura Diputació de Girona", "logotipo": true }
+    ]
+  },
+  "2024-recital-piano": {
+    "fuente": "recital.png",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "RECITAL DE PIANO",
+      "JOVEN PIANISTA",
+      "DEL 69 CONCURSO INTERNACIONAL DE PIANO",
+      "VIERNES 15 DE MARZO - 20H",
+      "AUDITORIO VIADER",
+      "CASA DE CULTURA DE GIRONA",
+      "ACCESO LIBRE (plazas limitadas)"
+    ],
+    "entidades": [
+      { "rol": null, "nombre": "Maria Canals Barcelona", "logotipo": true },
+      { "rol": "Organiza:", "nombre": "Cofradía de San Jorge", "logotipo": true },
+      { "rol": "Con el apoyo:", "nombre": "CCG Casa de Cultura Diputació de Girona", "logotipo": true }
+    ]
+  },
+  "2023-recital-piano": {
+    "fuente": "RECITAL DE PIANO - CAST.jpg",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "RECITAL DE PIANO",
+      "PIANISTA INTERNACIONAL DEL 68 CONCURSO",
+      "JUEVES 23 DE MARZO - 20H",
+      "AUDITORIO CASA DE CULTURA DE GERONA",
+      "ACCESO LIBRE"
+    ],
+    "entidades": [
+      { "rol": null, "nombre": "Maria Canals Barcelona", "logotipo": true },
+      { "rol": null, "nombre": "Cofradía de San Jorge", "logotipo": true }
+    ]
+  },
+  "2022-recital-piano": {
+    "fuente": "0.png",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "RECITAL DE PIANO",
+      "PIANISTA INTERNACIONAL DEL 67 CONCURSO",
+      "VIERNES 1 DE ABRIL - 20H",
+      "AUDITORIO CASA DE CULTURA DE GERONA"
+    ],
+    "entidades": [
+      { "rol": null, "nombre": "Maria Canals Barcelona", "logotipo": true },
+      { "rol": null, "nombre": "Confraria de Sant Jordi", "logotipo": true }
+    ]
+  },
+  "2019-recital-pianista-sorpresa": {
+    "fuente": "Captura de pantalla 2020-03-10 a las 20.57.48.png",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "Gran Recital de Piano",
+      "“El pianista sorpresa”",
+      "Un joven pianista llegado del Palau de la Música del 66 Concurso Internacional de Piano Maria Canals ofrecerá un recital sorpresa en la ciudad de Gerona",
+      "¿Quién será? ¿De qué país viene? ¿Qué repertorio tocará?",
+      "Todas las respuestas el jueves 26 de marzo a las 20h.",
+      "Auditori Viader - Casa de Cultura (Acceso libre)."
+    ],
+    "entidades": [
+      { "rol": null, "nombre": "Confraria de Sant Jordi", "logotipo": true },
+      { "rol": null, "nombre": "Casa de Cultura de la Diputació de Girona", "logotipo": true },
+      { "rol": null, "nombre": "Concurs Internacional de Música Maria Canals", "logotipo": true }
+    ]
+  },
+  "2018-recital-alvaro-mur": {
+    "fuente": "2018-recital-alvaro-mur.jpg (descargado del sitio antiguo)",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "La Cofradía de San Jorge y “Girona Temps de Flors”",
+      "Del 12 al 20 de mayo nuestra Cofradía facilita la colocación de un piano de cola en el claustro del Centro Cultural La Mercè.",
+      "Sábado 19 de mayo a las 19h tendrá lugar un recital de Álvaro Mur pianista del Concurso Internacional de Música Maria Canals (acceso libre)"
+    ],
+    "entidades": [
+      { "rol": "Con el apoyo de:", "nombre": "Concurs Internacional de Música Maria Canals", "logotipo": true },
+      { "rol": "Con el apoyo de:", "nombre": "Centre Cultural la mercè", "logotipo": true }
+    ]
+  },
+  "2017-viernes-santo-exposicion": {
+    "fuente": "2017-viernes-santo-exposicion.pdf (descargado del sitio antiguo; texto confirmado con la capa de texto del PDF)",
+    "idioma": "ca",
+    "estado": "pendiente",
+    "lineas": [
+      "EXPOSICIÓ",
+      "DIVENDRES SANT A GIRONA",
+      "FOTOGRAFIES DE JOSEP VILALLONGA",
+      "Amb la mirada que podria tenir un foraster, el fotògraf Josep Vilallonga (Cassà de la Selva, 1953) ens presenta una visió personal del Divendres Sant a Girona, a cavall de la Fe, la conservació de les tradicions i l’actractiu turístic."
+    ],
+    "datos": [
+      { "etiqueta": "INAUGURACIÓ", "valor": "20 de març a les 19 h" },
+      { "etiqueta": "LLOC", "valor": "Casa de Cultura de Girona (primer pis)" },
+      { "etiqueta": "DIES", "valor": "Del 21 de març al 21 d’abril de 2017" },
+      { "etiqueta": "HORARI", "valor": "De dilluns a divendres de 9 a 20 h (festius tancat)" }
+    ],
+    "entidades": [
+      { "rol": "ORGANITZA", "nombre": "Casa de Cultura de la Diputació de Girona", "logotipo": true },
+      { "rol": "COL·LABORA", "nombre": "Reial Estament Militar del Principat de Girona", "logotipo": true }
+    ]
+  },
+  "2025-felicitacion-navidad": {
+    "fuente": "felicitación_2025.jpg",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "El Veguer-Presidente y el Consejo del Real Estamento Militar del Principado de Gerona y Cofradía de San Jorge le desean Feliz Navidad y Venturoso Año Nuevo.",
+      "Navidad, 2025"
+    ],
+    "pie": ["La Epifanía. Retablo del Presbiterio de la Catedral de Gerona. Siglo XIV.", "Colección del Cabildo de la Catedral."]
+  },
+  "2024-felicitacion-navidad": {
+    "fuente": "unnamed.jpg",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "El Veguer-Presidente y el Consejo del Real Estamento Militar del Principado de Gerona y Cofradía de San Jorge le desean Feliz Navidad y Venturoso Año Nuevo.",
+      "Navidad, 2024"
+    ],
+    "pie": ["Reproducción del Nacimiento, cruz procesional de plata, del siglo XIV, llamada cruz de los esmaltes.", "Catedral de Gerona. Instituto del Patrimonio Cultural de España MECD"]
+  },
+  "2023-felicitacion-navidad": {
+    "fuente": "felicitación_2023.png (texto confirmado con la capa de texto de felicitación_2023 (1).pdf)",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "El Veguer-Presidente y el Consejo del Real Estamento Militar del Principado de Gerona y Cofradía de San Jorge le desean Feliz Navidad y Venturoso Año Nuevo.",
+      "Navidad, 2023"
+    ],
+    "pie": ["Miniatura del códice de la Biblia de Carlos V de Francia (siglo XIII), legada por el arzobispo de Zaragoza, Dalmacio de Mur, que antes había sido obispo de Gerona.", "Fondo Cabildo Catedral de Gerona"]
+  },
+  "2022-felicitacion-navidad": {
+    "fuente": "Navidad_2022.png",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "El Veguer-Presidente y el Consejo del Real Estamento Militar del Principado de Gerona y Cofradía de San Jorge le desean Feliz Navidad y Venturoso Año Nuevo.",
+      "Navidad, 2022"
+    ],
+    "pie": [
+      "Imagen del Nacimiento, vitral medieval de la Catedral de Gerona, de principios del siglo XIII, descubierto en 2019 tras un retablo con motivo de la restauración de éste, por lo que ha estado más de 500 años oculto. La obra se divide en dos partes: la primera consta de los pies y los elementos superiores de la vidriera, que datan de inicio del siglo XIII. La segunda parte se compone de unos fragmentos de finales del siglo XIV. La vidriera tiene una altura de 3 metros y una anchura de 1,3 metros y está dividida en diez paneles diferentes, de los que sólo se ha perdido uno. En ellos, se muestra los dos santos de la capilla donde ha sido encontrado el vitral, San Martín y San Francisco. Se añaden representaciones de animales, vegetación, detalles arquitectónicos y pequeñas figuras.",
+      "Fotografía JGB",
+      "Fons Capítol Catedral de Girona"
+    ]
+  },
+  "2021-felicitacion-navidad": {
+    "fuente": "Navidad_2021.png",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "El Veguer-Presidente y el Consejo del Real Estamento Militar del Principado de Gerona y Cofradía de San Jorge le desean Feliz Navidad y Venturoso Año Nuevo.",
+      "Navidad, 2021"
+    ],
+    "pie": ["El Nacimiento. Retablo de la Anunciación (Pau Costa, 1715-1725). Catedral de Gerona", "© Cabildo de la Catedral de Gerona"]
+  },
+  "2020-felicitacion-navidad": {
+    "fuente": "Navidad_2020.png",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "El Veguer-Presidente y el Consejo del Real Estamento Militar del Principado de Gerona y Cofradía de San Jorge le desean Feliz Navidad y Venturoso Año Nuevo.",
+      "Navidad, 2020"
+    ],
+    "pie": ["Frontal bordado del siglo XIV que se encuentra en el Museo de la Catedral de Gerona", "Fotografía de Capítol Catedral de Girona. Gustavo A.T. Mendoza"]
+  },
+  "2019-felicitacion-navidad": {
+    "fuente": "Navidad_2019.png",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "El Veguer-Presidente y el Consejo del Real Estamento Militar del Principado de Gerona y Cofradía de San Jorge le desean Feliz Navidad y Venturoso Año Nuevo.",
+      "Navidad, 2019"
+    ],
+    "pie": ["\"El nacimiento\" Frontal del Siglo XIV del Tesoro de la Catedral de Gerona.", "Fotografía de Eddy Kelele"]
+  },
+  "2018-felicitacion-navidad": {
+    "fuente": "Navidad_2018.png",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "El Veguer-Presidente y el Consejo del Real Estamento Militar del Principado de Gerona y Cofradía de San Jorge le desean Feliz Navidad y Venturoso Año Nuevo.",
+      "Navidad, 2018"
+    ],
+    "pie": [
+      "Jaume Busquets (Gerona 1904 - Barcelona 1968)",
+      "Virgen con Niño para la fachada de la Catedral de Gerona.",
+      "Realizó, asimismo, la Natividad y la Anunciación para la fachada de la Basílica de la Sagrada Família en Barcelona. Construyó el altar mayor y su baldaquín para el templo de Nuestra Señora de Montealegre en Barcelona, entre otros."
+    ]
+  },
+  "2017-felicitacion-navidad": {
+    "fuente": "Navidad_2017.png",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "El Veguer-Presidente y el Consejo del Real Estamento Militar del Principado de Gerona y Cofradía de San Jorge le desean Feliz Navidad y Venturoso Año Nuevo.",
+      "Navidad, 2017"
+    ],
+    "pie": [
+      "Domènec Fita. 1927 Gerona.",
+      "Imagen del Corazón de María. Iglesia del PP. Claretianos de Gerona.",
+      "Algunas de sus obras; “Cristo yacente”, Catedral de Gerona. “San Benito”, Monasterio de Montserrat. “Los cuatro evangelistas” y la entrada de la fachada de la Pasión, en la “Sagrada Família.”"
+    ]
+  },
+  "2016-felicitacion-navidad": {
+    "fuente": "Navidad_2016.png (= Felicitación_2016.pdf)",
+    "idioma": "es",
+    "estado": "pendiente",
+    "lineas": [
+      "El Veguer-Presidente y el Consejo del Real Estamento Militar del Principado de Gerona y Cofradía de San Jorge le desean Feliz Navidad y Venturoso Año Nuevo.",
+      "Navidad, 2016"
+    ],
+    "pie": [
+      "Jaume Busquets (Gerona 1904 – Barcelona 1968)",
+      "Según proyecto de Antoni Gaudí, La Natividad, fachada del Nacimiento. Basílica de la Sagrada Familia.",
+      "(Realizó, asimismo, la Virgen con Niño para la fachada de la Catedral de Gerona. Construyó el altar mayor y su baldaquín para el templo de Nuestra Señora de Montealegre de Barcelona)."
+    ]
+  }
+}
