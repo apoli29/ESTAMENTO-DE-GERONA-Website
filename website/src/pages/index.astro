@@ -47,11 +47,14 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   </section>
 
   <!-- II · Los distintivos -->
-  <section class="seccion banda-piedra" aria-labelledby="distintivos">
+  <section class="seccion banda-negra sobre-negro distintivos-seccion" aria-labelledby="distintivos">
     <div class="envoltura distintivos">
       <div class="distintivos__cabeza">
-        <div class="distintivos__emblema" data-giro>
-          <Venera tamano="100%" animada titulo="La venera: Cruz de San Jorge con cuatro espadas de plata" />
+        <div class="distintivos__escena escena-medalla">
+          <div class="distintivos__emblema medalla" data-giro>
+            <Venera tamano="100%" animada titulo="La venera: Cruz de San Jorge con cuatro espadas de plata" />
+            <span class="medalla__brillo" aria-hidden="true"></span>
+          </div>
         </div>
         <div class="rotulo rotulo--centro">
           <span class="rotulo__num" aria-hidden="true">II</span>
@@ -87,13 +90,15 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
         <p class="t-entradilla cabeza__nota">{C.proposito}</p>
       </div>
       <ObraCajas items={C.obra} id="obra-portada" />
+    </div>
+    <div class="obra__banda banda-negra sobre-negro">
       <div class="obra__fotos">
         <figure class="figura">
-          <Image src={foto('catedral-interior-tono.jpg')} alt="Interior de la Catedral de Gerona" widths={[480, 800, 1200]} sizes="(min-width: 960px) 45vw, 50vw" />
+          <Image src={foto('catedral-interior-tono.jpg')} alt="Interior de la Catedral de Gerona" widths={[480, 800, 1200, 1800]} sizes="50vw" />
           <figcaption>{CREDITOS['catedral-interior.jpg']}</figcaption>
         </figure>
         <figure class="figura">
-          <Image src={foto('capilla-san-jorge-tono.jpg')} alt="Retablo de una capilla de la Catedral de Gerona" widths={[480, 800, 1200]} sizes="(min-width: 960px) 45vw, 50vw" />
+          <Image src={foto('capilla-san-jorge-tono.jpg')} alt="Retablo de una capilla de la Catedral de Gerona" widths={[480, 800, 1200, 1800]} sizes="50vw" />
           <figcaption>{CREDITOS['capilla-san-jorge.jpg']}</figcaption>
         </figure>
       </div>
@@ -156,7 +161,7 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
         </div>
         <p class="t-titulo2">{F.entradilla}</p>
         <p class="t-cuerpo">{F.caracter}</p>
-        <blockquote class="cofradia__cita">
+        <blockquote class="cofradia__cita placa">
           <p class="cita">{F.conclusion}</p>
         </blockquote>
         <a class="enlace-mayor" href="/historia/la-cofradia/">Actas, ordinaciones y privilegios</a>
@@ -209,49 +214,6 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   </section>
 </Base>
 
-<script>
-  // La venera gira con el desplazamiento (un cuarto de vuelta, lento) hasta quedar en su sitio.
-  // Además, si el ratón traza círculos sobre ella, la venera le sigue; al salir se asienta
-  // en el cuarto de vuelta más cercano (la cruz es simétrica, así que queda igual).
-  const emblema = document.querySelector<HTMLElement>('[data-giro]');
-  if (emblema && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    let scroll = 0, mano = 0, manoObjetivo = 0, anguloPrevio: number | null = null;
-    const calcularScroll = () => {
-      const r = emblema.getBoundingClientRect();
-      const vh = innerHeight;
-      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.65 + r.height / 2)));
-      const suave = 1 - Math.pow(1 - p, 2);
-      scroll = (1 - suave) * -90;
-      emblema.style.opacity = String(0.3 + 0.7 * Math.min(1, p * 1.4));
-      return suave;
-    };
-    const pintar = () => {
-      const suave = calcularScroll();
-      mano += (manoObjetivo - mano) * 0.12;
-      emblema.style.transform = `rotate(${scroll + mano}deg) scale(${0.9 + 0.1 * suave})`;
-      requestAnimationFrame(pintar);
-    };
-    requestAnimationFrame(pintar);
-    const angulo = (e: PointerEvent) => {
-      const r = emblema.getBoundingClientRect();
-      return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI;
-    };
-    emblema.addEventListener('pointermove', (e) => {
-      const a = angulo(e);
-      if (anguloPrevio !== null) {
-        let d = a - anguloPrevio;
-        if (d > 180) d -= 360; else if (d < -180) d += 360;
-        manoObjetivo += d / 5; // giro suave: la venera gira cinco veces menos que el ratón
-      }
-      anguloPrevio = a;
-    });
-    emblema.addEventListener('pointerleave', () => {
-      anguloPrevio = null;
-      manoObjetivo = Math.round(manoObjetivo / 90) * 90;
-    });
-  }
-</script>
-
 <style>
   /* Portada */
   .portada { position: relative; min-height: 100svh; display: grid; place-items: center; overflow: hidden; background: var(--negro); color: var(--pergamino); text-align: center; }
@@ -271,23 +233,29 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .origen__texto { font-family: var(--f-display); font-size: clamp(28px, 3.1vw, 42px); line-height: 1.24; text-wrap: pretty; color: var(--pergamino); }
   .origen__pie { display: flex; flex-wrap: wrap; gap: var(--s4) var(--s7); margin-top: var(--s7); }
 
-  /* II · Distintivos: emblema y título centrados; debajo, tres columnas estrechas y largas, justificadas */
+  /* II · Distintivos: la venera expuesta como pieza, sobre negro, para que la plata de las
+     espadas coja la luz; debajo, tres columnas estrechas y largas, justificadas. */
   .distintivos { display: grid; gap: var(--s8); justify-items: center; }
   .distintivos__cabeza { display: grid; gap: var(--s5); justify-items: center; text-align: center; }
-  .distintivos__emblema { width: 152px; margin-bottom: var(--s3); will-change: transform; }
-  .distintivos__venera { max-width: 40ch; text-align: center; }
+  /* La escena y el reflejo son del sistema (.escena-medalla / .medalla); aquí sólo el tamaño */
+  .distintivos__escena { margin-bottom: var(--s4); }
+  .distintivos__emblema { width: clamp(184px, 20vw, 268px); }
+  .distintivos__venera { max-width: 40ch; text-align: center; color: var(--espada); }
   .distintivos__columnas { display: grid; gap: var(--s7); width: 100%; max-width: 30ch; }
   @media (min-width: 900px) { .distintivos__columnas { grid-template-columns: repeat(3, minmax(0, 23ch)); justify-content: center; max-width: none; gap: var(--s8); } }
-  .distintivos__col { display: grid; gap: var(--s4); align-content: start; padding-top: var(--s5); border-top: 1px solid var(--negro); }
-  .distintivos__texto { font-size: 16px; line-height: 1.7; color: var(--tinta); text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+  .distintivos__col { display: grid; gap: var(--s4); align-content: start; padding-top: var(--s5); border-top: 1px solid var(--linea-clara); }
+  .distintivos__texto { font-size: 16px; line-height: 1.7; color: var(--espada); text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
 
   /* Cabecera de sección a todo el ancho (III, IV) */
   .cabeza { margin-bottom: var(--s7); align-items: end; }
   .cabeza__nota { max-width: 46ch; }
 
-  /* III · Obra */
-  .obra__fotos { display: grid; grid-template-columns: 1fr 1fr; gap: var(--medianil); margin-top: var(--s8); }
-  .obra__fotos :global(img) { aspect-ratio: 4 / 5; object-fit: cover; }
+  /* III · Obra — la fotografía rompe la retícula y ocupa el ancho de la ventana sobre negro,
+     para que las cajas de arriba acaben contra una banda maciza en vez de en blanco. */
+  .obra__banda { margin-top: var(--s8); padding-bottom: var(--s5); }
+  .obra__fotos { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .obra__fotos :global(img) { width: 100%; height: clamp(280px, 42vw, 600px); object-fit: cover; }
+  .obra__fotos :global(figcaption) { padding: var(--s3) var(--s4) 0; }
 
   /* IV · Actividades */
   .rejilla-tarjetas { list-style: none; display: grid; gap: var(--s7) var(--medianil); grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
@@ -314,7 +282,7 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   @media (min-width: 960px) { .cofradia { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s8); } }
   .cofradia__figura :global(img) { max-height: 760px; object-fit: contain; object-position: left top; width: auto; }
   .cofradia__texto { display: grid; gap: var(--s5); align-content: start; }
-  .cofradia__cita { margin: var(--s3) 0; padding-left: var(--s5); border-left: 2px solid var(--teja); }
+  .cofradia__cita { margin: var(--s4) 0; }
 
   /* VII · Consejo */
   .consejo__cabeza { margin-bottom: var(--s7); }

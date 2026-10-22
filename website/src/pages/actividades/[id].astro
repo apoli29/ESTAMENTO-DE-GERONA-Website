@@ -29,16 +29,19 @@ if (a.panfleto) {
 }
 ---
 <Base titulo={a.titulo.replace(/^"|"$/g, '')}>
-  <article class="seccion detalle">
-    <div class="envoltura">
-      <nav class="miga t-dato" aria-label="Ruta">
-        <a href="/actividades/">Actividades</a>
-        <span aria-hidden="true">/</span>
-        <a href={`/actividades/#anio-${a.anio}`}>{a.anio}</a>
-      </nav>
-
+  <article class="detalle">
+    <div class="banda-negra sobre-negro cabeza-pagina detalle__cabeza">
+      <div class="envoltura">
+        <nav class="miga t-dato" aria-label="Ruta">
+          <a href="/actividades/">Actividades</a>
+          <span aria-hidden="true">/</span>
+          <a href={`/actividades/#anio-${a.anio}`}>{a.anio}</a>
+        </nav>
+      </div>
+    </div>
+    <div class="seccion"><div class="envoltura">
       <div class="capitulo detalle__cuerpo">
-        <aside class="detalle__ficha">
+        <aside class="detalle__ficha placa">
           <p class="t-etiqueta detalle__tipo">{TIPOS[a.tipo].singular}</p>
           {a.fecha && <p class="t-dato">{a.fecha}</p>}
           {a.panfleto && (
@@ -118,17 +121,20 @@ if (a.panfleto) {
           </a>
         ) : <span></span>}
       </nav>
-    </div>
+    </div></div>
   </article>
 </Base>
 
 <style>
-  .miga { display: flex; gap: var(--s3); margin-bottom: var(--s7); color: var(--tinta-2); }
-  .miga a { color: var(--tinta-2); }
-  .miga a:hover { color: var(--teja); }
-  .detalle__ficha { display: grid; gap: var(--s3); align-content: start; }
-  @media (min-width: 960px) { .detalle__ficha { position: sticky; top: 120px; } }
-  .detalle__tipo { color: var(--teja); }
+  /* Banda de entrada: sólo la ruta, para que la página arranque en oscuro como las demás */
+  .detalle__cabeza { padding-top: var(--s6); padding-bottom: var(--s6); }
+  .miga { display: flex; gap: var(--s3); color: var(--plata); }
+  .miga a { color: var(--plata); }
+  .miga a:hover { color: var(--pergamino); }
+  /* La ficha es la chapa de la pieza: tipo, fecha y la descarga, en rojo y con la esquina cortada */
+  .detalle__ficha { display: grid; gap: var(--s3); align-content: start; --muesca: 28px; padding: var(--s5); }
+  @media (min-width: 960px) { .detalle__ficha { position: sticky; top: 120px; --muesca: 34px; padding: var(--s6); } }
+  .detalle__tipo { color: var(--sobre-teja); }
   .detalle__descarga { margin-top: var(--s4); justify-self: start; }
   .detalle__principal { display: grid; gap: var(--s7); min-width: 0; }
   .detalle__titulo { max-width: 22ch; }

@@ -75,11 +75,13 @@ const ESPADA = 'M50 7.4a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8ZM48.9 12h2.2v5h-
 
   .caja__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s cubic-bezier(.2, .7, .1, 1); }
   .caja.esta-abierta .caja__panel { grid-template-rows: 1fr; }
-  .caja__interior { overflow: hidden; }
+  /* El panel no aparece: se abate sobre su canto superior, como la tapa de la caja */
+  .caja__interior { overflow: hidden; perspective: 900px; }
   .caja__texto {
     padding: 0 var(--s5) var(--s6); font-family: var(--f-texto); font-size: 19px; line-height: 1.5; color: var(--tinta);
     text-align: justify; hyphens: auto; -webkit-hyphens: auto;
-    opacity: 0; transform: translateY(-6px); transition: opacity .4s ease, transform .6s cubic-bezier(.2, .7, .1, 1);
+    opacity: 0; transform-origin: 50% 0; transform: rotateX(-16deg) translateY(-6px);
+    transition: opacity .4s ease, transform .6s cubic-bezier(.2, .7, .1, 1);
   }
   .caja.esta-abierta .caja__texto { opacity: 1; transform: none; transition-delay: .15s; }
 </style>

@@ -2,43 +2,100 @@
 import Base from '../layouts/Base.astro';
 import enlaces from '../data/enlaces.json';
 const limpio = (u: string) => u.replace(/^https?:\/\//, '').replace(/\/$/, '');
+// El primer bloque viene sin grupo en los datos: es un enlace suelto y se presenta aparte,
+// con el enlace mayor del sistema. Los demás son capítulos con su rótulo al costado.
+const suelto = enlaces.find((g) => !g.grupo);
+const grupos = enlaces.filter((g) => g.grupo);
 ---
 <Base titulo="Enlaces">
-  <section class="seccion">
+  <section class="seccion banda-negra sobre-negro cabeza-pagina">
     <div class="envoltura capitulo">
       <div class="rotulo">
         <span class="rotulo__etiqueta">Enlaces</span>
       </div>
-      <div class="enl">
-        <h1 class="t-display">Enlaces</h1>
-        {enlaces.map((g) => (
-          <section class="enl__grupo">
-            {g.grupo && <h2 class="t-etiqueta enl__titulo">{g.grupo.replace(/:$/, '')}</h2>}
-            <ul class="enl__lista">
-              {g.enlaces.map((e) => (
-                <li>
-                  <a class="enl__enlace" href={e.url} rel="noopener" target="_blank">
-                    <span class="enl__nombre">{e.nombre}</span>
-                    <span class="enl__url t-dato">{limpio(e.url)}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
-      </div>
+      <h1 class="t-display">Enlaces</h1>
     </div>
   </section>
+
+  {suelto && (
+    <section class="seccion banda-piedra">
+      <div class="envoltura capitulo">
+        <div class="columna-vacia" aria-hidden="true"></div>
+        <div class="suelto">
+          {suelto.enlaces.map((e) => (
+            <p class="suelto__fila">
+              <a class="enlace-mayor" href={e.url} rel="noopener" target="_blank">{e.nombre}</a>
+              <span class="t-dato suelto__url">{limpio(e.url)}</span>
+            </p>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {grupos.map((g, i) => (
+    <section class="seccion" aria-labelledby={`grupo-${i}`}>
+      <div class="envoltura capitulo capitulo--fijo">
+        <div class="rotulo">
+          <h2 id={`grupo-${i}`} class="rotulo__nombre">{g.grupo!.replace(/:$/, '')}</h2>
+        </div>
+        <ul class="enl__lista">
+          {g.enlaces.map((e) => (
+            <li class="enl__item">
+              <a class="enl__enlace" href={e.url} rel="noopener" target="_blank">
+                <span class="enl__nombre">{e.nombre}</span>
+                <span class="enl__url t-dato">{limpio(e.url)}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  ))}
 </Base>
 
 <style>
-  .enl { display: grid; gap: var(--s7); }
-  .enl__titulo { margin-bottom: var(--s3); }
+  /* Enlace suelto: el único que no pertenece a ningún grupo, con la espada del sistema.
+     La dirección se sangra el hueco que la espada deja a su izquierda, para caer bajo el texto. */
+  .suelto__fila { display: grid; gap: var(--s2); justify-items: start; }
+  .suelto__url { color: var(--tinta-2); padding-left: calc(42px + 16px); }
+
   .enl__lista { list-style: none; border-top: 1px solid var(--negro); }
-  .enl__lista li { border-bottom: 1px solid var(--linea); }
-  .enl__enlace { display: grid; gap: var(--s1) var(--s5); padding: var(--s4) 0; color: var(--negro); text-decoration: none; }
-  @media (min-width: 820px) { .enl__enlace { grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; } }
-  .enl__nombre { font-family: var(--f-texto); font-size: 19px; line-height: 1.4; text-wrap: pretty; }
-  .enl__url { color: var(--tinta-2); }
-  .enl__enlace:hover .enl__nombre { color: var(--teja); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+  .enl__item { border-bottom: 1px solid var(--linea); }
+  .enl__enlace {
+    position: relative; display: grid; gap: var(--s1) var(--s5);
+    padding: var(--s4) var(--s6) var(--s4) 0;
+    color: var(--negro); text-decoration: none;
+  }
+  @media (min-width: 820px) {
+    .enl__enlace { grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; }
+  }
+  /* El nombre avanza al apuntar: se mueve con transform, no con el relleno, para no rehacer
+     la retícula de veintitrés filas en cada paso del ratón. */
+  .enl__nombre {
+    font-family: var(--f-texto); font-size: 19px; line-height: 1.4; text-wrap: pretty;
+    transition: transform .5s cubic-bezier(.2, .7, .1, 1), color .3s ease;
+  }
+  .enl__url { color: var(--tinta-2); white-space: nowrap; }
+
+  /* La espada marca que el enlace sale fuera del sitio: entra desde la izquierda al apuntar */
+  .enl__enlace::after {
+    content: ''; position: absolute; right: 0; top: calc(var(--s4) + .55em - 6px);
+    width: 26px; height: 12px; background: var(--teja);
+    -webkit-mask: var(--espada-h) center / contain no-repeat;
+    mask: var(--espada-h) center / contain no-repeat;
+    opacity: 0; transform: translateX(-10px);
+    transition: opacity .3s ease, transform .5s cubic-bezier(.2, .7, .1, 1);
+  }
+  .enl__enlace:hover .enl__nombre, .enl__enlace:focus-visible .enl__nombre {
+    color: var(--teja); transform: translateX(var(--s4));
+  }
+  .enl__enlace:hover::after, .enl__enlace:focus-visible::after { opacity: 1; transform: none; }
+  .enl__enlace:focus-visible { outline-offset: -2px; }
+
+  /* Sin movimiento, el color y la espada siguen marcando el enlace apuntado */
+  @media (prefers-reduced-motion: reduce) {
+    .enl__enlace:hover .enl__nombre, .enl__enlace:focus-visible .enl__nombre { transform: none; }
+    .enl__enlace::after { transform: none; }
+  }
 </style>

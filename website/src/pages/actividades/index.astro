@@ -5,7 +5,7 @@ import { actividades, porAnio, FILTROS } from '../../lib/sitio';
 const anios = porAnio(actividades);
 ---
 <Base titulo="Actividades">
-  <section class="seccion encabezado">
+  <section class="seccion banda-negra sobre-negro cabeza-pagina encabezado">
     <div class="envoltura capitulo">
       <div class="rotulo">
         <span class="rotulo__etiqueta">Anales</span>
@@ -60,25 +60,27 @@ const anios = porAnio(actividades);
 <style>
   .encabezado { padding-bottom: var(--s7); }
   .encabezado__texto { display: grid; gap: var(--s6); }
-  /* Mini barra de navegación: filetes arriba y abajo, opciones separadas por la cruz */
+  /* Mini barra de navegación: filetes arriba y abajo, opciones separadas por la cruz.
+     Va sobre la banda negra, así que el filete es claro y la opción activa se distingue
+     por el color del texto, no sólo por la marca roja de abajo. */
   .filtros {
     display: flex; align-items: center; gap: var(--s5);
-    border-top: 1px solid var(--negro); border-bottom: 1px solid var(--negro);
+    border-top: 1px solid var(--linea-clara); border-bottom: 1px solid var(--linea-clara);
     overflow-x: auto; scrollbar-width: none;
   }
   .filtros::-webkit-scrollbar { display: none; }
   .filtros__boton {
     position: relative; flex: none; min-height: 52px; padding: 0; cursor: pointer;
-    background: none; border: 0; color: var(--negro);
+    background: none; border: 0; color: var(--plata);
     font: 500 12px/16px var(--f-sans); letter-spacing: .16em; text-transform: uppercase;
     transition: color .3s ease;
   }
   /* Marca de la opción activa: se apoya sobre el filete inferior */
   .filtros__boton::after {
-    content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--teja);
+    content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--rojo);
     transform: scaleX(0); transition: transform .5s cubic-bezier(.16, 1, .3, 1);
   }
-  .filtros__boton:hover, .filtros__boton[aria-pressed='true'] { color: var(--teja); }
+  .filtros__boton:hover, .filtros__boton[aria-pressed='true'] { color: var(--pergamino); }
   .filtros__boton[aria-pressed='true']::after { transform: scaleX(1); }
   .filtros__boton:focus-visible { outline-offset: -2px; }
   .filtros__cruz { flex: none; width: 7px; height: 7px; background: var(--cruz) center / contain no-repeat; }

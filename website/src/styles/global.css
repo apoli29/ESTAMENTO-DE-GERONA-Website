@@ -105,6 +105,11 @@ a:hover { color: var(--negro); }
   .capitulo { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); }
   .capitulo--fijo > .rotulo { position: sticky; top: 112px; }
 }
+/* Hueco de la columna del rótulo cuando el título ya se dio en la cabeza de página.
+   Sólo existe donde la retícula tiene dos columnas; en una sola sobraría como aire muerto. */
+.columna-vacia { display: none; }
+@media (min-width: 960px) { .columna-vacia { display: block; } }
+
 /* Rótulo: numeral romano como antetítulo + título de sección real (Caslon Display) */
 .rotulo { display: flex; flex-direction: column; gap: var(--s4); }
 .rotulo__num { display: flex; align-items: center; gap: var(--s3); font-family: var(--f-display); font-size: 22px; line-height: 1; color: var(--teja); }
@@ -214,11 +219,61 @@ a:hover { color: var(--negro); }
   background: var(--cruz) center / contain no-repeat;
 }
 .relacion__clave--mono { font-family: var(--f-mono); font-size: 13px; line-height: 1.9; color: var(--tinta-2); }
+/* Sobre fondo oscuro el rojo no llega al contraste: la clave pasa a pergamino, como el numeral */
+:is(.banda-negra, .sobre-negro) .relacion__clave:not(.relacion__clave--mono) { color: var(--pergamino); }
 .relacion__valor { color: var(--tinta); text-wrap: pretty; max-width: var(--medida); }
 .relacion__valor .nota { display: block; margin-top: var(--s2); color: var(--tinta-2); font-size: 15px; }
 .banda-negra .relacion { border-top-color: var(--pergamino); }
 .banda-negra .relacion__fila { border-bottom-color: var(--linea-clara); }
 .banda-negra .relacion__valor { color: var(--pergamino); }
+
+/* ——— La medalla ——— */
+/* La venera tratada como pieza física y no como dibujo: una escena con perspectiva, el emblema
+   que gira dentro de ella y un reflejo recortado con la silueta de la cruz. El giro lo lleva
+   Base.astro, que atiende a cualquier [data-giro]; aquí sólo vive la escena.
+   El tamaño lo pone cada página: la medalla ocupa lo que le dé su contenedor. */
+.escena-medalla { perspective: 860px; perspective-origin: 50% 46%; }
+.medalla { position: relative; transform-style: preserve-3d; will-change: transform; }
+/* La luz cae sobre el esmalte, no sobre un rectángulo alrededor de la pieza */
+.medalla__brillo {
+  position: absolute; inset: 0; pointer-events: none; opacity: var(--brillo, 0);
+  background: linear-gradient(100deg, transparent 34%, rgba(251, 248, 242, .62) 50%, transparent 66%);
+  -webkit-mask: var(--cruz) center / contain no-repeat;
+  mask: var(--cruz) center / contain no-repeat;
+}
+
+/* ——— Cabeza de página ——— */
+/* Las páginas interiores sin fotografía de entrada abren sobre negro, igual que las de
+   Historia abren sobre la foto: todo el sitio entra por lo oscuro y sigue en pergamino.
+   Se usa junto a .seccion .banda-negra .sobre-negro. */
+.cabeza-pagina { position: relative; padding-top: var(--s8); }
+@media (min-width: 768px) { .cabeza-pagina { padding-top: var(--s9); } }
+/* Filo rojo al pie de la banda: el mismo que cierra la cabecera */
+.cabeza-pagina::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--rojo); }
+
+/* ——— Placa ——— */
+/* Bloque macizo en rojo heráldico con la esquina cortada a bisel, como una chapa troquelada.
+   Es el contrapunto duro del pergamino: se usa con cuentagotas, en lo que remata una sección. */
+.placa {
+  --muesca: 36px;
+  position: relative;
+  background: var(--rojo);
+  color: var(--sobre-teja);
+  padding: var(--s6) var(--s6) var(--s7);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--muesca)), calc(100% - var(--muesca)) 100%, 0 100%);
+  /* Bisel: la luz cae desde arriba, así que el canto cortado queda en sombra */
+  background-image: linear-gradient(315deg, rgba(26, 23, 20, .26) 0, rgba(26, 23, 20, .26) var(--muesca), transparent var(--muesca));
+}
+@media (min-width: 768px) { .placa { --muesca: 52px; padding: var(--s7) var(--s7) var(--s8); } }
+.placa :is(.cita, .t-cuerpo, .t-titulo2, p) { color: var(--sobre-teja); }
+.placa .cita-fuente { color: rgba(251, 248, 242, .74); }
+/* Sobre la chapa el botón no puede ser rojo: se invierte a negro */
+.placa .boton { background: var(--negro); color: var(--pergamino); }
+.placa .boton:hover { background: var(--pergamino); color: var(--negro); }
+
+/* ——— Banda a sangre ——— */
+/* Rompe la retícula para que la fotografía ocupe el ancho completo de la ventana. */
+.a-sangre { width: 100vw; max-width: 100vw; margin-left: calc(50% - 50vw); }
 
 /* ——— Figuras ——— */
 .figura { margin: 0; }
@@ -227,13 +282,33 @@ a:hover { color: var(--negro); }
 .banda-negra .figura figcaption { color: var(--plata); }
 
 /* ——— Movimiento ——— */
-/* Aparición al entrar en pantalla (clases puestas por Base.astro; sin JS todo se ve tal cual) */
+/* El contenido no se desliza: gira sobre su canto y se asienta desde el fondo de la escena,
+   como una placa que se cuelga. El grado de giro lo marca el tipo de pieza, no la sección.
+   Las clases las pone Base.astro; sin JS todo se ve tal cual. */
 .revela:not(.revelado) { opacity: 0; }
 .revela.revelado { animation: revelar 1s cubic-bezier(.16, 1, .3, 1) var(--retraso, 0ms) backwards; }
+
+/* Texto corrido: giro mínimo sobre el eje horizontal, para que la línea base no se deforme al leer */
+@keyframes revelar { from { opacity: 0; transform: perspective(1400px) translate3d(0, 24px, -60px) rotateX(5deg); } }
+
+/* Rótulo de capítulo: bisagra sobre el canto izquierdo, como un escudo que se cuelga de la pared */
+.revela--rotulo { transform-origin: 0% 50%; }
+.revela--rotulo.revelado { animation-name: revelar-rotulo; animation-duration: 1.15s; }
+@keyframes revelar-rotulo { from { opacity: 0; transform: perspective(900px) translate3d(-14px, 0, -70px) rotateY(-16deg); } }
+
+/* Pieza suelta (tarjeta, caja, figura, felicitación): entra de más lejos y con más canto */
+.revela--pieza { transform-origin: 50% 100%; }
+.revela--pieza.revelado { animation-name: revelar-pieza; animation-duration: 1.1s; }
+@keyframes revelar-pieza { from { opacity: 0; transform: perspective(1100px) translate3d(0, 38px, -170px) rotateX(11deg); } }
+
 .figura.revela { overflow: hidden; }
 .figura.revela.revelado img { animation: revelar-foto 1.8s cubic-bezier(.16, 1, .3, 1) var(--retraso, 0ms) backwards; }
-@keyframes revelar { from { opacity: 0; transform: translateY(28px); } }
 @keyframes revelar-foto { from { transform: scale(1.08); } }
+
+/* Inclinación al puntero: la pieza responde como un objeto apoyado en la mesa, no como un cromo.
+   El ángulo lo escribe Base.astro; aquí sólo el amortiguado de la vuelta al reposo. */
+.pieza-3d { transition: transform .55s cubic-bezier(.2, .7, .1, 1); }
+.pieza-3d.esta-inclinada { transition-duration: .12s; }
 
 /* Entrada de las portadas al cargar */
 .portada__contenido > *, .hportada__contenido > * { animation: revelar 1.3s cubic-bezier(.16, 1, .3, 1) backwards; }

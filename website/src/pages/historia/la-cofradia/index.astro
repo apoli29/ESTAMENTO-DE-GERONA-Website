@@ -20,7 +20,7 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
       <div class="entrada__texto">
         <p class="t-titulo2">{F.entradilla}</p>
         <p class="t-cuerpo">{F.origen}</p>
-        <blockquote class="latin">
+        <blockquote class="latin placa">
           <p class="cita" lang="la">{F.encabezamiento}</p>
           <p class="cita-fuente">{F.encabezamiento_fuente}</p>
         </blockquote>
@@ -248,7 +248,8 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 <style>
   .entrada__texto { display: grid; gap: var(--s5); }
-  .latin { margin: var(--s3) 0 0; padding-left: var(--s5); border-left: 2px solid var(--teja); }
+  /* El encabezamiento latino es el momento ceremonial de la página: va en chapa roja */
+  .latin { margin: var(--s4) 0 0; }
 
   .libros { list-style: none; border-top: 1px solid var(--negro); }
   .libros__item { display: grid; gap: var(--s2) var(--s6); padding: var(--s5) 0; border-bottom: 1px solid var(--linea); }
@@ -280,7 +281,8 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .clases__item { padding: var(--s5); border: 1px solid var(--linea); display: grid; gap: var(--s3); align-content: start; }
   .clases__nombre { color: var(--teja); }
   .clases__texto { font-size: 15px; line-height: 1.6; color: var(--tinta); }
-  .cofrades__cita { margin: 0; padding-left: var(--s5); border-left: 2px solid var(--teja); }
+  /* Cita secundaria: sólo un filo fino, para no competir con la chapa de la entrada */
+  .cofrades__cita { margin: 0; padding-left: var(--s5); border-left: 1px solid var(--linea-fuerte); }
   .cofrades__sub { margin-top: var(--s5); }
 
   .desplegable { border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
