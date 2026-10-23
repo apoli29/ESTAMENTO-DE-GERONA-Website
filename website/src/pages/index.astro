@@ -92,15 +92,17 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
       <ObraCajas items={C.obra} id="obra-portada" />
     </div>
     <div class="obra__banda banda-negra sobre-negro">
-      <div class="obra__fotos">
-        <figure class="figura">
-          <Image src={foto('catedral-interior-tono.jpg')} alt="Interior de la Catedral de Gerona" widths={[480, 800, 1200, 1800]} sizes="50vw" />
-          <figcaption>{CREDITOS['catedral-interior.jpg']}</figcaption>
-        </figure>
-        <figure class="figura">
-          <Image src={foto('capilla-san-jorge-tono.jpg')} alt="Retablo de una capilla de la Catedral de Gerona" widths={[480, 800, 1200, 1800]} sizes="50vw" />
-          <figcaption>{CREDITOS['capilla-san-jorge.jpg']}</figcaption>
-        </figure>
+      <div class="envoltura">
+        <div class="obra__fotos">
+          <figure class="figura">
+            <Image src={foto('catedral-interior-tono.jpg')} alt="Interior de la Catedral de Gerona" widths={[400, 640, 960]} sizes="(min-width: 640px) 418px, calc(100vw - 48px)" />
+            <figcaption>{CREDITOS['catedral-interior.jpg']}</figcaption>
+          </figure>
+          <figure class="figura">
+            <Image src={foto('capilla-san-jorge-tono.jpg')} alt="Retablo de una capilla de la Catedral de Gerona" widths={[400, 640, 960]} sizes="(min-width: 640px) 418px, calc(100vw - 48px)" />
+            <figcaption>{CREDITOS['capilla-san-jorge.jpg']}</figcaption>
+          </figure>
+        </div>
       </div>
     </div>
   </section>
@@ -250,12 +252,19 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .cabeza { margin-bottom: var(--s7); align-items: end; }
   .cabeza__nota { max-width: 46ch; }
 
-  /* III · Obra — la fotografía rompe la retícula y ocupa el ancho de la ventana sobre negro,
-     para que las cajas de arriba acaben contra una banda maciza en vez de en blanco. */
-  .obra__banda { margin-top: var(--s8); padding-bottom: var(--s5); }
-  .obra__fotos { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
-  .obra__fotos :global(img) { width: 100%; height: clamp(280px, 42vw, 600px); object-fit: cover; }
-  .obra__fotos :global(figcaption) { padding: var(--s3) var(--s4) 0; }
+  /* III · Obra — la banda oscura cierra las cajas de arriba, pero las fotografías son apoyo y
+     no protagonistas: van contenidas en la retícula, a tamaño modesto y con aire alrededor. */
+  .obra__banda { margin-top: var(--s8); padding: var(--s8) 0; }
+  @media (min-width: 768px) { .obra__banda { padding: var(--s9) 0; } }
+  /* Centradas en la banda. En estrecho se apilan: a dos columnas la foto quedaría más
+     pequeña que su propio crédito. */
+  .obra__fotos {
+    display: grid; gap: var(--s6) var(--medianil);
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 860px; margin-inline: auto;
+  }
+  @media (min-width: 640px) { .obra__fotos { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s5) var(--medianil); } }
+  .obra__fotos :global(img) { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
 
   /* IV · Actividades */
   .rejilla-tarjetas { list-style: none; display: grid; gap: var(--s7) var(--medianil); grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }

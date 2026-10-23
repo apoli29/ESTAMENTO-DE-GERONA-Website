@@ -9,9 +9,11 @@
   /* II. acción */
   --teja: #A3201F; /* acento de interfaz = rojo heráldico; el naranja se retiró (feedback oct. 2026) */
   /* III. soportes */
-  --pergamino: #F3EDE2;
-  --piedra: #E3D8C5;
-  --piedra-clara: #E9E1D3;
+  /* Soportes aclarados (oct. 2026): el pergamino sube a un blanco cálido y la piedra lo sigue,
+     para que el escalón entre la página y las bandas se mantenga igual de legible. */
+  --pergamino: #FBF8F3;
+  --piedra: #E9E1D3;
+  --piedra-clara: #F2ECE2;
   --plata: #C9C3B8;
   --tinta: #3A332C;
   --tinta-2: #5C534A;
@@ -219,8 +221,12 @@ a:hover { color: var(--negro); }
   background: var(--cruz) center / contain no-repeat;
 }
 .relacion__clave--mono { font-family: var(--f-mono); font-size: 13px; line-height: 1.9; color: var(--tinta-2); }
-/* Sobre fondo oscuro el rojo no llega al contraste: la clave pasa a pergamino, como el numeral */
-:is(.banda-negra, .sobre-negro) .relacion__clave:not(.relacion__clave--mono) { color: var(--pergamino); }
+/* Sobre el negro, el rojo heráldico se queda en 1,9:1 y no hay forma de leerlo. El acento pasa
+   entonces a la plata de las espadas, que es la otra mitad de la marca: el esmalte es para los
+   fondos claros, el metal para los oscuros. */
+:is(.banda-negra, .sobre-negro) :is(.relacion__clave:not(.relacion__clave--mono), .disp__num) {
+  color: var(--espada);
+}
 .relacion__valor { color: var(--tinta); text-wrap: pretty; max-width: var(--medida); }
 .relacion__valor .nota { display: block; margin-top: var(--s2); color: var(--tinta-2); font-size: 15px; }
 .banda-negra .relacion { border-top-color: var(--pergamino); }

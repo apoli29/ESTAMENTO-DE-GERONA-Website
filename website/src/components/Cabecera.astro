@@ -2,8 +2,11 @@
 import Logo from './Logo.astro';
 const actual = Astro.url.pathname;
 const enHistoria = actual.startsWith('/historia');
-// En la portada la cabecera se oculta sobre la imagen y entra al primer desplazamiento.
-const enPortada = actual === '/';
+// Donde la página abre con fotografía a sangre, la cabecera se esconde sobre la imagen y entra
+// al primer desplazamiento: la portada y las dos de Historia (/historia/<obra>/). Los textos
+// íntegros cuelgan un nivel más abajo y abren sobre negro, así que conservan la cabecera fija.
+const ruta = actual.endsWith('/') ? actual : actual + '/';
+const enPortada = ruta === '/' || /^\/historia\/[^/]+\/$/.test(ruta);
 const navegacion = [
   { nombre: 'Actividades', href: '/actividades/' },
   { nombre: 'Consejo', href: '/#consejo' },
@@ -13,8 +16,8 @@ const navegacion = [
 const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href);
 ---
 <header class:list={['cabecera', 'sobre-negro', { 'cabecera--portada': enPortada }]} data-cabecera>
-  <div class="envoltura"><div class="cabecera__caja">
-  <div class="cabecera__barra">
+  <div class="cabecera__caja">
+  <div class="envoltura"><div class="cabecera__barra">
     <a class="cabecera__logo" href="/" aria-label="Inicio">
       <Logo version="horizontal-negativo" ancho={232} />
     </a>
@@ -41,9 +44,9 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
         ))}
       </ul>
     </nav>
-  </div>
-  <div class="cabecera__banda" aria-hidden="true"><div class="filete"></div></div>
   </div></div>
+  <div class="cabecera__banda" aria-hidden="true"><div class="filete"></div></div>
+  </div>
 </header>
 
 <script>
@@ -54,7 +57,26 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
     boton.setAttribute('aria-expanded', String(!abierto));
     nav?.classList.toggle('esta-abierta', !abierto);
     document.body.classList.toggle('menu-abierto', !abierto);
+    // Al abrir el panel, la espada del tema activo vuelve a recorrer su rótulo: con el menú
+    // cerrado la animación se consume sin que nadie llegue a verla.
+    if (!abierto) {
+      const activo = nav?.querySelector<HTMLElement>("[aria-current='page']");
+      activo?.getAnimations?.({ subtree: true }).forEach((a) => { a.cancel(); a.play(); });
+    }
   });
+  // "Consejo" no es una página sino una sección de la portada, así que no puede marcarse desde
+  // la ruta como las demás: se enciende cuando esa sección cruza el centro de la pantalla. Al
+  // empezar a cumplirse el selector, la espada arranca sola (la anima el CSS).
+  const enlaceConsejo = document.querySelector<HTMLElement>('.nav__enlace[href="/#consejo"]');
+  const seccionConsejo = document.getElementById('consejo');
+  if (enlaceConsejo && seccionConsejo && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) enlaceConsejo.setAttribute('aria-current', 'page');
+      else enlaceConsejo.removeAttribute('aria-current');
+      // La sección es más alta que la ventana: se mira la banda central, no el solapamiento.
+    }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' }).observe(seccionConsejo);
+  }
+
   // Portada: la cabecera aparece al desplazarse hacia abajo y vuelve a ocultarse al regresar arriba del todo.
   const cabecera = document.querySelector<HTMLElement>('.cabecera--portada');
   if (cabecera) {
@@ -72,7 +94,7 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
 </script>
 
 <style>
-  /* La cabecera ocupa sólo el ancho del contenido: fuera de la caja no hay fondo */
+  /* La cabecera ocupa el ancho de la ventana; el contenido se alinea a la retícula de la página */
   .cabecera { position: sticky; top: 0; z-index: 30; color: var(--pergamino); margin-bottom: -12px; }
   .cabecera__caja { position: relative; background: linear-gradient(var(--castano), var(--castano)) top / 100% calc(100% - 12px) no-repeat; }
   .cabecera--portada {
@@ -84,7 +106,8 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
     transform: none; opacity: 1; pointer-events: auto;
   }
   /* Mismo aire arriba y abajo del logotipo, hasta el filete */
-  .cabecera__barra { display: flex; align-items: center; justify-content: space-between; gap: var(--s5); height: var(--cabecera); padding: 0 var(--s5); }
+  /* El relleno lateral ya lo da la envoltura: el logotipo cae a plomo con el contenido */
+  .cabecera__barra { display: flex; align-items: center; justify-content: space-between; gap: var(--s5); height: var(--cabecera); }
   .cabecera__logo { display: flex; }
   .cabecera__banda { position: relative; z-index: 2; }
   .cabecera__logo :global(svg) { width: 200px; }
@@ -101,6 +124,7 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
 
   .nav__lista { list-style: none; }
   .nav__enlace {
+    position: relative;
     display: inline-flex; align-items: center; gap: var(--s2); padding: var(--s3) 0;
     background: none; border: 0; cursor: pointer;
     font: 500 12px/16px var(--f-sans); letter-spacing: .16em; text-transform: uppercase;
@@ -108,7 +132,30 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
     transition: color .25s ease;
   }
   .nav__enlace:hover { color: var(--plata); }
-  .nav__enlace[aria-current='page'] { color: var(--pergamino); border-bottom-color: var(--pergamino); }
+
+  /* El tema activo se subraya con la espada del sistema: el filo recorre el rótulo de izquierda
+     a derecha y la línea se dibuja detrás de él. El borde se queda transparente para reservar
+     el sitio y que nada salte al cambiar de página. */
+  .nav__enlace[aria-current='page'] { color: var(--pergamino); border-bottom-color: transparent; }
+  .nav__enlace[aria-current='page']::after {
+    content: ''; position: absolute; left: 0; bottom: -1px; width: 100%; height: 1px;
+    background: var(--pergamino);
+    transform: scaleX(0); transform-origin: left;
+    /* Misma cadencia que la espada de .enlace-mayor: un trazo decidido, no un rebote */
+    animation: nav-linea .9s cubic-bezier(.65, 0, .35, 1) forwards;
+  }
+  .nav__enlace[aria-current='page']::before {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 11px;
+    background: var(--pergamino);
+    -webkit-mask: var(--espada-h) left center / 22px 11px no-repeat;
+    mask: var(--espada-h) left center / 22px 11px no-repeat;
+    animation: nav-espada .9s cubic-bezier(.65, 0, .35, 1) forwards;
+  }
+  @keyframes nav-linea { to { transform: scaleX(1); } }
+  @keyframes nav-espada {
+    from { -webkit-mask-position: left center; mask-position: left center; }
+    to { -webkit-mask-position: right center; mask-position: right center; }
+  }
   .nav__flecha { transition: transform .2s ease; }
   .nav__item.esta-abierto .nav__flecha { transform: rotate(180deg); }
   .nav__sub { list-style: none; }
