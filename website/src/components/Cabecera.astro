@@ -39,9 +39,9 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
               <li><a href="/historia/la-corporacion/" aria-current={actual.startsWith('/historia/la-corporacion') ? 'page' : undefined}>La Corporación</a></li>
               <li><a href="/historia/la-cofradia/" aria-current={actual.startsWith('/historia/la-cofradia') ? 'page' : undefined}>La Cofradía de San Jorge</a></li>
             </ul>
-            {/* La banda de la cabecera rodea el panel: dos mitades, negra y roja, que nacen en el
-                centro de arriba, bajan por los lados y se cierran en el centro del pie. El trazado
-                lo calcula el script al abrir. */}
+            {/* La banda de la cabecera baja a rodear el panel: dos mitades, negra y roja, que salen
+                de la banda en cada canto, cruzan el respiro, bajan por los lados y se cierran en el
+                centro del pie. El trazado lo calcula el script al abrir. */}
             <svg class="nav__marco" aria-hidden="true">
               <path class="nav__marco-negro" pathLength="1" /><path class="nav__marco-negro" pathLength="1" />
               <path class="nav__marco-rojo" pathLength="1" /><path class="nav__marco-rojo" pathLength="1" />
@@ -96,16 +96,19 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
   document.querySelectorAll<HTMLButtonElement>('[data-submenu]').forEach((b) => {
     const item = b.closest('.nav__item');
     // Marco del panel (escritorio): por el centro de una banda de 12 px como la de la cabecera, desde
-    // el centro de arriba, por los dos lados, hasta el centro del pie. Medidas reales del panel, en
-    // píxeles, para que el ancho del trazo y los cantos salgan limpios.
+    // la propia banda de la cabecera (medida: queda por encima del panel, al otro lado del respiro),
+    // por los dos lados, hasta el centro del pie. Medidas reales, en píxeles, para que el ancho del
+    // trazo, el filo rojo y los cantos casen con la banda.
     const sub = item?.querySelector<HTMLElement>('.nav__sub');
     const marco = sub?.querySelector<SVGSVGElement>('.nav__marco');
     const trazar = () => {
       if (!sub || !marco) return;
       const w = sub.offsetWidth, h = sub.offsetHeight, m = 6;
+      const banda = document.querySelector('.cabecera__banda');
+      const y = (banda ? banda.getBoundingClientRect().top - sub.getBoundingClientRect().top : -18) + m;
       marco.setAttribute('viewBox', `0 0 ${w} ${h}`);
-      const izquierda = `M${w / 2} ${m}H${m}V${h - m}H${w / 2}`;
-      const derecha = `M${w / 2} ${m}H${w - m}V${h - m}H${w / 2}`;
+      const izquierda = `M${m} ${y.toFixed(2)}V${h - m}H${w / 2}`;
+      const derecha = `M${w - m} ${y.toFixed(2)}V${h - m}H${w / 2}`;
       marco.querySelectorAll('path').forEach((p, i) => p.setAttribute('d', i % 2 ? derecha : izquierda));
     };
     const set = (v: boolean) => { b.setAttribute('aria-expanded', String(v)); item?.classList.toggle('esta-abierto', v); if (v) trazar(); };
@@ -214,12 +217,12 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
     .cabecera__menu { display: none; }
     .nav__lista { display: flex; gap: var(--s6); align-items: center; }
     .nav__item--grupo { position: relative; }
-    /* El panel cuelga suelto bajo la cabecera, con un respiro de 8 px: desde el pie del botón quedan
-       media barra menos medio botón (40 px), los 12 px de la banda y el respiro. Lo rodea una banda
-       como la de la cabecera (.nav__marco): al abrirse, la negra y la roja salen del centro de arriba,
-       bajan por los lados y se cierran en el centro del pie. */
+    /* El panel cuelga bajo la cabecera con un respiro de 6 px: desde el pie del botón quedan media
+       barra menos medio botón (40 px), los 12 px de la banda y el respiro. La banda de la cabecera
+       sigue entera y baja a rodearlo (.nav__marco): al abrirse, la negra y la roja salen de ella en
+       cada canto, cruzan el respiro, bajan por los lados y se cierran en el centro del pie. */
     .nav__sub {
-      display: none; position: absolute; z-index: 3; top: calc(100% + var(--cabecera) / 2 - 20px + 12px + 8px); left: -36px; min-width: 324px;
+      display: none; position: absolute; z-index: 3; top: calc(100% + var(--cabecera) / 2 - 20px + 12px + 6px); left: -36px; min-width: 324px;
       padding: calc(12px + var(--s3)) calc(12px + var(--s5)); background: var(--castano);
     }
     .nav__item.esta-abierto .nav__sub { display: block; }
