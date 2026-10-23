@@ -243,11 +243,14 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 </Base>
 
 <script>
-  // VI · La hoja se da la vuelta al ritmo del desplazamiento, como quien vuelve una página.
-  // No se mueve hasta que se ve entera: entonces se queda fija en el centro de la ventana y el
-  // recorrido de su pista la va girando; termina de girar al 70 % y el resto es reposo, para
-  // leerla de espaldas antes de que siga la página. Al subir vuelve a ponerse de frente.
+  // VI · La hoja se da la vuelta como quien vuelve una página. No se mueve hasta que se ve
+  // entera: entonces se queda fija en el centro de la ventana mientras se recorre su pista.
+  // El desplazamiento es el gatillo, no la mano: pasado un 30 % del recorrido la hoja se vuelve
+  // de un solo gesto (1,2 s), y si se sube por debajo del 15 % vuelve a ponerse de frente. Así
+  // nunca se queda de canto aunque el lector deje de bajar a medias.
   // Con el ratón también se vuelve: pasarlo de un lado al otro de la hoja la gira con la mano.
+  // Regla de la mano: en cuanto el ratón sale de los límites de la hoja, ésta se posa en la
+  // cara más cercana.
   const hoja = document.querySelector<HTMLElement>('[data-hoja]');
   if (hoja && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const papel = hoja.querySelector<HTMLElement>('[data-hoja-papel]')!;
@@ -257,23 +260,35 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
     let pedido = 0;
     // Giro que pone la mano, sumado al del desplazamiento; en reposo siempre es múltiplo de 180
     let mano = 0, manoObjetivo = 0;
-    const pintar = () => {
+    // Giro que pone el desplazamiento: va de una cara a la otra por tiempo, no a remolque de la rueda
+    const VUELTA = 1200;
+    let lado = -1, giroScroll = 0, desde = 0, hacia = 0, t0 = 0, previo = 0;
+    const pintar = (ahora = performance.now()) => {
       pedido = 0;
+      // La mano sigue al ratón por tiempo, no por fotograma: se posa igual de rápido en cualquier equipo
+      const dt = previo ? Math.min(100, ahora - previo) : 16;
+      previo = ahora;
       // p = 0 en el momento en que la hoja se fija (ya entera a la vista) y 1 al 70 % de la pista
       const fija = parseFloat(getComputedStyle(hoja).top) || 0;
       const recorrido = (pista.offsetHeight - hoja.offsetHeight) * 0.7;
       const p = Math.min(1, Math.max(0, (fija - pista.getBoundingClientRect().top) / recorrido));
-      const suave = p * p * (3 - 2 * p);
-      mano += (manoObjetivo - mano) * 0.14;
+      // Con holgura entre los dos umbrales, para que un temblor de la rueda no la haga ir y venir
+      const nuevo = lado === 1 ? (p > 0.15 ? 1 : 0) : (p >= 0.3 ? 1 : 0);
+      if (lado < 0) { lado = nuevo; giroScroll = desde = hacia = -180 * lado; }
+      else if (nuevo !== lado) { lado = nuevo; desde = giroScroll; hacia = -180 * lado; t0 = ahora; }
+      const tramo = Math.abs(hacia - desde) / 180;
+      const k = tramo ? Math.min(1, (ahora - t0) / (VUELTA * tramo)) : 1;
+      giroScroll = desde + (hacia - desde) * (0.5 - 0.5 * Math.cos(Math.PI * k));
+      mano += (manoObjetivo - mano) * (1 - Math.exp(-dt / 110));
       if (Math.abs(manoObjetivo - mano) < 0.05) mano = manoObjetivo;
-      const giro = -180 * suave + mano;
+      const giro = giroScroll + mano;
       const rad = giro * Math.PI / 180;
       const canto = Math.abs(Math.sin(rad));
       // Como en un libro: la hoja se levanta hacia el lector y se tuerce un poco al ponerse de canto
       papel.style.transform = `translateZ(${(canto * 70).toFixed(1)}px) rotateY(${giro.toFixed(2)}deg) rotateZ(${(canto * -1.8).toFixed(2)}deg)`;
       hoja.style.setProperty('--canto', canto.toFixed(3));
       if (Math.cos(rad) < -0.96) escribir();
-      if (mano !== manoObjetivo) pedir();
+      if (mano !== manoObjetivo || k < 1) pedir(); else previo = 0;
     };
 
     // Cuando la hoja queda de espaldas, la pluma escribe la conclusión una sola vez.
@@ -313,34 +328,35 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
     const pedir = () => { if (!pedido) pedido = requestAnimationFrame(pintar); };
 
     // La mano: el recorrido horizontal del ratón sobre la hoja, de un canto al otro, es media
-    // vuelta, en el sentido en que se mueva. Si el gesto se queda a medias (el ratón sale o se
-    // detiene), la hoja no se queda de canto: cae hacia la cara más cercana.
+    // vuelta, en el sentido en que se mueva. Si el gesto se queda a medias (el ratón se detiene),
+    // la hoja cae hacia la cara más cercana. Los límites se comprueban contra la caja de la
+    // escena, que no gira: la hoja levantada asoma fuera de ella y el navegador no siempre avisa
+    // de que el ratón ha salido. Se comprueban al mover, al desplazar la página y al salir de la ventana.
     if (matchMedia('(pointer: fine)').matches) {
       const escena = hoja.querySelector<HTMLElement>('.hoja__escena')!;
-      let x0 = 0, ultimaX = 0, base = 0, ancho = 1, dentro = false, quieto = 0;
+      let x0 = 0, ultimaX = 0, ultimaY = 0, base = 0, dentro = false, quieto = 0;
       const asentar = () => { base = Math.round(manoObjetivo / 180) * 180; manoObjetivo = base; x0 = ultimaX; pedir(); };
-      escena.addEventListener('pointerenter', (e) => {
+      const posar = () => { if (!dentro) return; dentro = false; clearTimeout(quieto); asentar(); };
+      const comprobar = () => {
+        const r = escena.getBoundingClientRect();
+        const enLaHoja = ultimaX >= r.left && ultimaX <= r.right && ultimaY >= r.top && ultimaY <= r.bottom;
+        if (enLaHoja && !dentro) { dentro = true; x0 = ultimaX; base = Math.round(manoObjetivo / 180) * 180; }
+        else if (!enLaHoja) posar();
+        return r;
+      };
+      addEventListener('pointermove', (e) => {
         if (e.pointerType !== 'mouse') return;
-        dentro = true;
-        x0 = ultimaX = e.clientX;
-        ancho = escena.getBoundingClientRect().width;
-        base = Math.round(manoObjetivo / 180) * 180;
-      });
-      escena.addEventListener('pointermove', (e) => {
+        ultimaX = e.clientX; ultimaY = e.clientY;
+        const r = comprobar();
         if (!dentro) return;
-        ultimaX = e.clientX;
-        const dx = Math.max(-1, Math.min(1, (e.clientX - x0) / ancho));
-        manoObjetivo = base + dx * 180;
+        manoObjetivo = base + Math.max(-1, Math.min(1, (ultimaX - x0) / r.width)) * 180;
         clearTimeout(quieto);
         quieto = setTimeout(asentar, 420);
         pedir();
-      });
-      escena.addEventListener('pointerleave', () => {
-        if (!dentro) return;
-        dentro = false;
-        clearTimeout(quieto);
-        asentar();
-      });
+      }, { passive: true });
+      addEventListener('scroll', () => { if (dentro) comprobar(); }, { passive: true });
+      document.documentElement.addEventListener('pointerleave', posar);
+      addEventListener('blur', posar);
     }
     addEventListener('scroll', pedir, { passive: true });
     addEventListener('resize', pedir);
