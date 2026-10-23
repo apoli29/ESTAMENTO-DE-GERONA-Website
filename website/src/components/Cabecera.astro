@@ -34,10 +34,18 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
             Historia
             <svg class="nav__flecha" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.3" /></svg>
           </button>
-          <ul id="sub-historia" class="nav__sub">
-            <li><a href="/historia/la-corporacion/" aria-current={actual.startsWith('/historia/la-corporacion') ? 'page' : undefined}>La Corporación</a></li>
-            <li><a href="/historia/la-cofradia/" aria-current={actual.startsWith('/historia/la-cofradia') ? 'page' : undefined}>La Cofradía de San Jorge</a></li>
-          </ul>
+          <div id="sub-historia" class="nav__sub">
+            <ul class="nav__sub-lista">
+              <li><a href="/historia/la-corporacion/" aria-current={actual.startsWith('/historia/la-corporacion') ? 'page' : undefined}>La Corporación</a></li>
+              <li><a href="/historia/la-cofradia/" aria-current={actual.startsWith('/historia/la-cofradia') ? 'page' : undefined}>La Cofradía de San Jorge</a></li>
+            </ul>
+            {/* La banda de la cabecera rodea el panel: dos mitades, negra y roja, que bajan por los
+                lados y se cierran en el centro del pie. El trazado lo calcula el script al abrir. */}
+            <svg class="nav__marco" aria-hidden="true">
+              <path class="nav__marco-negro" pathLength="1" /><path class="nav__marco-negro" pathLength="1" />
+              <path class="nav__marco-rojo" pathLength="1" /><path class="nav__marco-rojo" pathLength="1" />
+            </svg>
+          </div>
         </li>
         {navegacion.map((n) => (
           <li class="nav__item"><a class="nav__enlace" href={n.href} aria-current={activo(n.href) ? 'page' : undefined}>{n.nombre}</a></li>
@@ -86,7 +94,23 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
   }
   document.querySelectorAll<HTMLButtonElement>('[data-submenu]').forEach((b) => {
     const item = b.closest('.nav__item');
-    const set = (v: boolean) => { b.setAttribute('aria-expanded', String(v)); item?.classList.toggle('esta-abierto', v); };
+    // Marco del panel (escritorio): por el centro de la banda de 12 px, desde la banda de la cabecera
+    // (arriba, en cada canto) bajando por los lados hasta el centro del pie. Medidas reales del panel,
+    // en píxeles, para que el ancho del trazo y los cantos casen con la banda.
+    const sub = item?.querySelector<HTMLElement>('.nav__sub');
+    const marco = sub?.querySelector<SVGSVGElement>('.nav__marco');
+    const trazar = () => {
+      if (!sub || !marco) return;
+      const w = sub.offsetWidth, h = sub.offsetHeight, m = 6;
+      // Centro de la banda de la cabecera, medido: el panel arranca un pelo por encima de ella
+      const banda = document.querySelector('.cabecera__banda');
+      const y = banda ? banda.getBoundingClientRect().top - sub.getBoundingClientRect().top + m : m;
+      marco.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      const izquierda = `M-1 ${y.toFixed(2)}H${m}V${h - m}H${w / 2}`;
+      const derecha = `M${w + 1} ${y.toFixed(2)}H${w - m}V${h - m}H${w / 2}`;
+      marco.querySelectorAll('path').forEach((p, i) => p.setAttribute('d', i % 2 ? derecha : izquierda));
+    };
+    const set = (v: boolean) => { b.setAttribute('aria-expanded', String(v)); item?.classList.toggle('esta-abierto', v); if (v) trazar(); };
     b.addEventListener('click', () => set(b.getAttribute('aria-expanded') !== 'true'));
     item?.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Escape') { set(false); b.focus(); } });
     document.addEventListener('click', (e) => { if (item && !item.contains(e.target as Node)) set(false); });
@@ -158,7 +182,8 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
   }
   .nav__flecha { transition: transform .2s ease; }
   .nav__item.esta-abierto .nav__flecha { transform: rotate(180deg); }
-  .nav__sub { list-style: none; }
+  .nav__sub-lista { list-style: none; }
+  .nav__marco { display: none; }
   /* Los temas de Historia hablan como la barra: Thasadith en versalitas espaciadas, y cada uno con
      su espada blanca delante, apuntando al rótulo. La del tema activo brilla entera; las demás, a
      media luz, y se acercan al rótulo al apuntar. */
@@ -191,20 +216,22 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
     .cabecera__menu { display: none; }
     .nav__lista { display: flex; gap: var(--s6); align-items: center; }
     .nav__item--grupo { position: relative; }
-    /* Cuelga justo por debajo de la banda de la cabecera (barra + filete de 12 px). El botón
-       está centrado en la barra, así que desde su pie quedan media barra menos medio botón
-       (40 px) y el filete; un píxel menos, para que no asome una raya de fondo por el medio píxel.
-       Si empezara dentro de la barra, el filete le pasaría por encima. */
+    /* El panel sale de la propia barra: arranca al pie de la barra (media barra menos medio botón,
+       40 px, por debajo del botón; un píxel más arriba, dentro del castaño, para que el medio píxel
+       de redondeo no deje ver un hilo de la banda), tapa la banda de la cabecera en su ancho y el castaño sigue sin
+       corte. La banda dobla en los cantos y lo rodea (.nav__marco): al abrirse, la negra y la roja
+       bajan por los lados y se cierran en el centro del pie. */
     .nav__sub {
-      display: none; position: absolute; top: calc(100% + var(--cabecera) / 2 - 20px + 12px - 1px); left: -24px; min-width: 300px;
-      /* Mismo traje que la barra: castaño, y al pie la banda negra de 12 px con el filo rojo */
-      padding: var(--s3) var(--s5) calc(var(--s3) + 12px);
-      background:
-        linear-gradient(var(--rojo), var(--rojo)) 0 calc(100% - 5px) / 100% 2px no-repeat,
-        linear-gradient(var(--castano), var(--castano)) top / 100% calc(100% - 12px) no-repeat,
-        var(--negro);
+      display: none; position: absolute; z-index: 3; top: calc(100% + var(--cabecera) / 2 - 21px); left: -36px; min-width: 324px;
+      padding: calc(12px + var(--s3)) calc(12px + var(--s5)); background: var(--castano);
     }
     .nav__item.esta-abierto .nav__sub { display: block; }
+    .nav__marco { display: block; position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+    .nav__marco path { fill: none; stroke-linejoin: miter; stroke-dasharray: 1; stroke-dashoffset: 1; }
+    .nav__marco-negro { stroke: var(--negro); stroke-width: 12; }
+    .nav__marco-rojo { stroke: var(--rojo); stroke-width: 2; }
+    .nav__item.esta-abierto .nav__marco path { animation: marco .65s cubic-bezier(.65, 0, .35, 1) forwards; }
+    @keyframes marco { to { stroke-dashoffset: 0; } }
     .nav__sub li + li { border-top: 1px solid var(--linea-clara); }
   }
 </style>
