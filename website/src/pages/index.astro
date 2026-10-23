@@ -306,7 +306,7 @@ const idForma = Object.fromEntries(Object.keys(E.formas).map((c, i) => [c, `plum
     // tiene su turno, más largo cuanto más largo es su contorno, con una pausa breve entre palabras
     // y más larga tras una coma o un punto; las letras se solapan un poco, como al escribir de corrido.
     // La punta de la pluma va sobre el punto exacto del contorno que se está trazando.
-    const ESCRITURA = 2200;
+    const ESCRITURA = 4200;
     const escrito = hoja.querySelector<HTMLElement>('[data-escrito]')!;
     const pluma = escrito.querySelector<SVGGElement>('[data-pluma]')!;
     const glifos = [...escrito.querySelectorAll<SVGUseElement>('.glifo')];
@@ -405,10 +405,11 @@ const idForma = Object.fromEntries(Object.keys(E.formas).map((c, i) => [c, `plum
     position: absolute; inset: 0;
     background: linear-gradient(180deg, rgba(26, 23, 20, .58) 0%, rgba(26, 23, 20, .4) 36%, rgba(26, 23, 20, .66) 72%, var(--negro) 100%);
   }
-  .portada__contenido { position: relative; display: grid; justify-items: center; gap: var(--s5); padding-top: var(--s9); padding-bottom: var(--s10); }
-  .portada__dato { color: var(--plata); letter-spacing: .12em; }
-  .portada__titulo { font-family: var(--f-titulo); font-weight: 800; font-size: clamp(48px, 6.4vw, 72px); line-height: 1; letter-spacing: -.035em; text-wrap: balance; max-width: 12ch; }
-  .portada__entradilla { font-family: var(--f-cuerpo); font-size: 20px; line-height: 1.6; color: var(--espada); max-width: 40ch; text-wrap: balance; }
+  /* La entrada de la portada va un 25 % por encima de la escala general (dato, título, entradilla y aire) */
+  .portada__contenido { position: relative; display: grid; justify-items: center; gap: 30px; padding-top: var(--s9); padding-bottom: var(--s10); }
+  .portada__dato { color: var(--plata); letter-spacing: .12em; font-size: 16.25px; }
+  .portada__titulo { font-family: var(--f-titulo); font-weight: 800; font-size: clamp(48px, 15vw, 90px); line-height: 1; letter-spacing: -.035em; text-wrap: balance; max-width: 12ch; }
+  .portada__entradilla { font-family: var(--f-cuerpo); font-size: 25px; line-height: 1.6; color: var(--espada); max-width: 40ch; text-wrap: balance; }
 
   /* I · Origen */
   .origen-seccion { padding-top: var(--s7); }

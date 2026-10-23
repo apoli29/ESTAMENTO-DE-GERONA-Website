@@ -159,9 +159,22 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
   .nav__flecha { transition: transform .2s ease; }
   .nav__item.esta-abierto .nav__flecha { transform: rotate(180deg); }
   .nav__sub { list-style: none; }
-  .nav__sub a { display: block; font-family: var(--f-cuerpo); font-size: 18px; color: var(--pergamino); text-decoration: none; padding: var(--s2) 0; }
+  /* Los temas de Historia hablan como la barra: Thasadith en versalitas espaciadas, y cada uno con
+     su espada blanca delante, apuntando al rótulo. La del tema activo brilla entera; las demás, a
+     media luz, y se acercan al rótulo al apuntar. */
+  .nav__sub a {
+    display: flex; align-items: center; gap: var(--s3); padding: var(--s3) 0;
+    font: 400 13px/16px var(--f-cuerpo); letter-spacing: .16em; text-transform: uppercase;
+    -webkit-text-stroke: .35px currentColor; color: var(--pergamino); text-decoration: none;
+  }
+  .nav__sub a::before {
+    content: ''; flex: none; width: 26px; height: 11px; background: var(--pergamino); opacity: .5;
+    -webkit-mask: var(--espada-h) center / contain no-repeat; mask: var(--espada-h) center / contain no-repeat;
+    transition: opacity .25s ease, transform .35s cubic-bezier(.2, .7, .1, 1);
+  }
   .nav__sub a:hover { color: var(--plata); }
-  .nav__sub a[aria-current='page']::before { content: ''; display: inline-block; width: 16px; height: 1px; background: currentColor; vertical-align: middle; margin-right: var(--s2); }
+  .nav__sub a:is(:hover, :focus-visible)::before { opacity: 1; transform: translateX(4px); }
+  .nav__sub a[aria-current='page']::before { opacity: 1; }
 
   /* Móvil y tableta: panel desplegable bajo la cabecera */
   @media (max-width: 1023px) {
@@ -180,10 +193,16 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
     .nav__item--grupo { position: relative; }
     /* Cuelga justo por debajo de la banda de la cabecera (barra + filete de 12 px). El botón
        está centrado en la barra, así que desde su pie quedan media barra menos medio botón
-       (40 px) y el filete. Si empezara dentro de la barra, el filete le pasaría por encima. */
+       (40 px) y el filete; un píxel menos, para que no asome una raya de fondo por el medio píxel.
+       Si empezara dentro de la barra, el filete le pasaría por encima. */
     .nav__sub {
-      display: none; position: absolute; top: calc(100% + var(--cabecera) / 2 - 20px + 12px); left: -24px; min-width: 300px;
-      background: var(--castano); border: 1px solid var(--linea-clara); border-top: 0; padding: var(--s3) var(--s5);
+      display: none; position: absolute; top: calc(100% + var(--cabecera) / 2 - 20px + 12px - 1px); left: -24px; min-width: 300px;
+      /* Mismo traje que la barra: castaño, y al pie la banda negra de 12 px con el filo rojo */
+      padding: var(--s3) var(--s5) calc(var(--s3) + 12px);
+      background:
+        linear-gradient(var(--rojo), var(--rojo)) 0 calc(100% - 5px) / 100% 2px no-repeat,
+        linear-gradient(var(--castano), var(--castano)) top / 100% calc(100% - 12px) no-repeat,
+        var(--negro);
     }
     .nav__item.esta-abierto .nav__sub { display: block; }
     .nav__sub li + li { border-top: 1px solid var(--linea-clara); }
