@@ -160,8 +160,8 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
         </div>
         <p class="t-titulo2">{F.entradilla}</p>
         <p class="t-cuerpo">{F.caracter}</p>
-        <a class="enlace-mayor" href="/historia/la-cofradia/">Actas, ordinaciones y privilegios</a>
       </div>
+      <div class="hoja-pista" data-hoja-pista>
       <figure class="hoja" data-hoja>
         <div class="hoja__escena">
           <div class="hoja__papel" data-hoja-papel>
@@ -192,6 +192,8 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
         </div>
         <figcaption>{CREDITOS['lismann-girona-1928.jpg']}</figcaption>
       </figure>
+      </div>
+      <a class="enlace-mayor" href="/historia/la-cofradia/">Actas, ordinaciones y privilegios</a>
     </div>
   </section>
 
@@ -241,24 +243,37 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 </Base>
 
 <script>
-  // VI · La hoja se da la vuelta al ritmo del desplazamiento, como quien vuelve una página:
-  // empieza cuando su canto superior asoma por el 85 % de la ventana y queda de espaldas al
-  // llegar al 30 %, que es donde se lee la sección. Va atada al scroll, así que al subir vuelve a ponerse de frente.
+  // VI · La hoja se da la vuelta al ritmo del desplazamiento, como quien vuelve una página.
+  // No se mueve hasta que se ve entera: entonces se queda fija en el centro de la ventana y el
+  // recorrido de su pista la va girando; termina de girar al 70 % y el resto es reposo, para
+  // leerla de espaldas antes de que siga la página. Al subir vuelve a ponerse de frente.
+  // Con el ratón también se vuelve: pasarlo de un lado al otro de la hoja la gira con la mano.
   const hoja = document.querySelector<HTMLElement>('[data-hoja]');
   if (hoja && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const papel = hoja.querySelector<HTMLElement>('[data-hoja-papel]')!;
+    const pista = hoja.closest<HTMLElement>('[data-hoja-pista]')!;
     hoja.classList.add('es-viva');
+    pista.classList.add('es-viva');
     let pedido = 0;
+    // Giro que pone la mano, sumado al del desplazamiento; en reposo siempre es múltiplo de 180
+    let mano = 0, manoObjetivo = 0;
     const pintar = () => {
       pedido = 0;
-      const r = hoja.getBoundingClientRect();
-      const p = Math.min(1, Math.max(0, (innerHeight * 0.85 - r.top) / (innerHeight * 0.55)));
+      // p = 0 en el momento en que la hoja se fija (ya entera a la vista) y 1 al 70 % de la pista
+      const fija = parseFloat(getComputedStyle(hoja).top) || 0;
+      const recorrido = (pista.offsetHeight - hoja.offsetHeight) * 0.7;
+      const p = Math.min(1, Math.max(0, (fija - pista.getBoundingClientRect().top) / recorrido));
       const suave = p * p * (3 - 2 * p);
-      const canto = Math.sin(suave * Math.PI);
-      // De derecha a izquierda, como en un libro: la hoja se levanta hacia el lector y se tuerce un poco
-      papel.style.transform = `translateZ(${(canto * 70).toFixed(1)}px) rotateY(${(-180 * suave).toFixed(2)}deg) rotateZ(${(canto * -1.8).toFixed(2)}deg)`;
+      mano += (manoObjetivo - mano) * 0.14;
+      if (Math.abs(manoObjetivo - mano) < 0.05) mano = manoObjetivo;
+      const giro = -180 * suave + mano;
+      const rad = giro * Math.PI / 180;
+      const canto = Math.abs(Math.sin(rad));
+      // Como en un libro: la hoja se levanta hacia el lector y se tuerce un poco al ponerse de canto
+      papel.style.transform = `translateZ(${(canto * 70).toFixed(1)}px) rotateY(${giro.toFixed(2)}deg) rotateZ(${(canto * -1.8).toFixed(2)}deg)`;
       hoja.style.setProperty('--canto', canto.toFixed(3));
-      if (suave > 0.86) escribir();
+      if (Math.cos(rad) < -0.96) escribir();
+      if (mano !== manoObjetivo) pedir();
     };
 
     // Cuando la hoja queda de espaldas, la pluma escribe la conclusión una sola vez.
@@ -293,8 +308,41 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
       setTimeout(siguiente, 260);
     };
     const pedir = () => { if (!pedido) pedido = requestAnimationFrame(pintar); };
+
+    // La mano: el recorrido horizontal del ratón sobre la hoja, de un canto al otro, es media
+    // vuelta, en el sentido en que se mueva. Si el gesto se queda a medias (el ratón sale o se
+    // detiene), la hoja no se queda de canto: cae hacia la cara más cercana.
+    if (matchMedia('(pointer: fine)').matches) {
+      const escena = hoja.querySelector<HTMLElement>('.hoja__escena')!;
+      let x0 = 0, ultimaX = 0, base = 0, ancho = 1, dentro = false, quieto = 0;
+      const asentar = () => { base = Math.round(manoObjetivo / 180) * 180; manoObjetivo = base; x0 = ultimaX; pedir(); };
+      escena.addEventListener('pointerenter', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        dentro = true;
+        x0 = ultimaX = e.clientX;
+        ancho = escena.getBoundingClientRect().width;
+        base = Math.round(manoObjetivo / 180) * 180;
+      });
+      escena.addEventListener('pointermove', (e) => {
+        if (!dentro) return;
+        ultimaX = e.clientX;
+        const dx = Math.max(-1, Math.min(1, (e.clientX - x0) / ancho));
+        manoObjetivo = base + dx * 180;
+        clearTimeout(quieto);
+        quieto = setTimeout(asentar, 420);
+        pedir();
+      });
+      escena.addEventListener('pointerleave', () => {
+        if (!dentro) return;
+        dentro = false;
+        clearTimeout(quieto);
+        asentar();
+      });
+    }
     addEventListener('scroll', pedir, { passive: true });
     addEventListener('resize', pedir);
+    new ResizeObserver(() => { pista.style.setProperty('--hoja-alto', hoja.offsetHeight + 'px'); pedir(); }).observe(hoja);
+    pista.style.setProperty('--hoja-alto', hoja.offsetHeight + 'px');
     pintar();
   }
 </script>
@@ -375,8 +423,14 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .cofradia__texto { display: grid; gap: var(--s5); justify-items: center; max-width: 60ch; }
   .cofradia__texto .t-titulo2 { max-width: 26ch; }
 
-  /* La hoja: 520 px de ancho son 710 px de alto en el formato del dibujo */
-  .hoja { margin: 0; width: min(100%, 520px); container-type: inline-size; text-align: left; }
+  /* La hoja: 520 px de ancho son 710 px de alto en el formato del dibujo. En ventanas bajas
+     se estrecha (0,732 es la proporción del dibujo) para caber entera bajo la cabecera, pie incluido. */
+  .hoja { margin: 0; width: min(100%, 520px, calc((100svh - var(--cabecera) - 96px) * .732)); container-type: inline-size; text-align: left; }
+  .hoja-pista { width: 100%; display: grid; justify-items: center; align-content: start; }
+  /* La pista: la hoja se queda fija y centrada bajo la cabecera mientras se recorre; ese
+     recorrido es el que la da la vuelta (ver el script). --hoja-alto lo mide el script. */
+  .hoja-pista.es-viva { height: calc(var(--hoja-alto, 0px) + 110svh); }
+  .hoja-pista.es-viva .hoja { position: sticky; top: calc(var(--cabecera) + max(var(--s4), (100svh - var(--cabecera) - var(--hoja-alto, 0px)) / 2)); }
   .hoja figcaption { margin-top: var(--s2); font-family: var(--f-mono); font-size: 12px; line-height: 1.5; color: var(--tinta-2); text-align: center; }
   .hoja__escena { perspective: 1800px; perspective-origin: 50% 40%; }
   .hoja__papel { position: relative; }
@@ -434,6 +488,7 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   /* Con JS y sin movimiento reducido: las dos caras son una sola hoja que se da la vuelta.
      El giro y --canto (0 de frente o de espaldas, 1 de canto) los escribe el script de abajo. */
   .hoja.es-viva .hoja__papel { transform-style: preserve-3d; will-change: transform; }
+  @media (pointer: fine) { .hoja.es-viva .hoja__escena { cursor: ew-resize; } }
   .hoja.es-viva .hoja__cara {
     -webkit-backface-visibility: hidden; backface-visibility: hidden;
     box-shadow: 0 calc(18px + 26px * var(--canto, 0)) calc(36px + 30px * var(--canto, 0)) -22px rgba(26, 23, 20, .45);
