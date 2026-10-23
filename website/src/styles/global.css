@@ -157,9 +157,14 @@ a:hover { color: var(--negro); }
    su lengua) para que el justificado no abra ríos entre palabras */
 .t-cuerpo, .relacion__valor, .rotulo__nota { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
 .t-etiqueta { font-size: 13px; line-height: 1.5; letter-spacing: .16em; text-transform: uppercase; }
-/* Thasadith sólo tiene 400 y 700: a 13 px en versalitas el 400 queda flojo y el 700 pesa demasiado.
-   Un trazo finísimo del mismo color engorda la letra lo justo, sea roja, castaña o clara. */
-:is(.t-etiqueta, .rotulo__etiqueta, .cita-fuente) { -webkit-text-stroke: .35px currentColor; }
+/* Texto pequeño (13–14 px) en Thasadith: sólo tiene 400 y 700, y a este tamaño el 400 queda flojo
+   (sobre todo en versalitas y sobre fondo oscuro) mientras el 700 pesa demasiado. Un trazo finísimo
+   del mismo color engorda la letra lo justo para leerla bien, sea roja, castaña o clara.
+   Vale para todo el texto pequeño del sitio: etiquetas, datos, pies de foto, menú y filtros. */
+:is(.t-etiqueta, .rotulo__etiqueta, .cita-fuente, .t-dato, .boton__dato, .relacion__clave--mono,
+    .figura figcaption, .hoja figcaption, .nav__enlace, .cabecera__menu, .pie__legal, .filtros__boton) {
+  -webkit-text-stroke: .35px currentColor;
+}
 /* Caption del kit: 13 / 1,5 / 0,04em */
 .t-dato { font-family: var(--f-cuerpo); font-size: 13px; line-height: 1.5; letter-spacing: .04em; }
 .t-secundario { color: var(--tinta-2); }

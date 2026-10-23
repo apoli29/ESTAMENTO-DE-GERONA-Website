@@ -6,6 +6,7 @@ import ActividadTarjeta from '../components/ActividadTarjeta.astro';
 import ObraCajas from '../components/ObraCajas.astro';
 import consejo from '../data/consejo.json';
 import hc from '../data/historia-compacta.json';
+import escritura from '../data/escritura-hoja.json';
 import { actividades, foto, imagenActividad, ruta, CREDITOS } from '../lib/sitio';
 
 const C = hc.corporacion;
@@ -13,6 +14,9 @@ const F = hc.cofradia;
 const recientes = actividades.filter((a) => a.tipo !== 'navidad').slice(0, 4);
 const felicitaciones = actividades.filter((a) => a.tipo === 'navidad');
 const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+// Conclusión manuscrita del reverso de la hoja (scripts/escritura-hoja.mjs): cada forma una vez
+const E = escritura as { ancho: number; alto: number; formas: Record<string, string>; glifos: { c: string; x: number; y: number; fin?: boolean }[] };
+const idForma = Object.fromEntries(Object.keys(E.formas).map((c, i) => [c, `pluma-${i}`]));
 ---
 <Base>
   <!-- Portada: imagen a sangre que se funde con la sección I -->
@@ -173,17 +177,21 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
               <Image class="hoja__trasluz" src={foto('lismann-girona-1928.jpg')} alt="" aria-hidden="true" widths={[480, 800]} sizes="(min-width: 600px) 520px, calc(100vw - 48px)" />
               <span class="hoja__grano" aria-hidden="true"></span>
               <blockquote class="hoja__cita" data-escrito>
-                <p class="cita">
-                  <span class="visualmente-oculto">{F.conclusion}</span>
-                  {/* Letra a letra, para que la pluma las vaya trazando; las palabras no se parten */}
-                  <span aria-hidden="true">{F.conclusion.split(' ').map((palabra, i) => (
-                    <>{i > 0 && ' '}<span class="palabra">{[...palabra].map((l) => <span class="letra">{l}</span>)}</span></>
-                  ))}</span>
-                </p>
-                <svg class="hoja__pluma" viewBox="0 0 48 56" aria-hidden="true">
-                  <path class="hoja__pluma-barba" d="M13 41C15 25 28 9 47 1C44 17 32 33 13 41Z" />
-                  <path class="hoja__pluma-cana" d="M3 54L46 2" />
-                  <path class="hoja__pluma-punta" d="M1 55L5 46L9 49Z" />
+                <p class="visualmente-oculto">{F.conclusion}</p>
+                {/* La misma conclusión, manuscrita en Pinyon Script: cada letra es un contorno que la
+                    pluma recorre y luego se llena de tinta. Mismo lienzo y proporción que la hoja. */}
+                <svg class="hoja__manuscrito" viewBox={`0 0 ${E.ancho} ${E.alto}`} aria-hidden="true">
+                  <defs>{Object.entries(E.formas).map(([c, d]) => <path id={idForma[c]} d={d} />)}</defs>
+                  <g class="hoja__tinta">
+                    {E.glifos.map((g) => <use class="glifo" href={`#${idForma[g.c]}`} x={g.x} y={g.y} data-c={g.c} data-fin={g.fin ? '' : undefined} />)}
+                  </g>
+                  <g class="hoja__pluma" data-pluma>
+                    <g transform="translate(-1 -55)">
+                      <path class="hoja__pluma-barba" d="M13 41C15 25 28 9 47 1C44 17 32 33 13 41Z" />
+                      <path class="hoja__pluma-cana" d="M3 54L46 2" />
+                      <path class="hoja__pluma-punta" d="M1 55L5 46L9 49Z" />
+                    </g>
+                  </g>
                 </svg>
               </blockquote>
               <span class="hoja__sombra" aria-hidden="true"></span>
@@ -294,36 +302,55 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
       if (mano !== manoObjetivo || k < 1) pedir(); else previo = 0;
     };
 
-    // Cuando la hoja queda de espaldas, la pluma escribe la conclusión una sola vez.
-    // Lleva el ritmo de la mano: se detiene un poco entre palabras y más tras una coma o un punto.
+    // Cuando la hoja queda de espaldas, la pluma escribe la conclusión una sola vez. Cada letra
+    // tiene su turno, más largo cuanto más largo es su contorno, con una pausa breve entre palabras
+    // y más larga tras una coma o un punto; las letras se solapan un poco, como al escribir de corrido.
+    // La punta de la pluma va sobre el punto exacto del contorno que se está trazando.
+    const ESCRITURA = 2200;
     const escrito = hoja.querySelector<HTMLElement>('[data-escrito]')!;
-    const pluma = escrito.querySelector<SVGElement>('.hoja__pluma')!;
-    const letras = [...escrito.querySelectorAll<HTMLElement>('.letra')];
+    const pluma = escrito.querySelector<SVGGElement>('[data-pluma]')!;
+    const glifos = [...escrito.querySelectorAll<SVGUseElement>('.glifo')];
+    const forma = (g: SVGUseElement) => escrito.querySelector<SVGPathElement>(g.getAttribute('href')!)!;
+    const largos = new Map<SVGPathElement, number>();
+    const largo = (f: SVGPathElement) => { if (!largos.has(f)) largos.set(f, f.getTotalLength()); return largos.get(f)!; };
     let empezado = false;
     const escribir = () => {
       if (empezado) return;
       empezado = true;
-      pluma.classList.add('escribe');
-      // Horario de cada letra (ms desde el arranque), hecho de antemano: así el ritmo es el previsto
-      // aunque el navegador no sepa disparar temporizadores tan cortos uno tras otro.
-      let t = 80;
-      const horario = letras.map((l) => {
-        const h = t;
-        const final = l === l.parentElement!.lastElementChild;
-        t += 4.65 + Math.random() * 3.7;
-        if (final) t += 13.5;
-        if (final && /[,;]/.test(l.textContent!)) t += 62;
-        if (final && /[.]/.test(l.textContent!)) t += 111;
-        return h;
+      const datos = glifos.map((g) => {
+        const f = forma(g);
+        const l = largo(f);
+        const c = g.dataset.c!;
+        const fin = g.hasAttribute('data-fin');
+        g.style.setProperty('--l', l.toFixed(1));
+        return { g, f, l, x: +g.getAttribute('x')!, y: +g.getAttribute('y')!, pausa: fin ? (/[,;]/.test(c) ? 3 : /[.]/.test(c) ? 5 : 0.7) : 0 };
       });
+      const media = datos.reduce((t, d) => t + d.l, 0) / datos.length;
+      const pesos = datos.map((d) => d.l / media + d.pausa);
+      const unidad = ESCRITURA / pesos.reduce((a, b) => a + b, 0);
+      let t = 0;
+      const horario = datos.map((d, i) => {
+        const inicio = t;
+        t += pesos[i] * unidad;
+        const dura = Math.max(90, (d.l / media) * unidad * 2.2);
+        d.g.style.setProperty('--d', dura.toFixed(0) + 'ms');
+        return { inicio, dura };
+      });
+      const fin = Math.max(...horario.map((h, i) => h.inicio + h.dura));
       const t0 = performance.now();
-      let i = 0;
+      let i = 0, px = datos[0].x, py = datos[0].y;
+      pluma.classList.add('escribe');
       const paso = (ahora: number) => {
-        let ultima: HTMLElement | null = null;
-        while (i < letras.length && ahora - t0 >= horario[i]) { ultima = letras[i++]; ultima.classList.add('trazada'); }
-        // La punta (abajo a la izquierda del dibujo) se apoya al final de la letra, en la línea base
-        if (ultima) pluma.style.translate = `${ultima.offsetLeft + ultima.offsetWidth}px ${ultima.offsetTop + ultima.offsetHeight * 0.82 - pluma.clientHeight}px`;
-        if (i < letras.length) requestAnimationFrame(paso);
+        const tt = ahora - t0;
+        while (i < datos.length && tt >= horario[i].inicio) datos[i++].g.classList.add('trazado');
+        // La punta sigue el contorno de la última letra empezada, en la parte de la animación que lo traza
+        const k = Math.max(0, i - 1);
+        const avance = Math.min(1, Math.max(0, (tt - horario[k].inicio) / (horario[k].dura * 0.62)));
+        const pt = datos[k].f.getPointAtLength(datos[k].l * avance);
+        px += (datos[k].x + pt.x - px) * 0.6;
+        py += (datos[k].y + pt.y - py) * 0.6;
+        pluma.setAttribute('transform', `translate(${px.toFixed(1)} ${py.toFixed(1)}) rotate(${(Math.sin(tt / 45) * 4).toFixed(1)})`);
+        if (tt < fin) requestAnimationFrame(paso);
         else { escrito.classList.add('escrito'); pluma.classList.remove('escribe'); }
       };
       requestAnimationFrame(paso);
@@ -488,30 +515,30 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
       radial-gradient(ellipse 30% 22% at 82% 14%, rgba(140, 104, 60, .16), transparent 70%),
       radial-gradient(ellipse 26% 18% at 12% 88%, rgba(140, 104, 60, .13), transparent 70%);
   }
-  .hoja__cita { position: relative; isolation: isolate; margin: 0; }
+  /* El manuscrito ocupa el reverso entero: mismo lienzo y proporción que la hoja (ver el script) */
+  .hoja__cara--reverso { aspect-ratio: 1903 / 2600; }
+  .hoja__cita { position: absolute; inset: 0; margin: 0; isolation: isolate; }
   /* Un velo de papel limpio detrás del texto, para que la tinta trasluzida no lo ensucie */
-  .hoja__cita::before { content: ''; position: absolute; inset: -16% -10%; z-index: -1; background: radial-gradient(closest-side, rgba(240, 233, 220, .8), rgba(240, 233, 220, 0)); }
-  .hoja__cita .cita { color: #3B2716; font-size: clamp(18px, 5.2cqi, 28px); line-height: 1.34; text-wrap: pretty; }
-  .palabra { white-space: nowrap; }
+  .hoja__cita::before { content: ''; position: absolute; inset: 14% 0; z-index: -1; background: radial-gradient(closest-side, rgba(240, 233, 220, .82), rgba(240, 233, 220, 0)); }
+  .hoja__manuscrito { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .glifo { fill: #3B2716; }
   .hoja__pluma { display: none; }
 
-  /* Escritura a pluma (ver el script): cada letra se traza de izquierda a derecha con la tinta
-     aún húmeda, casi negra y algo corrida, y se seca hasta el sepia. La pluma va delante. */
-  .hoja.es-viva [data-escrito]:not(.escrito) .letra { opacity: 0; }
-  .hoja.es-viva .letra.trazada { animation: trazar .14s cubic-bezier(.3, .7, .4, 1) both; }
-  @keyframes trazar {
-    0% { opacity: 1; color: #120B06; clip-path: inset(-25% 100% -25% -40%); filter: blur(.7px); text-shadow: 0 0 1.5px rgba(18, 11, 6, .7); }
-    45% { color: #1A110A; clip-path: inset(-25% -40% -25% -40%); filter: blur(.25px); }
-    100% { opacity: 1; color: #3B2716; clip-path: inset(-25% -40% -25% -40%); filter: none; text-shadow: none; }
+  /* Escritura a pluma (ver el script): la punta recorre el contorno de cada letra con tinta húmeda,
+     casi negra; la letra se llena y la tinta seca hasta el sepia. --l es el largo del contorno y
+     --d lo que tarda la letra; los pone el script. */
+  .hoja.es-viva [data-escrito]:not(.escrito) .glifo:not(.trazado) { fill-opacity: 0; }
+  .hoja.es-viva .glifo.trazado {
+    stroke: #1A110A; stroke-width: .7; stroke-linejoin: round; stroke-dasharray: var(--l);
+    animation: trazo var(--d) linear both;
   }
-  .hoja.es-viva .hoja__pluma {
-    display: block; position: absolute; left: 0; top: 0; width: clamp(34px, 9cqi, 48px); height: auto;
-    pointer-events: none; opacity: 0; transform-origin: 2% 98%;
-    transition: opacity .4s ease, translate .03s linear;
-    filter: drop-shadow(-3px 5px 3px rgba(26, 23, 20, .28));
+  @keyframes trazo {
+    0% { stroke-dashoffset: var(--l); stroke-opacity: 1; fill: #120B06; fill-opacity: 0; }
+    62% { stroke-dashoffset: 0; stroke-opacity: 1; fill: #120B06; fill-opacity: .15; }
+    100% { stroke-dashoffset: 0; stroke-opacity: 0; fill: #3B2716; fill-opacity: 1; }
   }
-  .hoja.es-viva .hoja__pluma.escribe { opacity: 1; animation: rasgo .12s ease-in-out infinite alternate; }
-  @keyframes rasgo { from { rotate: -3deg; } to { rotate: 4deg; } }
+  .hoja.es-viva .hoja__pluma { display: inline; opacity: 0; transition: opacity .35s ease; filter: drop-shadow(-3px 5px 3px rgba(26, 23, 20, .28)); }
+  .hoja.es-viva .hoja__pluma.escribe { opacity: 1; }
   .hoja__pluma-barba { fill: #8C7A63; opacity: .85; }
   .hoja__pluma-cana { stroke: #4A3826; stroke-width: 1.4; stroke-linecap: round; fill: none; }
   .hoja__pluma-punta { fill: #120B06; }
