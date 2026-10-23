@@ -111,44 +111,32 @@ const nombre = 'Real Estamento Militar del Principado de Gerona';
       }
 
       // La venera es una medalla, no un dibujo. Allí donde se presenta como pieza (cualquier
-      // [data-giro]) llega de canto y se vuelve hacia el lector sobre su eje vertical, a la vez
-      // que da el cuarto de vuelta hasta quedar en su sitio; un reflejo le cruza la plata a
-      // mitad del giro y se apaga de frente. Si el ratón traza círculos sobre ella, la sigue y
-      // se recuesta hacia él; al salir se asienta en el cuarto de vuelta más cercano (la cruz
-      // es simétrica, así que queda igual).
+      // [data-giro]) da una vuelta entera sobre sí misma mientras cruza la ventana, atada al
+      // desplazamiento: entra por abajo, gira al ritmo de la página y sale por arriba con la
+      // vuelta completa. La cruz y las espadas se repiten cada cuarto de vuelta, así que al pasar
+      // por el centro de la ventana (media vuelta) queda derecha. Un reflejo le cruza la plata
+      // en cada diagonal. Si el ratón traza círculos sobre ella, la sigue y se recuesta hacia él;
+      // al salir se asienta en el cuarto de vuelta más cercano.
       if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
         document.querySelectorAll<HTMLElement>('[data-giro]').forEach((emblema) => {
-          let giroZ = 0, giroY = 0, mano = 0, manoObjetivo = 0, anguloPrevio: number | null = null;
+          let giroZ = 0, mano = 0, manoObjetivo = 0, anguloPrevio: number | null = null;
           let cantoX = 0, cantoY = 0, cantoXObjetivo = 0, cantoYObjetivo = 0;
-          // El giro de entrada va por tiempo, no por desplazamiento: si siguiera a la rueda, se
-          // pararía cada vez que el lector deja de bajar y avanzaría a tirones. Al asomar la medalla
-          // (un tercio a la vista) hace el giro entero de una vez, con aceleración y frenada
-          // continuas. Si la página carga con la medalla ya pasada, empieza asentada.
-          // El canto es moderado: más de ~35° con esta perspectiva la estira.
-          const DURACION = 1900;
-          let inicio = -1;
-          let avance = emblema.getBoundingClientRect().bottom < 0 ? 1 : 0;
-          if (avance === 0) {
-            const io = new IntersectionObserver((entradas) => {
-              if (entradas.some((e) => e.isIntersecting)) { inicio = performance.now(); io.disconnect(); }
-            }, { threshold: 0.33 });
-            io.observe(emblema);
-          }
-          const calcularScroll = (ahora: number) => {
-            if (inicio >= 0) avance = Math.min(1, Math.max(0, (ahora - inicio) / DURACION));
-            const suave = 0.5 - 0.5 * Math.cos(Math.PI * avance);
-            giroZ = (1 - suave) * -90;
-            giroY = (1 - suave) * -34;
-            emblema.style.opacity = String(0.25 + 0.75 * Math.min(1, avance * 1.6));
-            emblema.style.setProperty('--brillo', (Math.pow(Math.sin(suave * Math.PI), 2) * 0.4).toFixed(3));
-            return suave;
+          // Se mide la escena y no la medalla: el rectángulo de la medalla girada crece en las
+          // diagonales y realimentaría el giro.
+          const escena = emblema.parentElement!;
+          const calcularScroll = () => {
+            const r = escena.getBoundingClientRect();
+            const p = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight + r.height)));
+            giroZ = -360 + 360 * p;
+            emblema.style.opacity = String(0.25 + 0.75 * Math.min(1, p * 3.5));
+            emblema.style.setProperty('--brillo', (Math.pow(Math.sin(giroZ * Math.PI / 90), 2) * 0.3).toFixed(3));
           };
-          const pintar = (ahora: number) => {
-            const suave = calcularScroll(ahora);
+          const pintar = () => {
+            calcularScroll();
             mano += (manoObjetivo - mano) * 0.12;
             cantoX += (cantoXObjetivo - cantoX) * 0.09;
             cantoY += (cantoYObjetivo - cantoY) * 0.09;
-            emblema.style.transform = `rotateX(${cantoX.toFixed(2)}deg) rotateY(${(giroY + cantoY).toFixed(2)}deg) rotateZ(${(giroZ + mano).toFixed(2)}deg) scale(${(0.9 + 0.1 * suave).toFixed(3)})`;
+            emblema.style.transform = `rotateX(${cantoX.toFixed(2)}deg) rotateY(${cantoY.toFixed(2)}deg) rotateZ(${(giroZ + mano).toFixed(2)}deg)`;
             requestAnimationFrame(pintar);
           };
           requestAnimationFrame(pintar);

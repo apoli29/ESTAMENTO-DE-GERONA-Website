@@ -257,6 +257,7 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .libros__periodo { font-family: var(--f-mono); font-size: 22px; color: var(--teja); letter-spacing: -.01em; }
   .libros__texto { color: var(--tinta); }
   .libros__nota { font-size: 15px; color: var(--tinta-2); }
+  .libros__texto, .libros__nota, .disp__texto, .clases__texto { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
   .lagunas { display: grid; gap: var(--s4); margin-top: var(--s7); max-width: var(--medida); }
   .lagunas .t-cuerpo + .t-cuerpo { margin-top: 0; }
 

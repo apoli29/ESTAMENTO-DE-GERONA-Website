@@ -286,26 +286,29 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
       if (empezado) return;
       empezado = true;
       pluma.classList.add('escribe');
-      let i = 0;
-      const siguiente = () => {
-        if (i >= letras.length) {
-          escrito.classList.add('escrito');
-          pluma.classList.remove('escribe');
-          return;
-        }
-        const l = letras[i++];
-        l.classList.add('trazada');
-        // La punta (abajo a la izquierda del dibujo) se apoya al final de la letra, en la línea base
-        pluma.style.translate = `${l.offsetLeft + l.offsetWidth}px ${l.offsetTop + l.offsetHeight * 0.82 - pluma.clientHeight}px`;
-        const t = l.textContent!;
+      // Horario de cada letra (ms desde el arranque), hecho de antemano: así el ritmo es el previsto
+      // aunque el navegador no sepa disparar temporizadores tan cortos uno tras otro.
+      let t = 160;
+      const horario = letras.map((l) => {
+        const h = t;
         const final = l === l.parentElement!.lastElementChild;
-        let pausa = 15 + Math.random() * 12;
-        if (final) pausa += 45;
-        if (final && /[,;]/.test(t)) pausa += 200;
-        if (final && /[.]/.test(t)) pausa += 360;
-        setTimeout(siguiente, pausa);
+        t += 9.3 + Math.random() * 7.4;
+        if (final) t += 27;
+        if (final && /[,;]/.test(l.textContent!)) t += 124;
+        if (final && /[.]/.test(l.textContent!)) t += 223;
+        return h;
+      });
+      const t0 = performance.now();
+      let i = 0;
+      const paso = (ahora: number) => {
+        let ultima: HTMLElement | null = null;
+        while (i < letras.length && ahora - t0 >= horario[i]) { ultima = letras[i++]; ultima.classList.add('trazada'); }
+        // La punta (abajo a la izquierda del dibujo) se apoya al final de la letra, en la línea base
+        if (ultima) pluma.style.translate = `${ultima.offsetLeft + ultima.offsetWidth}px ${ultima.offsetTop + ultima.offsetHeight * 0.82 - pluma.clientHeight}px`;
+        if (i < letras.length) requestAnimationFrame(paso);
+        else { escrito.classList.add('escrito'); pluma.classList.remove('escribe'); }
       };
-      setTimeout(siguiente, 260);
+      requestAnimationFrame(paso);
     };
     const pedir = () => { if (!pedido) pedido = requestAnimationFrame(pintar); };
 
@@ -422,6 +425,8 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .cofradia { display: grid; gap: var(--s8); justify-items: center; text-align: center; }
   .cofradia__texto { display: grid; gap: var(--s5); justify-items: center; max-width: 60ch; }
   .cofradia__texto .t-titulo2 { max-width: 26ch; }
+  /* Justificado como todo el cuerpo, pero la última línea se centra con el resto de la sección */
+  .cofradia__texto .t-cuerpo { text-align-last: center; }
 
   /* La hoja: 520 px de ancho son 710 px de alto en el formato del dibujo. En ventanas bajas
      se estrecha (0,732 es la proporción del dibujo) para caber entera bajo la cabecera, pie incluido. */
@@ -467,7 +472,7 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   /* Escritura a pluma (ver el script): cada letra se traza de izquierda a derecha con la tinta
      aún húmeda, casi negra y algo corrida, y se seca hasta el sepia. La pluma va delante. */
   .hoja.es-viva [data-escrito]:not(.escrito) .letra { opacity: 0; }
-  .hoja.es-viva .letra.trazada { animation: trazar .55s cubic-bezier(.3, .7, .4, 1) both; }
+  .hoja.es-viva .letra.trazada { animation: trazar .28s cubic-bezier(.3, .7, .4, 1) both; }
   @keyframes trazar {
     0% { opacity: 1; color: #120B06; clip-path: inset(-25% 100% -25% -40%); filter: blur(.7px); text-shadow: 0 0 1.5px rgba(18, 11, 6, .7); }
     45% { color: #1A110A; clip-path: inset(-25% -40% -25% -40%); filter: blur(.25px); }
@@ -476,10 +481,10 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .hoja.es-viva .hoja__pluma {
     display: block; position: absolute; left: 0; top: 0; width: clamp(34px, 9cqi, 48px); height: auto;
     pointer-events: none; opacity: 0; transform-origin: 2% 98%;
-    transition: opacity .4s ease, translate .09s linear;
+    transition: opacity .4s ease, translate .045s linear;
     filter: drop-shadow(-3px 5px 3px rgba(26, 23, 20, .28));
   }
-  .hoja.es-viva .hoja__pluma.escribe { opacity: 1; animation: rasgo .32s ease-in-out infinite alternate; }
+  .hoja.es-viva .hoja__pluma.escribe { opacity: 1; animation: rasgo .16s ease-in-out infinite alternate; }
   @keyframes rasgo { from { rotate: -3deg; } to { rotate: 4deg; } }
   .hoja__pluma-barba { fill: #8C7A63; opacity: .85; }
   .hoja__pluma-cana { stroke: #4A3826; stroke-width: 1.4; stroke-linecap: round; fill: none; }
