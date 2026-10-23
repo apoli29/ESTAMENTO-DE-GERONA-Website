@@ -168,7 +168,7 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
         <p class="t-cuerpo">{F.generosidad.definicion}</p>
         <p class="t-cuerpo">{F.generosidad.linea_hembra}</p>
 
-        <div class="registro">
+        <div class="registro placa">
           <div class="registro__cabeza">
             <h3 class="t-etiqueta">Registro de concesiones</h3>
             <label class="registro__buscar">
@@ -248,7 +248,7 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 <style>
   .entrada__texto { display: grid; gap: var(--s5); }
-  /* El encabezamiento latino es el momento ceremonial de la página: va en chapa roja */
+  /* El encabezamiento latino es el momento ceremonial de la página: va en placa */
   .latin { margin: var(--s4) 0 0; }
 
   .libros { list-style: none; border-top: 1px solid var(--negro); }
@@ -299,23 +299,31 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
   .gen { display: grid; gap: var(--s5); }
   .gen .t-cuerpo + .t-cuerpo { margin-top: 0; }
-  .registro { margin-top: var(--s6); background: var(--pergamino); padding: var(--s6) var(--s5); border-top: 2px solid var(--teja); }
-  @media (min-width: 720px) { .registro { padding: var(--s6); } }
+  /* El registro va en placa (el traje de la barra, ver global.css): sobre el castaño oscuro, los
+     años pasan del rojo a la plata de las espadas y las líneas, la búsqueda y el resaltado se
+     aclaran para leerse igual que sobre el pergamino. */
+  .registro { margin-top: var(--s6); padding: var(--s6) var(--s5) calc(var(--s6) + 12px); }
+  @media (min-width: 720px) { .registro { padding: var(--s6) var(--s6) calc(var(--s6) + 12px); } }
   .registro__cabeza { display: flex; flex-wrap: wrap; gap: var(--s4); justify-content: space-between; align-items: center; margin-bottom: var(--s5); }
   .registro__buscar input {
     min-height: 44px; width: min(320px, 100%); padding: 0 var(--s4);
-    font: 400 16px var(--f-cuerpo); color: var(--negro); background: #fff; border: 1px solid var(--linea-fuerte); border-radius: 0;
+    font: 400 16px var(--f-cuerpo); color: var(--pergamino); background: rgba(243, 237, 226, .06); border: 1px solid rgba(243, 237, 226, .35); border-radius: 0;
   }
-  .registro__buscar input:focus { outline: 2px solid var(--teja); outline-offset: 0; }
-  .registro__anio { display: grid; gap: var(--s3) var(--s6); padding: var(--s5) 0; border-top: 1px solid var(--negro); }
+  /* color-scheme: el aspa nativa del buscador y la selección se dibujan para fondo oscuro */
+  .registro__buscar input { color-scheme: dark; }
+  .registro__buscar input::placeholder { color: var(--plata); opacity: 1; }
+  .registro__buscar input:focus { outline: 2px solid var(--plata); outline-offset: 0; }
+  .registro__anio { display: grid; gap: var(--s3) var(--s6); padding: var(--s5) 0; border-top: 1px solid rgba(243, 237, 226, .4); }
   @media (min-width: 720px) { .registro__anio { grid-template-columns: 90px minmax(0, 1fr); } }
-  .registro__ano { font-family: var(--f-titulo); font-weight: 600; font-size: 22px; color: var(--teja); }
-  .registro__encabezado { color: var(--tinta-2); font-size: 16px; line-height: 1.55; margin-bottom: var(--s3); }
+  .registro__ano { font-family: var(--f-titulo); font-weight: 600; font-size: 22px; color: var(--espada); }
+  .registro__encabezado { color: var(--plata); font-size: 16px; line-height: 1.55; margin-bottom: var(--s3); }
   .registro__grupos { list-style: none; }
-  .registro__grupo { display: grid; gap: var(--s1); padding: var(--s3) 0; border-bottom: 1px solid var(--linea); }
+  .registro__grupo { display: grid; gap: var(--s1); padding: var(--s3) 0; border-bottom: 1px solid var(--linea-clara); }
   .registro__nombres { font-family: var(--f-cuerpo); font-size: 16px; line-height: 1.55; }
-  .registro__lugar { color: var(--tinta-2); }
-  .es-coincidencia { background: rgba(163, 32, 31, .07); }
+  .registro__lugar { color: var(--plata); }
+  .registro .nombres li { border-bottom-color: var(--linea-clara); }
+  .registro .registro__vacio { color: var(--plata); }
+  .es-coincidencia { background: rgba(243, 237, 226, .1); }
   .nobles { display: grid; gap: var(--s4); margin-top: var(--s6); }
   .nobles .t-cuerpo + .t-cuerpo { margin-top: 0; }
 

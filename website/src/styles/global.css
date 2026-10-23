@@ -85,6 +85,8 @@ body {
   /* Abhaya Libre no tiene cursiva ni Thasadith seminegra: nada de versiones falsas inclinadas o engordadas */
   font-synthesis: none;
 }
+/* [hidden] esconde siempre, aunque la clase del elemento le dé display (grid, flex…) */
+[hidden] { display: none !important; }
 img, svg { display: block; max-width: 100%; }
 img { height: auto; }
 p { margin: 0; }
@@ -302,23 +304,23 @@ a:hover { color: var(--negro); }
 .cabeza-pagina::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--rojo); }
 
 /* ——— Placa ——— */
-/* Bloque macizo en rojo heráldico con la esquina cortada a bisel, como una chapa troquelada.
-   Es el contrapunto duro del pergamino: se usa con cuentagotas, en lo que remata una sección. */
+/* Bloque destacado con el traje de la barra de la cabecera: el castaño oscuro de las bandas de
+   sección y, al pie, la banda de 12 px con el filo rojo. Sobre ese fondo la banda va un punto más
+   oscura que él, para que se lea igual que bajo la barra. Se usa con cuentagotas, en lo que
+   remata o resume una sección. */
 .placa {
-  --muesca: 36px;
   position: relative;
-  background: var(--rojo);
-  color: var(--sobre-teja);
-  padding: var(--s6) var(--s6) var(--s7);
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--muesca)), calc(100% - var(--muesca)) 100%, 0 100%);
-  /* Bisel: la luz cae desde arriba, así que el canto cortado queda en sombra */
-  background-image: linear-gradient(315deg, rgba(26, 23, 20, .26) 0, rgba(26, 23, 20, .26) var(--muesca), transparent var(--muesca));
+  color: var(--pergamino);
+  padding: var(--s6) var(--s6) calc(var(--s7) + 12px);
+  background:
+    linear-gradient(var(--rojo), var(--rojo)) 0 calc(100% - 5px) / 100% 2px no-repeat,
+    linear-gradient(#0E0C0A, #0E0C0A) bottom / 100% 12px no-repeat,
+    var(--negro);
 }
-@media (min-width: 768px) { .placa { --muesca: 52px; padding: var(--s7) var(--s7) var(--s8); } }
-.placa :is(.cita, .t-cuerpo, .t-titulo2, p) { color: var(--sobre-teja); }
-.placa .cita-fuente { color: rgba(251, 248, 242, .74); }
-/* Sobre la chapa el botón no puede ser rojo: se invierte a negro */
-.placa .boton { background: var(--negro); color: var(--pergamino); }
+@media (min-width: 768px) { .placa { padding: var(--s7) var(--s7) calc(var(--s8) + 12px); } }
+.placa :is(.cita, .t-cuerpo, .t-titulo2, .t-titulo3, p) { color: var(--pergamino); }
+.placa :is(.cita-fuente, .t-etiqueta) { color: var(--plata); }
+.placa :focus-visible { outline-color: var(--plata); }
 .placa .boton:hover { background: var(--pergamino); color: var(--negro); }
 
 /* ——— Banda a sangre ——— */
