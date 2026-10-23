@@ -152,8 +152,25 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   <!-- VI · La Cofradía -->
   <section class="seccion banda-piedra" aria-labelledby="cofradia">
     <div class="envoltura cofradia">
-      <figure class="figura cofradia__figura">
-        <Image src={foto('lismann-girona-1928.jpg')} alt="Dibujo de Gerona desde el río Onyar, con la torre de la Catedral al fondo" widths={[480, 800, 1200]} sizes="(min-width: 960px) 40vw, 100vw" />
+      <!-- La hoja: el dibujo se da la vuelta con el desplazamiento y por detrás, en el
+           reverso del papel, trasluce la tinta y aparece la conclusión de la sección. -->
+      <figure class="hoja" data-hoja>
+        <div class="hoja__escena">
+          <div class="hoja__papel" data-hoja-papel>
+            <div class="hoja__cara hoja__cara--frente">
+              <Image src={foto('lismann-girona-1928.jpg')} alt="Dibujo de Gerona desde el río Onyar, con la torre de la Catedral al fondo" widths={[480, 800, 1200]} sizes="(min-width: 960px) 556px, calc(100vw - 48px)" />
+              <span class="hoja__sombra" aria-hidden="true"></span>
+            </div>
+            <div class="hoja__cara hoja__cara--reverso">
+              <Image class="hoja__trasluz" src={foto('lismann-girona-1928.jpg')} alt="" aria-hidden="true" widths={[480, 800]} sizes="(min-width: 960px) 556px, calc(100vw - 48px)" />
+              <span class="hoja__grano" aria-hidden="true"></span>
+              <blockquote class="hoja__cita">
+                <p class="cita">{F.conclusion}</p>
+              </blockquote>
+              <span class="hoja__sombra" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
         <figcaption>{CREDITOS['lismann-girona-1928.jpg']}</figcaption>
       </figure>
       <div class="cofradia__texto">
@@ -163,9 +180,6 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
         </div>
         <p class="t-titulo2">{F.entradilla}</p>
         <p class="t-cuerpo">{F.caracter}</p>
-        <blockquote class="cofradia__cita placa">
-          <p class="cita">{F.conclusion}</p>
-        </blockquote>
         <a class="enlace-mayor" href="/historia/la-cofradia/">Actas, ordinaciones y privilegios</a>
       </div>
     </div>
@@ -216,6 +230,32 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   </section>
 </Base>
 
+<script>
+  // VI · La hoja se da la vuelta al ritmo del desplazamiento, como quien vuelve una página:
+  // empieza cuando su canto superior asoma por el 85 % de la ventana y queda de espaldas al
+  // llegar al 30 %, que es donde se lee la sección. Va atada al scroll, así que al subir vuelve a ponerse de frente.
+  const hoja = document.querySelector<HTMLElement>('[data-hoja]');
+  if (hoja && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const papel = hoja.querySelector<HTMLElement>('[data-hoja-papel]')!;
+    hoja.classList.add('es-viva');
+    let pedido = 0;
+    const pintar = () => {
+      pedido = 0;
+      const r = hoja.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (innerHeight * 0.85 - r.top) / (innerHeight * 0.55)));
+      const suave = p * p * (3 - 2 * p);
+      const canto = Math.sin(suave * Math.PI);
+      // De derecha a izquierda, como en un libro: la hoja se levanta hacia el lector y se tuerce un poco
+      papel.style.transform = `translateZ(${(canto * 70).toFixed(1)}px) rotateY(${(-180 * suave).toFixed(2)}deg) rotateZ(${(canto * -1.8).toFixed(2)}deg)`;
+      hoja.style.setProperty('--canto', canto.toFixed(3));
+    };
+    const pedir = () => { if (!pedido) pedido = requestAnimationFrame(pintar); };
+    addEventListener('scroll', pedir, { passive: true });
+    addEventListener('resize', pedir);
+    pintar();
+  }
+</script>
+
 <style>
   /* Portada */
   .portada { position: relative; min-height: 100svh; display: grid; place-items: center; overflow: hidden; background: var(--negro); color: var(--pergamino); text-align: center; }
@@ -263,8 +303,9 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
     grid-template-columns: minmax(0, 1fr);
     max-width: 860px; margin-inline: auto;
   }
-  @media (min-width: 640px) { .obra__fotos { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s5) var(--medianil); } }
-  .obra__fotos :global(img) { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+  @media (min-width: 640px) { .obra__fotos { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s5) var(--medianil); align-items: start; } }
+  /* Cada fotografía en su formato original: no se recorta */
+  .obra__fotos :global(img) { width: 100%; height: auto; }
 
   /* IV · Actividades */
   .rejilla-tarjetas { list-style: none; display: grid; gap: var(--s7) var(--medianil); grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
@@ -289,9 +330,55 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   /* VI · Cofradía */
   .cofradia { display: grid; gap: var(--s7); align-items: start; }
   @media (min-width: 960px) { .cofradia { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s8); } }
-  .cofradia__figura :global(img) { max-height: 760px; object-fit: contain; object-position: left top; width: auto; }
   .cofradia__texto { display: grid; gap: var(--s5); align-content: start; }
-  .cofradia__cita { margin: var(--s4) 0; }
+
+  /* La hoja: 556 px de ancho son 760 px de alto en el formato del dibujo */
+  .hoja { margin: 0; width: min(100%, 556px); container-type: inline-size; }
+  .hoja figcaption { margin-top: var(--s2); font-family: var(--f-mono); font-size: 12px; line-height: 1.5; color: var(--tinta-2); }
+  .hoja__escena { perspective: 1800px; perspective-origin: 50% 40%; }
+  .hoja__papel { position: relative; }
+  .hoja__cara { position: relative; }
+  .hoja__cara--frente :global(img) { width: 100%; height: auto; }
+  .hoja__sombra { display: none; }
+  /* Reverso del papel: la fibra y el grano a la vista, el dibujo trasluce invertido y apagado,
+     y la conclusión va en rojo heráldico, que es lo que más destaca sobre ese gris de tinta. */
+  .hoja__cara--reverso {
+    display: grid; place-items: center; overflow: hidden;
+    margin-top: var(--s5); padding: clamp(24px, 9cqi, 52px);
+    background: rgba(229, 219, 201, .82);
+    box-shadow: inset 0 0 0 1px rgba(92, 72, 48, .16), inset 0 0 70px rgba(120, 92, 58, .3);
+  }
+  .hoja__cara--reverso :global(.hoja__trasluz) {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    transform: scaleX(-1); opacity: .17; filter: grayscale(1) blur(.6px); mix-blend-mode: multiply;
+  }
+  .hoja__grano {
+    position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .34 0 0 0 0 .26 0 0 0 0 .17 1.3 0 0 0 -.52'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .32' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .31 0 0 0 0 .2 1.6 0 0 0 -.95'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"),
+      radial-gradient(ellipse 30% 22% at 82% 14%, rgba(140, 104, 60, .16), transparent 70%),
+      radial-gradient(ellipse 26% 18% at 12% 88%, rgba(140, 104, 60, .13), transparent 70%);
+  }
+  .hoja__cita { position: relative; isolation: isolate; margin: 0; }
+  /* Un velo de papel limpio detrás del texto, para que la tinta trasluzida no lo ensucie */
+  .hoja__cita::before { content: ''; position: absolute; inset: -16% -10%; z-index: -1; background: radial-gradient(closest-side, rgba(240, 233, 220, .8), rgba(240, 233, 220, 0)); }
+  .hoja__cita .cita { color: var(--rojo); font-size: clamp(18px, 5.2cqi, 28px); line-height: 1.34; text-wrap: pretty; }
+
+  /* Con JS y sin movimiento reducido: las dos caras son una sola hoja que se da la vuelta.
+     El giro y --canto (0 de frente o de espaldas, 1 de canto) los escribe el script de abajo. */
+  .hoja.es-viva .hoja__papel { transform-style: preserve-3d; will-change: transform; }
+  .hoja.es-viva .hoja__cara {
+    -webkit-backface-visibility: hidden; backface-visibility: hidden;
+    box-shadow: 0 calc(18px + 26px * var(--canto, 0)) calc(36px + 30px * var(--canto, 0)) -22px rgba(26, 23, 20, .45);
+  }
+  .hoja.es-viva .hoja__cara--reverso {
+    position: absolute; inset: 0; margin: 0; transform: rotateY(180deg);
+    box-shadow: inset 0 0 0 1px rgba(92, 72, 48, .16), inset 0 0 70px rgba(120, 92, 58, .3), 0 calc(18px + 26px * var(--canto, 0)) calc(36px + 30px * var(--canto, 0)) -22px rgba(26, 23, 20, .45);
+  }
+  /* Al ponerse de canto la hoja se aparta de la luz y se oscurece */
+  .hoja.es-viva .hoja__sombra { display: block; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(26, 23, 20, .7), rgba(26, 23, 20, .35)); opacity: calc(var(--canto, 0) * .85); }
+  .hoja.es-viva .hoja__cara--reverso .hoja__sombra { background: linear-gradient(270deg, rgba(26, 23, 20, .7), rgba(26, 23, 20, .35)); }
 
   /* VII · Consejo */
   .consejo__cabeza { margin-bottom: var(--s7); }
