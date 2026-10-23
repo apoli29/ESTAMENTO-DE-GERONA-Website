@@ -14,6 +14,9 @@
   --pergamino: #FBF8F3;
   --piedra: #E9E1D3;
   --piedra-clara: #F2ECE2;
+  /* Un escalón más leve que la piedra, para lo que se abre dentro de la propia página y no
+     debe leerse como una banda aparte */
+  --piedra-tenue: #F6F1E8;
   --plata: #C9C3B8;
   --tinta: #3A332C;
   --tinta-2: #5C534A;
