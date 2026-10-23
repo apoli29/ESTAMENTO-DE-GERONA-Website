@@ -111,7 +111,7 @@ const nombre = 'Real Estamento Militar del Principado de Gerona';
       }
 
       // La venera es una medalla, no un dibujo. Allí donde se presenta como pieza (cualquier
-      // [data-giro]) da una vuelta entera sobre sí misma atada al desplazamiento: empieza al
+      // [data-giro]) da un tercio de vuelta (120°) sobre sí misma atado al desplazamiento: empieza al
       // asomar por abajo y la termina, frenando, cuando su centro llega al 45 % de la ventana;
       // desde ahí queda quieta y derecha, se siga bajando o no. Al subir deshace la vuelta.
       // Un reflejo le cruza la plata en cada diagonal. Si el ratón traza círculos sobre ella, la sigue y se recuesta hacia él;
@@ -127,7 +127,7 @@ const nombre = 'Real Estamento Militar del Principado de Gerona';
             const r = escena.getBoundingClientRect();
             // p = 0 al asomar el canto superior; 1 con el centro al 45 % de la ventana
             const p = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight * 0.55 + r.height / 2)));
-            giroZ = -360 * Math.pow(1 - p, 2);
+            giroZ = -120 * Math.pow(1 - p, 2);
             emblema.style.opacity = String(0.25 + 0.75 * Math.min(1, p * 3.5));
             emblema.style.setProperty('--brillo', (Math.pow(Math.sin(giroZ * Math.PI / 90), 2) * 0.3).toFixed(3));
           };

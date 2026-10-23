@@ -57,8 +57,12 @@ import contacto from '../data/contacto.json';
      como la chapa grabada al pie de una pieza. Repite la marca, no añade información. */
   .pie__firma {
     display: flex; justify-content: center; overflow: hidden;
-    padding: 0 var(--margen); margin-bottom: -2.2%;
+    /* El margen negativo recorta el aire propio del dibujo; el relleno de abajo dobla lo que
+       queda bajo la cruz, para que la firma no se apoye en el canto de la ventana */
+    padding: 0 var(--margen) var(--s6); margin-bottom: -1.65%;
     opacity: .17; pointer-events: none; user-select: none;
   }
-  .pie__firma :global(svg) { width: 100%; max-width: 1480px; }
+  /* Tres cuartos del ancho que tendría a sangre: la firma acompaña, no tapa el pie */
+  .pie__firma :global(.logo) { width: 75%; max-width: 1110px; }
+  .pie__firma :global(svg) { width: 100%; }
 </style>

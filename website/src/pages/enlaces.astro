@@ -76,7 +76,9 @@ const grupos = enlaces.filter((g) => g.grupo);
     font-family: var(--f-texto); font-size: 19px; line-height: 1.4; text-wrap: pretty;
     transition: transform .5s cubic-bezier(.2, .7, .1, 1), color .3s ease;
   }
-  .enl__url { color: var(--tinta-2); white-space: nowrap; }
+  /* En estrecho la dirección puede partirse: entera, alguna es más ancha que un móvil */
+  .enl__url { color: var(--tinta-2); overflow-wrap: anywhere; }
+  @media (min-width: 820px) { .enl__url { white-space: nowrap; } }
 
   /* La espada marca que el enlace sale fuera del sitio: entra desde la izquierda al apuntar */
   .enl__enlace::after {

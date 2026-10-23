@@ -271,7 +271,10 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
       // p = 0 en el momento en que la hoja se fija (ya entera a la vista) y 1 al 70 % de la pista
       const fija = parseFloat(getComputedStyle(hoja).top) || 0;
       const recorrido = (pista.offsetHeight - hoja.offsetHeight) * 0.7;
-      const p = Math.min(1, Math.max(0, (fija - pista.getBoundingClientRect().top) / recorrido));
+      // Sin pista (ventanas bajas, ver el CSS) el gatillo es la posición de la hoja en la ventana
+      const p = recorrido > 1
+        ? Math.min(1, Math.max(0, (fija - pista.getBoundingClientRect().top) / recorrido))
+        : Math.min(1, Math.max(0, (innerHeight * 0.75 - hoja.getBoundingClientRect().top) / (innerHeight * 0.5)));
       // Con holgura entre los dos umbrales, para que un temblor de la rueda no la haga ir y venir
       const nuevo = lado === 1 ? (p > 0.15 ? 1 : 0) : (p >= 0.3 ? 1 : 0);
       if (lado < 0) { lado = nuevo; giroScroll = desde = hacia = -180 * lado; }
@@ -303,14 +306,14 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
       pluma.classList.add('escribe');
       // Horario de cada letra (ms desde el arranque), hecho de antemano: así el ritmo es el previsto
       // aunque el navegador no sepa disparar temporizadores tan cortos uno tras otro.
-      let t = 160;
+      let t = 80;
       const horario = letras.map((l) => {
         const h = t;
         const final = l === l.parentElement!.lastElementChild;
-        t += 9.3 + Math.random() * 7.4;
-        if (final) t += 27;
-        if (final && /[,;]/.test(l.textContent!)) t += 124;
-        if (final && /[.]/.test(l.textContent!)) t += 223;
+        t += 4.65 + Math.random() * 3.7;
+        if (final) t += 13.5;
+        if (final && /[,;]/.test(l.textContent!)) t += 62;
+        if (final && /[.]/.test(l.textContent!)) t += 111;
         return h;
       });
       const t0 = performance.now();
@@ -452,6 +455,13 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
      recorrido es el que la da la vuelta (ver el script). --hoja-alto lo mide el script. */
   .hoja-pista.es-viva { height: calc(var(--hoja-alto, 0px) + 110svh); }
   .hoja-pista.es-viva .hoja { position: sticky; top: calc(var(--cabecera) + max(var(--s4), (100svh - var(--cabecera) - var(--hoja-alto, 0px)) / 2)); }
+  /* Ventanas bajas (un móvil apaisado): fijada, la hoja tendría que encogerse tanto para caber
+     que el reverso no podría con el texto. Ahí no se fija ni se encoge; se vuelve igual al pasar. */
+  @media (max-height: 559px) {
+    .hoja { width: min(100%, 520px); }
+    .hoja-pista.es-viva { height: auto; }
+    .hoja-pista.es-viva .hoja { position: static; }
+  }
   .hoja figcaption { margin-top: var(--s2); font-family: var(--f-mono); font-size: 12px; line-height: 1.5; color: var(--tinta-2); text-align: center; }
   .hoja__escena { perspective: 1800px; perspective-origin: 50% 40%; }
   .hoja__papel { position: relative; }
@@ -488,7 +498,7 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   /* Escritura a pluma (ver el script): cada letra se traza de izquierda a derecha con la tinta
      aún húmeda, casi negra y algo corrida, y se seca hasta el sepia. La pluma va delante. */
   .hoja.es-viva [data-escrito]:not(.escrito) .letra { opacity: 0; }
-  .hoja.es-viva .letra.trazada { animation: trazar .28s cubic-bezier(.3, .7, .4, 1) both; }
+  .hoja.es-viva .letra.trazada { animation: trazar .14s cubic-bezier(.3, .7, .4, 1) both; }
   @keyframes trazar {
     0% { opacity: 1; color: #120B06; clip-path: inset(-25% 100% -25% -40%); filter: blur(.7px); text-shadow: 0 0 1.5px rgba(18, 11, 6, .7); }
     45% { color: #1A110A; clip-path: inset(-25% -40% -25% -40%); filter: blur(.25px); }
@@ -497,10 +507,10 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .hoja.es-viva .hoja__pluma {
     display: block; position: absolute; left: 0; top: 0; width: clamp(34px, 9cqi, 48px); height: auto;
     pointer-events: none; opacity: 0; transform-origin: 2% 98%;
-    transition: opacity .4s ease, translate .045s linear;
+    transition: opacity .4s ease, translate .03s linear;
     filter: drop-shadow(-3px 5px 3px rgba(26, 23, 20, .28));
   }
-  .hoja.es-viva .hoja__pluma.escribe { opacity: 1; animation: rasgo .16s ease-in-out infinite alternate; }
+  .hoja.es-viva .hoja__pluma.escribe { opacity: 1; animation: rasgo .12s ease-in-out infinite alternate; }
   @keyframes rasgo { from { rotate: -3deg; } to { rotate: 4deg; } }
   .hoja__pluma-barba { fill: #8C7A63; opacity: .85; }
   .hoja__pluma-cana { stroke: #4A3826; stroke-width: 1.4; stroke-linecap: round; fill: none; }
