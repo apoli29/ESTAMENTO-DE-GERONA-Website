@@ -380,12 +380,12 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   }
   .portada__contenido { position: relative; display: grid; justify-items: center; gap: var(--s5); padding-top: var(--s9); padding-bottom: var(--s10); }
   .portada__dato { color: var(--plata); letter-spacing: .12em; }
-  .portada__titulo { font-family: var(--f-display); font-size: clamp(52px, 8.4vw, 116px); line-height: 1; letter-spacing: -.01em; text-wrap: balance; max-width: 12ch; }
-  .portada__entradilla { font-family: var(--f-texto); font-style: italic; font-size: clamp(19px, 1.8vw, 23px); line-height: 1.5; color: var(--espada); max-width: 40ch; text-wrap: balance; }
+  .portada__titulo { font-family: var(--f-titulo); font-weight: 800; font-size: clamp(48px, 6.4vw, 72px); line-height: 1; letter-spacing: -.035em; text-wrap: balance; max-width: 12ch; }
+  .portada__entradilla { font-family: var(--f-cuerpo); font-size: 20px; line-height: 1.6; color: var(--espada); max-width: 40ch; text-wrap: balance; }
 
   /* I · Origen */
   .origen-seccion { padding-top: var(--s7); }
-  .origen__texto { font-family: var(--f-display); font-size: clamp(28px, 3.1vw, 42px); line-height: 1.24; text-wrap: pretty; color: var(--pergamino); }
+  .origen__texto { font-family: var(--f-titulo); font-weight: 500; font-size: var(--h2); line-height: 1.15; letter-spacing: -.02em; text-wrap: pretty; color: var(--pergamino); }
   .origen__pie { display: flex; flex-wrap: wrap; gap: var(--s4) var(--s7); margin-top: var(--s7); }
 
   /* II · Distintivos: la venera expuesta como pieza, sobre negro, para que la plata de las
@@ -427,7 +427,7 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   /* V · Navidad */
   .navidad__cabeza { display: grid; gap: var(--s6); margin-bottom: var(--s7); }
   @media (min-width: 960px) { .navidad__cabeza { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--s8); align-items: end; } }
-  .navidad__lema { font-family: var(--f-texto); font-style: italic; font-size: 21px; line-height: 1.5; color: var(--pergamino); max-width: 52ch; }
+  .navidad__lema { font-family: var(--f-cuerpo); font-style: italic; font-size: 20px; line-height: 1.6; color: var(--pergamino); max-width: 52ch; }
   .navidad__tira {
     list-style: none; display: flex; gap: var(--s5); overflow-x: auto; scroll-snap-type: x mandatory;
     padding: 0 var(--margen) var(--s4); scroll-padding: 0 var(--margen);
@@ -462,7 +462,7 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
     .hoja-pista.es-viva { height: auto; }
     .hoja-pista.es-viva .hoja { position: static; }
   }
-  .hoja figcaption { margin-top: var(--s2); font-family: var(--f-mono); font-size: 12px; line-height: 1.5; color: var(--tinta-2); text-align: center; }
+  .hoja figcaption { margin-top: var(--s2); font-family: var(--f-cuerpo); font-size: 13px; line-height: 1.5; letter-spacing: .04em; color: var(--tinta-2); text-align: center; }
   .hoja__escena { perspective: 1800px; perspective-origin: 50% 40%; }
   .hoja__papel { position: relative; }
   .hoja__cara { position: relative; }
@@ -541,6 +541,6 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .consejo__nomina--dos { margin-top: var(--s4); }
   .consejo__miembro { padding: var(--s5) 0; border-top: 1px solid var(--linea); display: grid; gap: var(--s2); align-content: start; }
   .consejo__cargo { color: var(--teja); line-height: 1.5; }
-  .consejo__nombre { font-family: var(--f-texto); font-size: 19px; line-height: 1.4; text-wrap: pretty; }
+  .consejo__nombre { font-family: var(--f-titulo); font-weight: 500; font-size: 22px; line-height: 1.2; letter-spacing: -.01em; text-wrap: pretty; }
   .consejo__capellanes { margin-top: var(--s7); }
 </style>

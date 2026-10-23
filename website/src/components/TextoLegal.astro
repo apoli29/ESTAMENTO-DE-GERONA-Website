@@ -40,7 +40,8 @@ for (const b of bloques) {
 </section>
 
 <style>
-  .legal { display: grid; gap: var(--s4); }
+  /* La columna no se ensancha por la palabra más larga (un correo, a 20 px, es más ancho que un móvil) */
+  .legal { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s4); overflow-wrap: break-word; }
   .legal .t-cuerpo + .t-cuerpo { margin-top: 0; }
   .legal__h { margin-top: var(--s5); }
   .legal__lista { padding-left: var(--s5); display: grid; gap: var(--s2); color: var(--tinta); max-width: var(--medida); }

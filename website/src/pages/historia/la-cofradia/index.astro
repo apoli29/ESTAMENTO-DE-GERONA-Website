@@ -254,9 +254,9 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .libros { list-style: none; border-top: 1px solid var(--negro); }
   .libros__item { display: grid; gap: var(--s2) var(--s6); padding: var(--s5) 0; border-bottom: 1px solid var(--linea); }
   @media (min-width: 720px) { .libros__item { grid-template-columns: 200px minmax(0, 1fr); } .libros__nota { grid-column: 2; } }
-  .libros__periodo { font-family: var(--f-mono); font-size: 22px; color: var(--teja); letter-spacing: -.01em; }
+  .libros__periodo { font-family: var(--f-titulo); font-weight: 600; font-size: 22px; color: var(--teja); letter-spacing: -.01em; }
   .libros__texto { color: var(--tinta); }
-  .libros__nota { font-size: 15px; color: var(--tinta-2); }
+  .libros__nota { font-size: 16px; line-height: 1.55; color: var(--tinta-2); }
   .libros__texto, .libros__nota, .disp__texto, .clases__texto { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
   .lagunas { display: grid; gap: var(--s4); margin-top: var(--s7); max-width: var(--medida); }
   .lagunas .t-cuerpo + .t-cuerpo { margin-top: 0; }
@@ -271,8 +271,8 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   @media (min-width: 960px) { .disp__cabeza { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--s8); } }
   .disp { list-style: none; display: grid; gap: 1px; background: var(--linea-clara); border: 1px solid var(--linea-clara); grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
   .disp__item { background: var(--negro); padding: var(--s6) var(--s5); display: grid; gap: var(--s4); align-content: start; }
-  .disp__num { font-family: var(--f-display); font-size: 48px; line-height: 1; color: var(--teja); }
-  .disp__texto { color: var(--pergamino); font-size: 16px; line-height: 1.6; text-wrap: pretty; }
+  .disp__num { font-family: var(--f-titulo); font-weight: 800; font-size: 48px; line-height: 1; letter-spacing: -.03em; color: var(--teja); }
+  .disp__texto { color: var(--pergamino); font-size: 16px; line-height: 1.55; text-wrap: pretty; }
   .disp__pie { display: grid; gap: var(--s4); margin-top: var(--s7); max-width: var(--medida); margin-left: auto; }
   .disp__pie .t-cuerpo + .t-cuerpo { margin-top: 0; }
 
@@ -281,20 +281,20 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .clases { list-style: none; display: grid; gap: var(--medianil); grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
   .clases__item { padding: var(--s5); border: 1px solid var(--linea); display: grid; gap: var(--s3); align-content: start; }
   .clases__nombre { color: var(--teja); }
-  .clases__texto { font-size: 15px; line-height: 1.6; color: var(--tinta); }
+  .clases__texto { font-size: 16px; line-height: 1.55; color: var(--tinta); }
   /* Cita secundaria: sólo un filo fino, para no competir con la chapa de la entrada */
   .cofrades__cita { margin: 0; padding-left: var(--s5); border-left: 1px solid var(--linea-fuerte); }
   .cofrades__sub { margin-top: var(--s5); }
 
   .desplegable { border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
-  .desplegable summary { cursor: pointer; padding: var(--s4) 0; font-family: var(--f-texto); font-size: 18px; list-style: none; display: flex; gap: var(--s3); align-items: baseline; }
-  .desplegable summary::before { content: '+'; color: var(--teja); font-family: var(--f-mono); }
+  .desplegable summary { cursor: pointer; padding: var(--s4) 0; font-family: var(--f-cuerpo); font-size: 20px; list-style: none; display: flex; gap: var(--s3); align-items: baseline; }
+  .desplegable summary::before { content: '+'; color: var(--teja); font-family: var(--f-cuerpo); }
   .desplegable[open] summary::before { content: '−'; }
   .desplegable summary::-webkit-details-marker { display: none; }
   .desplegable .nombres { padding-bottom: var(--s5); }
 
   .nombres { list-style: none; columns: 2 220px; column-gap: var(--s6); }
-  .nombres li { break-inside: avoid; padding: 6px 0; border-bottom: 1px solid var(--linea); font-family: var(--f-texto); font-size: 17px; }
+  .nombres li { break-inside: avoid; padding: 6px 0; border-bottom: 1px solid var(--linea); font-family: var(--f-cuerpo); font-size: 16px; line-height: 1.55; }
   .nombres--familias { columns: 1; }
 
   .gen { display: grid; gap: var(--s5); }
@@ -304,16 +304,16 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .registro__cabeza { display: flex; flex-wrap: wrap; gap: var(--s4); justify-content: space-between; align-items: center; margin-bottom: var(--s5); }
   .registro__buscar input {
     min-height: 44px; width: min(320px, 100%); padding: 0 var(--s4);
-    font: 400 16px var(--f-sans); color: var(--negro); background: #fff; border: 1px solid var(--linea-fuerte); border-radius: 0;
+    font: 400 16px var(--f-cuerpo); color: var(--negro); background: #fff; border: 1px solid var(--linea-fuerte); border-radius: 0;
   }
   .registro__buscar input:focus { outline: 2px solid var(--teja); outline-offset: 0; }
   .registro__anio { display: grid; gap: var(--s3) var(--s6); padding: var(--s5) 0; border-top: 1px solid var(--negro); }
   @media (min-width: 720px) { .registro__anio { grid-template-columns: 90px minmax(0, 1fr); } }
-  .registro__ano { font-family: var(--f-mono); font-size: 22px; color: var(--teja); }
-  .registro__encabezado { color: var(--tinta-2); font-size: 15px; margin-bottom: var(--s3); }
+  .registro__ano { font-family: var(--f-titulo); font-weight: 600; font-size: 22px; color: var(--teja); }
+  .registro__encabezado { color: var(--tinta-2); font-size: 16px; line-height: 1.55; margin-bottom: var(--s3); }
   .registro__grupos { list-style: none; }
   .registro__grupo { display: grid; gap: var(--s1); padding: var(--s3) 0; border-bottom: 1px solid var(--linea); }
-  .registro__nombres { font-family: var(--f-texto); font-size: 17px; line-height: 1.5; }
+  .registro__nombres { font-family: var(--f-cuerpo); font-size: 16px; line-height: 1.55; }
   .registro__lugar { color: var(--tinta-2); }
   .es-coincidencia { background: rgba(163, 32, 31, .07); }
   .nobles { display: grid; gap: var(--s4); margin-top: var(--s6); }
