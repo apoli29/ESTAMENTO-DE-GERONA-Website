@@ -78,19 +78,3 @@ export function porAnio(lista: Actividad[]) {
   }
   return [...mapa.entries()];
 }
-
-/* Créditos de fotografías (uso libre; se citan por cortesía) */
-export const CREDITOS: Record<string, string> = {
-  'hero.jpg': 'Catedral de Girona · Enric Domas / Unsplash',
-  'catedral-interior.jpg': 'Catedral de Girona · Max van den Oetelaar / Unsplash',
-  'catedral-jardin.jpg': 'Catedral de Girona · Àngel Pi / Unsplash',
-  'onyar-catedral.jpg': 'El Onyar y la Catedral · Mch Ayr / Unsplash',
-  'capilla-san-jorge.jpg': 'Catedral de Girona, capilla de Sant Jordi y Sant Dalmau · Zarateman / Wikimedia Commons (CC0)',
-  'claustro-catedral-1900.jpg': 'Claustro de la Catedral de Girona, c. 1890–1910 · Juli Soler i Santaló',
-  'claustro-sant-domenec-1922.jpg': 'Claustro de Sant Domènec, Girona, 1922 · Josep Salvany i Blanch',
-  'lismann-girona-1928.jpg': 'Hermann Lismann, Girona desde el río, julio de 1928 · Städel Museum',
-  'baptisterio-ernst-1838.jpg': 'Leopold Ernst, interior de un baptisterio, 1838 · Kunsthistorisches Museum',
-  'sala-gotica-malbork.jpg': 'Sala gótica, siglo XIX',
-  'velas-1.jpg': 'Unsplash',
-  'velas-2.jpg': 'Unsplash',
-};

@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Venera from '../components/Venera.astro';
 import contacto from '../data/contacto.json';
-import { foto, CREDITOS } from '../lib/sitio';
+import { foto } from '../lib/sitio';
 ---
 <Base titulo="Contacto">
   <!-- La página se abre sobre la ciudad: la fotografía a sangre y el correo encima, en claro -->
@@ -21,7 +21,6 @@ import { foto, CREDITOS } from '../lib/sitio';
         <a class="contacto__email" href={`mailto:${contacto.email}`}>{contacto.email}</a>
       </div>
     </div>
-    <p class="contacto__credito t-dato">{CREDITOS['onyar-catedral.jpg']}</p>
   </section>
 </Base>
 
@@ -50,5 +49,4 @@ import { foto, CREDITOS } from '../lib/sitio';
     color: var(--pergamino); text-decoration-color: var(--teja); text-underline-offset: 8px; overflow-wrap: anywhere;
   }
   .contacto__email:hover { color: var(--espada); }
-  .contacto__credito { position: absolute; left: var(--margen); right: var(--margen); bottom: var(--s5); color: var(--plata); }
 </style>

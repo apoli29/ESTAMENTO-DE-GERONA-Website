@@ -162,9 +162,9 @@ a:hover { color: var(--negro); }
 /* Texto pequeño (13–14 px) en Thasadith: sólo tiene 400 y 700, y a este tamaño el 400 queda flojo
    (sobre todo en versalitas y sobre fondo oscuro) mientras el 700 pesa demasiado. Un trazo finísimo
    del mismo color engorda la letra lo justo para leerla bien, sea roja, castaña o clara.
-   Vale para todo el texto pequeño del sitio: etiquetas, datos, pies de foto, menú y filtros. */
+   Vale para todo el texto pequeño del sitio: etiquetas, datos, menú y filtros. */
 :is(.t-etiqueta, .rotulo__etiqueta, .cita-fuente, .t-dato, .boton__dato, .relacion__clave--mono,
-    .figura figcaption, .hoja figcaption, .nav__enlace, .cabecera__menu, .pie__legal, .filtros__boton) {
+    .nav__enlace, .cabecera__menu, .pie__legal, .filtros__boton) {
   -webkit-text-stroke: .35px currentColor;
 }
 /* Caption del kit: 13 / 1,5 / 0,04em */
@@ -330,8 +330,6 @@ a:hover { color: var(--negro); }
 /* ——— Figuras ——— */
 .figura { margin: 0; }
 .figura img { width: 100%; }
-.figura figcaption { margin-top: var(--s2); font-family: var(--f-cuerpo); font-size: 13px; line-height: 1.5; letter-spacing: .04em; color: var(--tinta-2); }
-.banda-negra .figura figcaption { color: var(--plata); }
 
 /* ——— Movimiento ——— */
 /* El contenido no se desliza: gira sobre su canto y se asienta desde el fondo de la escena,

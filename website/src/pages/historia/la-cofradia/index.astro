@@ -5,7 +5,7 @@ import HistoriaCabecera from '../../../components/HistoriaCabecera.astro';
 import TextoIntegroBanda from '../../../components/TextoIntegroBanda.astro';
 import hc from '../../../data/historia-compacta.json';
 import historia from '../../../data/historia.json';
-import { foto, CREDITOS } from '../../../lib/sitio';
+import { foto } from '../../../lib/sitio';
 const F = hc.cofradia;
 const H = historia.cofradia.es;
 const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -75,7 +75,6 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
         <div class="fiesta__general">
           <figure class="figura">
             <Image src={foto('claustro-catedral-1900.jpg')} alt="Claustro de la Catedral de Gerona, con un pozo en el centro, hacia 1900" widths={[480, 1024]} sizes="(min-width: 960px) 30vw, 100vw" />
-            <figcaption>{CREDITOS['claustro-catedral-1900.jpg']}</figcaption>
           </figure>
           <div class="fiesta__general-texto">
             <p class="t-cuerpo">{F.casa_general}</p>

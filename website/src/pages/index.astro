@@ -7,7 +7,7 @@ import ObraCajas from '../components/ObraCajas.astro';
 import consejo from '../data/consejo.json';
 import hc from '../data/historia-compacta.json';
 import escritura from '../data/escritura-hoja.json';
-import { actividades, foto, imagenActividad, ruta, CREDITOS } from '../lib/sitio';
+import { actividades, foto, imagenActividad, ruta } from '../lib/sitio';
 
 const C = hc.corporacion;
 const F = hc.cofradia;
@@ -196,7 +196,6 @@ const idForma = Object.fromEntries(Object.keys(E.formas).map((c, i) => [c, `plum
             </div>
           </div>
         </div>
-        <figcaption>{CREDITOS['lismann-girona-1928.jpg']}</figcaption>
       </figure>
       </div>
       <a class="enlace-mayor" href="/historia/la-cofradia/">Actas, ordinaciones y privilegios</a>
@@ -474,8 +473,8 @@ const idForma = Object.fromEntries(Object.keys(E.formas).map((c, i) => [c, `plum
   .cofradia__texto .t-cuerpo { text-align-last: center; }
 
   /* La hoja: 520 px de ancho son 710 px de alto en el formato del dibujo. En ventanas bajas
-     se estrecha (0,732 es la proporción del dibujo) para caber entera bajo la cabecera, pie incluido. */
-  .hoja { margin: 0; width: min(100%, 520px, calc((100svh - var(--cabecera) - 96px) * .732)); container-type: inline-size; text-align: left; }
+     se estrecha (0,732 es la proporción del dibujo) para caber entera bajo la cabecera, con aire. */
+  .hoja { margin: 0; width: min(100%, 520px, calc((100svh - var(--cabecera) - 56px) * .732)); container-type: inline-size; text-align: left; }
   .hoja-pista { width: 100%; display: grid; justify-items: center; align-content: start; }
   /* La pista: la hoja se queda fija y centrada bajo la cabecera mientras se recorre; ese
      recorrido es el que la da la vuelta (ver el script). --hoja-alto lo mide el script. */
@@ -488,7 +487,6 @@ const idForma = Object.fromEntries(Object.keys(E.formas).map((c, i) => [c, `plum
     .hoja-pista.es-viva { height: auto; }
     .hoja-pista.es-viva .hoja { position: static; }
   }
-  .hoja figcaption { margin-top: var(--s2); font-family: var(--f-cuerpo); font-size: 13px; line-height: 1.5; letter-spacing: .04em; color: var(--tinta-2); text-align: center; }
   .hoja__escena { perspective: 1800px; perspective-origin: 50% 40%; }
   .hoja__papel { position: relative; }
   .hoja__cara { position: relative; }

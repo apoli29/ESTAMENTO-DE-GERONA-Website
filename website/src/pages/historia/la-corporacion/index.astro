@@ -7,7 +7,7 @@ import Venera from '../../../components/Venera.astro';
 import ObraCajas from '../../../components/ObraCajas.astro';
 import hc from '../../../data/historia-compacta.json';
 import historia from '../../../data/historia.json';
-import { foto, CREDITOS } from '../../../lib/sitio';
+import { foto } from '../../../lib/sitio';
 const C = hc.corporacion;
 const H = historia.corporacion.es;
 const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -39,7 +39,6 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
     <div class="envoltura sede">
       <figure class="figura sede__foto">
         <Image src={foto('capilla-san-jorge.jpg')} alt="Retablo de una capilla de la Catedral de Gerona" widths={[480, 800, 1200]} sizes="(min-width: 960px) 36vw, 100vw" />
-        <figcaption>{CREDITOS['capilla-san-jorge.jpg']}</figcaption>
       </figure>
       <div class="sede__texto">
         <div class="rotulo">
