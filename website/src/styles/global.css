@@ -201,20 +201,7 @@ a:hover { color: var(--negro); }
 }
 .enlace-mayor:hover::before, .enlace-mayor:focus-visible::before { clip-path: inset(0 0 0 0); }
 .enlace-mayor:hover::after, .enlace-mayor:focus-visible::after { left: calc(100% - var(--espada-w)); }
-/* En reposo, cada dos segundos la espada da dos toques con la punta en la primera letra, con una
-   pausa breve entre ellos. Va con translate y no con left, que es lo que mueve el recorrido al
-   apuntar (y lo que lee Base.astro para las gotas); al apuntar, los toques se detienen. */
-.enlace-mayor::after { animation: tocar 2s infinite; }
-.enlace-mayor:hover::after, .enlace-mayor:focus-visible::after { animation: none; }
-@keyframes tocar {
-  0% { translate: 0 0; animation-timing-function: cubic-bezier(.55, 0, .9, .5); }
-  8% { translate: calc(var(--hueco) - 1px) 0; animation-timing-function: cubic-bezier(.2, .6, .4, 1); }
-  15% { translate: 5px 0; }
-  25% { translate: 5px 0; animation-timing-function: cubic-bezier(.55, 0, .9, .5); }
-  31% { translate: calc(var(--hueco) - 1px) 0; animation-timing-function: cubic-bezier(.2, .6, .4, 1); }
-  44%, 100% { translate: 0 0; }
-}
-@media (prefers-reduced-motion: reduce) { .enlace-mayor::after { animation: none; } }
+/* En reposo la espada da dos toques en la primera letra; los lleva Base.astro ("Toques de la espada") */
 /* Con JS, el subrayado lo dibujan las gotas que caen (ver Base.astro) */
 .enlace-mayor.con-tinta::before, .enlace-mayor.con-tinta:hover::before, .enlace-mayor.con-tinta:focus-visible::before {
   clip-path: inset(0 calc(100% - var(--revelado, 0px)) 0 0); transition: clip-path .08s linear;
@@ -262,8 +249,10 @@ a:hover { color: var(--negro); }
 .medalla__brillo {
   position: absolute; inset: 0; pointer-events: none; opacity: var(--brillo, 0);
   background: linear-gradient(100deg, transparent 22%, rgba(251, 248, 242, .5) 50%, transparent 78%);
-  -webkit-mask: var(--cruz) center / contain no-repeat;
-  mask: var(--cruz) center / contain no-repeat;
+  /* La silueta exacta de la cruz de la venera (Venera.astro): con la de --cruz, de brazos más
+     anchos, el reflejo se salía por los bordes como un halo gris */
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M36 4H64V36H96V64H64V96H36V64H4V36H36Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M36 4H64V36H96V64H64V96H36V64H4V36H36Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
 }
 
 /* ——— Cabeza de página ——— */
