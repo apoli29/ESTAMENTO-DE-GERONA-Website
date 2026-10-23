@@ -156,6 +156,9 @@ a:hover { color: var(--negro); }
    su lengua) para que el justificado no abra ríos entre palabras */
 .t-cuerpo, .relacion__valor, .rotulo__nota { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
 .t-etiqueta { font-size: 13px; line-height: 1.5; letter-spacing: .16em; text-transform: uppercase; }
+/* Thasadith sólo tiene 400 y 700: a 13 px en versalitas el 400 queda flojo y el 700 pesa demasiado.
+   Un trazo finísimo del mismo color engorda la letra lo justo, sea roja, castaña o clara. */
+:is(.t-etiqueta, .rotulo__etiqueta, .cita-fuente) { -webkit-text-stroke: .35px currentColor; }
 /* Caption del kit: 13 / 1,5 / 0,04em */
 .t-dato { font-family: var(--f-cuerpo); font-size: 13px; line-height: 1.5; letter-spacing: .04em; }
 .t-secundario { color: var(--tinta-2); }
@@ -190,7 +193,8 @@ a:hover { color: var(--negro); }
   display: inline-flex; align-items: center; gap: var(--s3);
   min-height: 48px; padding: 0 var(--s5);
   background: var(--teja); color: var(--sobre-teja);
-  font-family: var(--f-cuerpo); font-size: 16px; letter-spacing: .02em;
+  /* CTA: Thasadith Bold en versalitas espaciadas, para que la acción no se confunda con el cuerpo */
+  font-family: var(--f-cuerpo); font-weight: 700; font-size: 14px; line-height: 1.2; letter-spacing: .12em; text-transform: uppercase;
   text-decoration: none; border: 0; cursor: pointer;
   transition: background-color .2s ease;
 }
@@ -199,7 +203,7 @@ a:hover { color: var(--negro); }
 .boton--linea { background: transparent; color: var(--negro); box-shadow: inset 0 0 0 1px var(--negro); }
 .boton--linea:hover { background: var(--negro); color: var(--pergamino); }
 .banda-negra .boton--linea { color: var(--pergamino); box-shadow: inset 0 0 0 1px var(--linea-clara); }
-.boton__dato { font-family: var(--f-cuerpo); font-size: 13px; opacity: .8; letter-spacing: .04em; }
+.boton__dato { font-family: var(--f-cuerpo); font-weight: 400; font-size: 13px; opacity: .8; letter-spacing: .04em; text-transform: none; }
 
 /* Enlace mayor: la espada espera a la izquierda, a la altura del texto; al pasar el ratón
    lo recorre despacio hasta la derecha y va dejando detrás un trazo de tinta irregular. */
@@ -207,7 +211,9 @@ a:hover { color: var(--negro); }
   --espada-w: 42px; --hueco: 16px; --ritmo: 1.2s cubic-bezier(.65, 0, .35, 1);
   position: relative; display: inline-block;
   padding: 2px calc(var(--espada-w) + var(--hueco)) 10px;
-  font-family: var(--f-cuerpo); font-size: 20px; line-height: 1.3; color: var(--negro); text-decoration: none;
+  /* CTA: el mismo estilo que .boton (Thasadith Bold en versalitas espaciadas), distinto del cuerpo */
+  font-family: var(--f-cuerpo); font-weight: 700; font-size: 15px; line-height: 1.6; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--negro); text-decoration: none;
   /* A la izquierda aunque la sección esté centrada: si el rótulo parte en dos líneas, la primera
      letra sigue junto a la espada (es donde la espada da sus toques) */
   text-align: left; text-wrap: balance;
@@ -220,7 +226,7 @@ a:hover { color: var(--negro); }
   clip-path: inset(0 100% 0 0); transition: clip-path var(--ritmo);
 }
 .enlace-mayor::after {
-  content: ''; position: absolute; left: 0; top: calc(2px + .65em - 8px); width: var(--espada-w); height: 16px; background: var(--teja);
+  content: ''; position: absolute; left: 0; top: calc(2px + .8em - 8px); width: var(--espada-w); height: 16px; background: var(--teja);
   -webkit-mask: var(--espada-h) center / contain no-repeat; mask: var(--espada-h) center / contain no-repeat;
   transition: left var(--ritmo);
 }
