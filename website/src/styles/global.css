@@ -255,12 +255,13 @@ a:hover { color: var(--negro); }
    que gira dentro de ella y un reflejo recortado con la silueta de la cruz. El giro lo lleva
    Base.astro, que atiende a cualquier [data-giro]; aquí sólo vive la escena.
    El tamaño lo pone cada página: la medalla ocupa lo que le dé su contenedor. */
-.escena-medalla { perspective: 860px; perspective-origin: 50% 46%; }
+/* Perspectiva larga: con una corta, al girar la medalla se deforma en trapecio y parece estirada */
+.escena-medalla { perspective: 1600px; perspective-origin: 50% 46%; }
 .medalla { position: relative; transform-style: preserve-3d; will-change: transform; }
 /* La luz cae sobre el esmalte, no sobre un rectángulo alrededor de la pieza */
 .medalla__brillo {
   position: absolute; inset: 0; pointer-events: none; opacity: var(--brillo, 0);
-  background: linear-gradient(100deg, transparent 34%, rgba(251, 248, 242, .62) 50%, transparent 66%);
+  background: linear-gradient(100deg, transparent 22%, rgba(251, 248, 242, .5) 50%, transparent 78%);
   -webkit-mask: var(--cruz) center / contain no-repeat;
   mask: var(--cruz) center / contain no-repeat;
 }
