@@ -1,4 +1,5 @@
-// Compone la conclusión de la Cofradía (sección VI de la portada) en Pinyon Script y guarda el
+// Compone la conclusión de la Cofradía (sección VI de la portada) en Petit Formal Script (caligrafía
+// de pluma, como la Pinyon Script de la primera versión, pero más abierta y legible) y guarda el
 // contorno de cada letra en src/data/escritura-hoja.json, para que la pluma las trace una a una.
 // La fuente no se guarda en el repositorio: se descarga de Google Fonts si falta (licencia OFL;
 // lo que se publica es el texto ya compuesto, no la fuente).
@@ -11,19 +12,20 @@ import fs from 'node:fs';
 import path from 'node:path';
 import opentype from 'opentype.js';
 
-const FUENTE = path.resolve('scripts/fuentes/PinyonScript-Regular.ttf');
+const FAMILIA = 'Petit Formal Script';
+const FUENTE = path.resolve(`scripts/fuentes/${FAMILIA.replace(/ /g, '')}-Regular.ttf`);
 const SALIDA = path.resolve('src/data/escritura-hoja.json');
 const texto = JSON.parse(fs.readFileSync('src/data/historia-compacta.json', 'utf8')).cofradia.conclusion;
 
 const ANCHO = 520;
 const ALTO = Math.round((ANCHO * 2600) / 1903);
 const MARGEN = 50;
-const CUERPO = 40;
-const INTERLINEA = CUERPO * 1.3;
+const CUERPO = Number(process.env.CUERPO) || 30;
+const INTERLINEA = CUERPO * (Number(process.env.INTERLINEA) || 1.55);
 
 if (!fs.existsSync(FUENTE)) {
   // Con un agente antiguo Google Fonts sirve TrueType, que es lo que lee opentype.js
-  const css = await (await fetch('https://fonts.googleapis.com/css2?family=Pinyon+Script', { headers: { 'User-Agent': 'Mozilla/4.0' } })).text();
+  const css = await (await fetch(`https://fonts.googleapis.com/css2?family=${FAMILIA.replace(/ /g, '+')}`, { headers: { 'User-Agent': 'Mozilla/4.0' } })).text();
   const url = css.match(/https:\/\/fonts\.gstatic\.com[^)]+/)[0];
   fs.mkdirSync(path.dirname(FUENTE), { recursive: true });
   fs.writeFileSync(FUENTE, Buffer.from(await (await fetch(url)).arrayBuffer()));

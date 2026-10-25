@@ -80,24 +80,25 @@ const grupos = enlaces.filter((g) => g.grupo);
   .enl__url { color: var(--tinta-2); overflow-wrap: anywhere; }
   @media (min-width: 820px) { .enl__url { white-space: nowrap; } }
 
-  /* La espada marca que el enlace sale fuera del sitio: entra desde la izquierda al apuntar */
+  /* La espada marca que el enlace sale fuera del sitio: entra al apuntar, desde la derecha,
+     con la punta vuelta hacia el nombre (el dibujo apunta a la derecha; se refleja) */
   .enl__enlace::after {
     content: ''; position: absolute; right: 0; top: calc(var(--s4) + .55em - 6px);
     width: 26px; height: 12px; background: var(--teja);
     -webkit-mask: var(--espada-h) center / contain no-repeat;
     mask: var(--espada-h) center / contain no-repeat;
-    opacity: 0; transform: translateX(-10px);
+    opacity: 0; transform: translateX(10px) scaleX(-1);
     transition: opacity .3s ease, transform .5s cubic-bezier(.2, .7, .1, 1);
   }
   .enl__enlace:hover .enl__nombre, .enl__enlace:focus-visible .enl__nombre {
     color: var(--teja); transform: translateX(var(--s4));
   }
-  .enl__enlace:hover::after, .enl__enlace:focus-visible::after { opacity: 1; transform: none; }
+  .enl__enlace:hover::after, .enl__enlace:focus-visible::after { opacity: 1; transform: scaleX(-1); }
   .enl__enlace:focus-visible { outline-offset: -2px; }
 
   /* Sin movimiento, el color y la espada siguen marcando el enlace apuntado */
   @media (prefers-reduced-motion: reduce) {
     .enl__enlace:hover .enl__nombre, .enl__enlace:focus-visible .enl__nombre { transform: none; }
-    .enl__enlace::after { transform: none; }
+    .enl__enlace::after { transform: scaleX(-1); }
   }
 </style>

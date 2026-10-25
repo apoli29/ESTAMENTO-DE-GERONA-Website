@@ -27,9 +27,15 @@ const nombre = 'Real Estamento Militar del Principado de Gerona';
     <Pie />
     <script>
       // Desplazamiento suave y algo más lento que el nativo (≈20 %), para un ritmo pausado.
+      // En tableta y móvil cada gesto empuja un 20 % más (rueda y dedo), sin perder la suavidad:
+      // el dedo también pasa por Lenis (syncTouch), con la misma inercia pausada.
       import Lenis from 'lenis';
       if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        const lenis = new Lenis({ lerp: 0.08, wheelMultiplier: 0.8, anchors: { offset: -96 }, autoRaf: true });
+        const estrecho = matchMedia('(max-width: 1023px)').matches;
+        const lenis = new Lenis({
+          lerp: 0.08, wheelMultiplier: estrecho ? 0.96 : 0.8, anchors: { offset: -96 }, autoRaf: true,
+          ...(estrecho ? { syncTouch: true, syncTouchLerp: 0.08, touchMultiplier: 1.2 } : {}),
+        });
         (window as any).lenis = lenis;
       }
 
@@ -221,6 +227,7 @@ const nombre = 'Real Estamento Militar del Principado de Gerona';
             requestAnimationFrame(gotear);
           };
           const parar = () => {
+            if (enlace.classList.contains('en-marcha')) return;
             ronda++; activo = false;
             enlace.querySelectorAll('.enlace-mayor__gota').forEach((g) => g.remove());
             enlace.classList.add('recogiendo');
@@ -230,6 +237,25 @@ const nombre = 'Real Estamento Militar del Principado de Gerona';
           enlace.addEventListener('focus', empezar);
           enlace.addEventListener('pointerleave', parar);
           enlace.addEventListener('blur', parar);
+          // Tableta y móvil: al tocarlo, el enlace no salta enseguida. Durante 1,5 s la espada
+          // recorre el rótulo y deja su trazo de tinta (1,2 s de recorrido y las últimas gotas), y
+          // sólo entonces se va a la página. Abrir en otra pestaña o descargar no espera.
+          enlace.addEventListener('click', (e) => {
+            if (!matchMedia('(max-width: 1023px)').matches) return;
+            if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+            if ((enlace.target && enlace.target !== '_self') || enlace.hasAttribute('download')) return;
+            e.preventDefault();
+            if (enlace.classList.contains('en-marcha')) return;
+            empezar();
+            enlace.classList.add('en-marcha');
+            setTimeout(() => { location.href = enlace.href; }, 1500);
+          });
+          // Al volver con «atrás», la página puede salir de la caché tal como se dejó: se recoge
+          addEventListener('pageshow', (e) => {
+            if (!e.persisted || !enlace.classList.contains('en-marcha')) return;
+            enlace.classList.remove('en-marcha');
+            parar();
+          });
         });
       }
 
@@ -273,7 +299,7 @@ const nombre = 'Real Estamento Militar del Principado de Gerona';
           tocar();
           enlace.addEventListener('pointerenter', callar);
           enlace.addEventListener('focus', callar);
-          enlace.addEventListener('pointerleave', () => { if (!toque && document.activeElement !== enlace) tocar(); });
+          enlace.addEventListener('pointerleave', () => { if (!toque && document.activeElement !== enlace && !enlace.classList.contains('en-marcha')) tocar(); });
           enlace.addEventListener('blur', () => { if (!toque && !enlace.matches(':hover')) tocar(); });
         }));
       }

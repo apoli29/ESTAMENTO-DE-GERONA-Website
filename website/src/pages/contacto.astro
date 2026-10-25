@@ -8,7 +8,7 @@ import { foto } from '../lib/sitio';
 <Base titulo="Contacto">
   <!-- La página se abre sobre la ciudad: la fotografía a sangre y el correo encima, en claro -->
   <section class="seccion contacto banda-negra sobre-negro" aria-labelledby="contacto-titulo">
-    <Image class="contacto__foto" src={foto('onyar-catedral.jpg')} alt="El Onyar y la Catedral de Gerona" widths={[960, 1600, 2400]} sizes="100vw" quality={86} loading="eager" fetchpriority="high" />
+    <Image class="contacto__foto" src={foto('onyar-catedral-banda.jpg')} alt="El Onyar y la Catedral de Gerona" widths={[960, 1600, 2400, 3200]} sizes="100vw" quality={86} loading="eager" fetchpriority="high" />
     <div class="contacto__velo" aria-hidden="true"></div>
     <div class="envoltura capitulo contacto__caja">
       <div class="rotulo">
@@ -26,19 +26,19 @@ import { foto } from '../lib/sitio';
 
 <style>
   .contacto { position: relative; min-height: 80svh; display: grid; align-content: center; overflow: hidden; }
-  .contacto :global(.contacto__foto) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 58%; }
-  /* En estrecho el texto ocupa todo el ancho, así que el velo sólo puede ser vertical.
-     A partir de 900 px entra el de costado: hunde el lado del texto y deja respirar la
-     fotografía a la derecha. */
+  .contacto :global(.contacto__foto) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+  /* El velo manda: la fotografía es fondo y el texto tiene que leerse entero en cualquier punto.
+     En estrecho el texto ocupa todo el ancho, así que el velo sólo puede ser vertical; a partir
+     de 900 px entra además el de costado, más denso del lado del texto. */
   .contacto__velo {
     position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(26, 23, 20, .74) 0%, rgba(26, 23, 20, .6) 40%, rgba(26, 23, 20, .9) 100%);
+    background: linear-gradient(180deg, rgba(26, 23, 20, .86) 0%, rgba(26, 23, 20, .8) 40%, rgba(26, 23, 20, .94) 100%);
   }
   @media (min-width: 900px) {
     .contacto__velo {
       background:
-        linear-gradient(100deg, rgba(26, 23, 20, .93) 0%, rgba(26, 23, 20, .74) 48%, rgba(26, 23, 20, .34) 100%),
-        linear-gradient(180deg, rgba(26, 23, 20, .5) 0%, rgba(26, 23, 20, .28) 44%, rgba(26, 23, 20, .82) 100%);
+        linear-gradient(100deg, rgba(26, 23, 20, .95) 0%, rgba(26, 23, 20, .86) 48%, rgba(26, 23, 20, .62) 100%),
+        linear-gradient(180deg, rgba(26, 23, 20, .55) 0%, rgba(26, 23, 20, .35) 44%, rgba(26, 23, 20, .85) 100%);
     }
   }
   .contacto__caja { position: relative; }

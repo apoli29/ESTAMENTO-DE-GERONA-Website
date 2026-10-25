@@ -60,9 +60,11 @@ import contacto from '../data/contacto.json';
     /* El margen negativo recorta el aire propio del dibujo; el relleno de abajo dobla lo que
        queda bajo la cruz, para que la firma no se apoye en el canto de la ventana */
     padding: 0 var(--margen) var(--s6); margin-bottom: -1.65%;
-    opacity: .17; pointer-events: none; user-select: none;
+    pointer-events: none; user-select: none;
   }
-  /* El 60 % del ancho que tendría a sangre: la firma acompaña, no tapa el pie */
+  /* El 60 % del ancho que tendría a sangre: la firma acompaña, no tapa el pie. En tableta y
+     móvil, a ese porcentaje se quedaba diminuta: ocupa todo el ancho de la retícula. */
   .pie__firma :global(.logo) { width: 60%; max-width: 888px; }
+  @media (max-width: 1023px) { .pie__firma :global(.logo) { width: 100%; } }
   .pie__firma :global(svg) { width: 100%; }
 </style>

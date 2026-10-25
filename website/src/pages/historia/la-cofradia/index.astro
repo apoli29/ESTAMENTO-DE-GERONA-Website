@@ -278,9 +278,27 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .cofrades { display: grid; gap: var(--s6); }
   .cofrades .t-cuerpo + .t-cuerpo { margin-top: 0; }
   .clases { list-style: none; display: grid; gap: var(--medianil); grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
-  .clases__item { padding: var(--s5); border: 1px solid var(--linea); display: grid; gap: var(--s3); align-content: start; }
-  .clases__nombre { color: var(--teja); }
-  .clases__texto { font-size: 16px; line-height: 1.55; color: var(--tinta); }
+  /* Las clases de cofrades, en castaño como la barra y con su espada: al apuntar al cuadro, bajo
+     el título se dibuja la línea con la espada delante, como el tema activo del menú; al salir
+     la espada vuelve y la línea se recoge. */
+  .clases__item { padding: var(--s5); background: var(--castano); color: var(--pergamino); display: grid; gap: var(--s4); align-content: start; }
+  .clases__nombre { position: relative; justify-self: start; padding-bottom: var(--s2); color: var(--pergamino); }
+  .clases__nombre::after {
+    content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px; background: var(--pergamino);
+    transform: scaleX(0); transform-origin: left; transition: transform .9s cubic-bezier(.65, 0, .35, 1);
+  }
+  .clases__nombre::before {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -5px; height: 11px; background: var(--pergamino);
+    -webkit-mask: var(--espada-h) left center / 22px 11px no-repeat; mask: var(--espada-h) left center / 22px 11px no-repeat;
+    opacity: 0;
+    transition: -webkit-mask-position .9s cubic-bezier(.65, 0, .35, 1), mask-position .9s cubic-bezier(.65, 0, .35, 1), opacity .25s ease .65s;
+  }
+  .clases__item:hover .clases__nombre::after { transform: scaleX(1); }
+  .clases__item:hover .clases__nombre::before {
+    -webkit-mask-position: right center; mask-position: right center; opacity: 1;
+    transition: -webkit-mask-position .9s cubic-bezier(.65, 0, .35, 1), mask-position .9s cubic-bezier(.65, 0, .35, 1), opacity .15s ease;
+  }
+  .clases__texto { font-size: 16px; line-height: 1.55; color: var(--pergamino); }
   /* Cita secundaria: sólo un filo fino, para no competir con la chapa de la entrada */
   .cofrades__cita { margin: 0; padding-left: var(--s5); border-left: 1px solid var(--linea-fuerte); }
   .cofrades__sub { margin-top: var(--s5); }
