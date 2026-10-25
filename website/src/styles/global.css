@@ -225,8 +225,6 @@ a:hover { color: var(--negro); }
   /* A la izquierda aunque la sección esté centrada: si el rótulo parte en dos líneas, la primera
      letra sigue junto a la espada (es donde la espada da sus toques) */
   text-align: left; text-wrap: balance;
-  /* Al tocarlo en el móvil, el navegador no pinta su recuadro azul encima de la espada */
-  -webkit-tap-highlight-color: transparent;
 }
 .enlace-mayor::before {
   content: ''; position: absolute; bottom: 1px; height: 9px;
@@ -241,7 +239,7 @@ a:hover { color: var(--negro); }
   transition: left var(--ritmo);
 }
 .enlace-mayor:hover::before, .enlace-mayor:focus-visible::before { clip-path: inset(0 0 0 0); }
-.enlace-mayor:hover::after, .enlace-mayor:focus-visible::after, .enlace-mayor.en-marcha::after { left: calc(100% - var(--espada-w)); }
+.enlace-mayor:hover::after, .enlace-mayor:focus-visible::after { left: calc(100% - var(--espada-w)); }
 /* En reposo la espada da dos toques en la primera letra; los lleva Base.astro ("Toques de la espada") */
 /* Con JS, el subrayado lo dibujan las gotas que caen (ver Base.astro) */
 .enlace-mayor.con-tinta::before, .enlace-mayor.con-tinta:hover::before, .enlace-mayor.con-tinta:focus-visible::before {

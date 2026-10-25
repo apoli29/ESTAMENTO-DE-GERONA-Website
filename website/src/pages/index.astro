@@ -480,15 +480,6 @@ const idForma = Object.fromEntries(Object.keys(E.formas).map((c, i) => [c, `plum
      recorrido es el que la da la vuelta (ver el script). --hoja-alto lo mide el script. */
   .hoja-pista.es-viva { height: calc(var(--hoja-alto, 0px) + 110svh); }
   .hoja-pista.es-viva .hoja { position: sticky; top: calc(var(--cabecera) + max(var(--s4), (100svh - var(--cabecera) - var(--hoja-alto, 0px)) / 2)); }
-  /* Tableta y móvil: la hoja se lleva casi todo el ancho de la pantalla (12 px a cada lado, saliendo
-     del margen de la retícula) y se centra en lo que de verdad se ve: entre el pie de la cabecera
-     (barra y banda) y el borde de abajo, con la altura dinámica de la ventana (dvh), que crece
-     cuando el navegador esconde su barra. */
-  @media (max-width: 1023px) {
-    .hoja-pista { width: calc(100% + 2 * var(--margen) - 24px); margin-inline: calc(12px - var(--margen)); }
-    .hoja { width: min(100%, 680px, calc((100dvh - var(--cabecera) - 12px - 24px) * .732)); }
-    .hoja-pista.es-viva .hoja { top: calc(var(--cabecera) + 12px + max(var(--s2), (100dvh - var(--cabecera) - 12px - var(--hoja-alto, 0px)) / 2)); }
-  }
   /* Ventanas bajas (un móvil apaisado): fijada, la hoja tendría que encogerse tanto para caber
      que el reverso no podría con el texto. Ahí no se fija ni se encoge; se vuelve igual al pasar. */
   @media (max-height: 559px) {

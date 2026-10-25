@@ -62,9 +62,7 @@ import contacto from '../data/contacto.json';
     padding: 0 var(--margen) var(--s6); margin-bottom: -1.65%;
     pointer-events: none; user-select: none;
   }
-  /* El 60 % del ancho que tendría a sangre: la firma acompaña, no tapa el pie. En tableta y
-     móvil, a ese porcentaje se quedaba diminuta: ocupa todo el ancho de la retícula. */
+  /* El 60 % del ancho que tendría a sangre: la firma acompaña, no tapa el pie */
   .pie__firma :global(.logo) { width: 60%; max-width: 888px; }
-  @media (max-width: 1023px) { .pie__firma :global(.logo) { width: 100%; } }
   .pie__firma :global(svg) { width: 100%; }
 </style>
