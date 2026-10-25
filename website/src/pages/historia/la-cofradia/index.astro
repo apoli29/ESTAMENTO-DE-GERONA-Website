@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../../../layouts/Base.astro';
+import { metaPagina } from '../../../lib/pageMeta';
 import HistoriaCabecera from '../../../components/HistoriaCabecera.astro';
 import TextoIntegroBanda from '../../../components/TextoIntegroBanda.astro';
 import hc from '../../../data/historia-compacta.json';
@@ -10,7 +11,7 @@ const F = hc.cofradia;
 const H = historia.cofradia.es;
 const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 ---
-<Base titulo="La Cofradía de San Jorge">
+<Base meta={metaPagina("/historia/la-cofradia/")}>
   <HistoriaCabecera titulo="La Cofradía de San Jorge" imagen={foto('sala-gotica-malbork.jpg')} alt="Pintura del siglo XIX: caballeros en una sala gótica abovedada" posicion="50% 0%" />
 
   <!-- Entrada -->

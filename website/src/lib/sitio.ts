@@ -1,6 +1,7 @@
 import actividadesData from '../data/actividades.json';
 import transcripciones from '../data/transcripciones.json';
 import type { ImageMetadata } from 'astro';
+import { rutaActividad } from './rutas';
 
 export type Tipo = 'musica' | 'conferencia' | 'exposicion' | 'publicacion' | 'navidad';
 
@@ -42,7 +43,7 @@ export function transcripcionDe(a: Actividad) {
   return (transcripciones as Record<string, any>)[a.transcripcion] ?? null;
 }
 
-export const ruta = (a: Actividad) => `/actividades/${a.id}/`;
+export const ruta = (a: Actividad) => rutaActividad(a.id);
 
 /* Imágenes (optimizadas por Astro) */
 const imgsActividades = import.meta.glob<{ default: ImageMetadata }>('../assets/actividades/*', { eager: true });

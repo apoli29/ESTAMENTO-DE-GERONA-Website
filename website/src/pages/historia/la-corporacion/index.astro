@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../../../layouts/Base.astro';
+import { metaPagina } from '../../../lib/pageMeta';
 import HistoriaCabecera from '../../../components/HistoriaCabecera.astro';
 import TextoIntegroBanda from '../../../components/TextoIntegroBanda.astro';
 import Venera from '../../../components/Venera.astro';
@@ -12,7 +13,7 @@ const C = hc.corporacion;
 const H = historia.corporacion.es;
 const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 ---
-<Base titulo="La Corporación">
+<Base meta={metaPagina("/historia/la-corporacion/")}>
   <HistoriaCabecera titulo="La Corporación" imagen={foto('catedral-jardin.jpg')} alt="La Catedral de Gerona al atardecer" />
 
   <!-- I · Cronología -->

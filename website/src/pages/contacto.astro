@@ -1,9 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
+import { metaPagina } from '../lib/pageMeta';
 import Venera from '../components/Venera.astro';
 import contacto from '../data/contacto.json';
 ---
-<Base titulo="Contacto">
+<Base meta={metaPagina("/contacto/")}>
   <section class="seccion contacto">
     <div class="envoltura capitulo">
       <div class="rotulo">

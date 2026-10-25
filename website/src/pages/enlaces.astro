@@ -1,9 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
+import { metaPagina } from '../lib/pageMeta';
 import enlaces from '../data/enlaces.json';
 const limpio = (u: string) => u.replace(/^https?:\/\//, '').replace(/\/$/, '');
 ---
-<Base titulo="Enlaces">
+<Base meta={metaPagina("/enlaces/")}>
   <section class="seccion">
     <div class="envoltura capitulo">
       <div class="rotulo">

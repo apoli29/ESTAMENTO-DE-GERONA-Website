@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
+import { metaActividad } from '../../lib/pageMeta';
 import { actividades, TIPOS, ruta, imagenActividad, transcripcionDe, urlPanfleto, formatoPanfleto, type Actividad } from '../../lib/sitio';
 
 export function getStaticPaths() {
@@ -28,7 +29,7 @@ if (a.panfleto) {
   }
 }
 ---
-<Base titulo={a.titulo.replace(/^"|"$/g, '')}>
+<Base meta={metaActividad(a)}>
   <article class="seccion detalle">
     <div class="envoltura">
       <nav class="miga t-dato" aria-label="Ruta">

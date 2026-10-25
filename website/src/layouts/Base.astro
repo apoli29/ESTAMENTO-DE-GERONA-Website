@@ -2,16 +2,18 @@
 import '../styles/global.css';
 import Cabecera from '../components/Cabecera.astro';
 import Pie from '../components/Pie.astro';
-interface Props { titulo?: string; lang?: string }
-const { titulo, lang = 'es' } = Astro.props;
-const nombre = 'Real Estamento Militar del Principado de Gerona';
+import type { Meta } from '../lib/pageMeta';
+/* Título, descripción e idioma vienen siempre de lib/pageMeta.ts */
+interface Props { meta: Meta }
+const { meta } = Astro.props;
 ---
 <!doctype html>
-<html lang={lang}>
+<html lang={meta.lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{titulo ? `${titulo} · ${nombre}` : `${nombre} · Cofradía de San Jorge`}</title>
+    <title>{meta.title}</title>
+    <meta name="description" content={meta.description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="theme-color" content="#2B1F18" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

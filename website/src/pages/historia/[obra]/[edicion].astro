@@ -3,16 +3,14 @@ import Base from '../../../layouts/Base.astro';
 import Venera from '../../../components/Venera.astro';
 import historia from '../../../data/historia.json';
 import { romano } from '../../../lib/sitio';
+import { metaTextoIntegro } from '../../../lib/pageMeta';
+import { OBRAS, EDICIONES, rutaObra, rutaEdicion, type Obra, type Edicion } from '../../../lib/rutas';
 
-type Obra = 'la-corporacion' | 'la-cofradia';
-type Edicion = 'texto-integro' | 'text-integre';
 export function getStaticPaths() {
-  const obras: Obra[] = ['la-corporacion', 'la-cofradia'];
-  const ediciones: Edicion[] = ['texto-integro', 'text-integre'];
-  return obras.flatMap((obra) => ediciones.map((edicion) => ({ params: { obra, edicion } })));
+  return OBRAS.flatMap((obra) => (Object.keys(EDICIONES) as Edicion[]).map((edicion) => ({ params: { obra, edicion } })));
 }
 const { obra, edicion } = Astro.params as { obra: Obra; edicion: Edicion };
-const lang = edicion === 'text-integre' ? 'ca' : 'es';
+const lang = EDICIONES[edicion];
 const texto = (historia as any)[obra === 'la-corporacion' ? 'corporacion' : 'cofradia'][lang];
 const otra = edicion === 'text-integre' ? 'texto-integro' : 'text-integre';
 
@@ -24,13 +22,13 @@ const R = lang === 'ca'
 let capitulo = 0;
 const bloques = texto.blocks.map((b: { type: string; text: string }) => (b.type === 'h' ? { ...b, num: romano(++capitulo) } : b));
 ---
-<Base titulo={`${texto.title} · ${R.etiqueta}`} lang={lang}>
+<Base meta={metaTextoIntegro(obra, edicion)}>
   <div class="pergamino">
     <article class="envoltura libro">
       <header class="libro__cabeza">
         <nav class="libro__nav t-dato" aria-label="Edición">
-          <a href={`/historia/${obra}/`} lang="es">← {R.volver}</a>
-          <a href={`/historia/${obra}/${otra}/`} hreflang={lang === 'ca' ? 'es' : 'ca'} lang={lang === 'ca' ? 'es' : 'ca'}>{R.otra}</a>
+          <a href={rutaObra(obra)} lang="es">← {R.volver}</a>
+          <a href={rutaEdicion(obra, otra)} hreflang={lang === 'ca' ? 'es' : 'ca'} lang={lang === 'ca' ? 'es' : 'ca'}>{R.otra}</a>
         </nav>
         <Venera tamano={56} />
         <p class="t-etiqueta libro__etiqueta">{R.etiqueta}</p>

@@ -1,10 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { metaPagina } from '../../lib/pageMeta';
 import ActividadTarjeta from '../../components/ActividadTarjeta.astro';
 import { actividades, porAnio, FILTROS } from '../../lib/sitio';
 const anios = porAnio(actividades);
 ---
-<Base titulo="Actividades">
+<Base meta={metaPagina("/actividades/")}>
   <section class="seccion encabezado">
     <div class="envoltura capitulo">
       <div class="rotulo">

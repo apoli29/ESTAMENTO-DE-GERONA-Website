@@ -1,0 +1,33 @@
+---
+/* Página para URLs inexistentes: el build la emite como 404.html y el servidor la sirve con estado 404.
+   TODO(revisar): texto nuevo, pendiente de aprobación. */
+import Base from '../layouts/Base.astro';
+import Venera from '../components/Venera.astro';
+import { metaPagina } from '../lib/pageMeta';
+import { RUTAS } from '../lib/rutas';
+---
+<Base meta={metaPagina('404')}>
+  <section class="seccion no-encontrada">
+    <div class="envoltura capitulo">
+      <div class="rotulo">
+        <span class="rotulo__etiqueta">Error 404</span>
+        <Venera tamano={64} clase="no-encontrada__venera" />
+      </div>
+      <div class="no-encontrada__texto">
+        <h1 class="t-display">Página no encontrada</h1>
+        <p class="t-entradilla">La página que busca no existe o ha cambiado de dirección.</p>
+        <div class="no-encontrada__enlaces">
+          <a class="enlace-mayor" href={RUTAS.inicio}>Volver a la portada</a>
+          <a class="enlace-mayor" href={RUTAS.actividades}>Ver las actividades</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .no-encontrada { min-height: 52vh; }
+  .no-encontrada :global(.no-encontrada__venera) { margin-top: var(--s6); }
+  .no-encontrada__texto { display: grid; gap: var(--s6); }
+  .no-encontrada__enlaces { display: flex; flex-wrap: wrap; gap: var(--s4) var(--s7); }
+</style>

@@ -1,6 +1,7 @@
 ---
 /* Banda de cierre: firma del texto original + acceso al texto íntegro (ES / CA) */
-interface Props { obra: 'la-corporacion' | 'la-cofradia'; firma: string[] }
+import { rutaEdicion, type Obra } from '../lib/rutas';
+interface Props { obra: Obra; firma: string[] }
 const { obra, firma } = Astro.props;
 ---
 <section class="seccion banda-negra sobre-negro ti">
@@ -14,8 +15,8 @@ const { obra, firma } = Astro.props;
     <div class="ti__acciones">
       <p class="cita">El texto completo, tal como fue escrito, en una sola página de lectura.</p>
       <div class="ti__botones">
-        <a class="boton" href={`/historia/${obra}/texto-integro/`}>Leer el texto íntegro</a>
-        <a class="boton boton--linea" href={`/historia/${obra}/text-integre/`} hreflang="ca" lang="ca">Llegir-lo en català</a>
+        <a class="boton" href={rutaEdicion(obra, 'texto-integro')}>Leer el texto íntegro</a>
+        <a class="boton boton--linea" href={rutaEdicion(obra, 'text-integre')} hreflang="ca" lang="ca">Llegir-lo en català</a>
       </div>
     </div>
   </div>

@@ -1,8 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
+import { metaPagina } from '../lib/pageMeta';
 import TextoLegal from '../components/TextoLegal.astro';
 import legal from '../data/legal.json';
 ---
-<Base titulo="Política de privacidad">
+<Base meta={metaPagina("/privacidad/")}>
   <TextoLegal titulo={legal.privacidad.title} bloques={legal.privacidad.blocks} />
 </Base>
