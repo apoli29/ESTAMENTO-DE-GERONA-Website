@@ -292,8 +292,15 @@ const idForma = Object.fromEntries(Object.keys(E.formas).map((c, i) => [c, `plum
       const giro = giroScroll + mano;
       const rad = giro * Math.PI / 180;
       const canto = Math.abs(Math.sin(rad));
+      // Sólo se ve la cara que mira al lector, y nunca vuelta del revés: la hoja gira hasta ponerse
+      // de canto (90°), ahí cambia de cara sin que se vea, y la otra viene de canto a 0°. En reposo
+      // ninguna cara lleva giro alguno. Con una cara de espaldas girada 180° (lo de antes), Safari
+      // la reflejaba sobre un eje equivocado y el reverso quedaba desplazado a un lado.
+      const vueltas = Math.round(giro / 180);
+      const visto = giro - vueltas * 180;
+      hoja.classList.toggle('de-espaldas', vueltas % 2 !== 0);
       // Como en un libro: la hoja se levanta hacia el lector y se tuerce un poco al ponerse de canto
-      papel.style.transform = `translateZ(${(canto * 70).toFixed(1)}px) rotateY(${giro.toFixed(2)}deg) rotateZ(${(canto * -1.8).toFixed(2)}deg)`;
+      papel.style.transform = canto < 0.0005 ? '' : `translateZ(${(canto * 70).toFixed(1)}px) rotateY(${visto.toFixed(2)}deg) rotateZ(${(canto * -1.8).toFixed(2)}deg)`;
       hoja.style.setProperty('--canto', canto.toFixed(3));
       if (Math.cos(rad) < -0.96) escribir();
       if (mano !== manoObjetivo || k < 1) pedir(); else previo = 0;
@@ -387,22 +394,8 @@ const idForma = Object.fromEntries(Object.keys(E.formas).map((c, i) => [c, `plum
     }
     addEventListener('scroll', pedir, { passive: true });
     addEventListener('resize', pedir);
-    // Los ejes del giro, en píxeles y medidos cada vez que la hoja cambia de tamaño. En porcentaje,
-    // Safari (iOS) no los recalcula si la hoja se estrecha estando ya vuelta (la barra del navegador
-    // que se esconde, girar el teléfono): el reverso se reflejaba sobre el centro viejo y quedaba
-    // desplazado de su sitio. Las dos caras giran sobre el mismo centro, el de la hoja.
-    const escenaGiro = hoja.querySelector<HTMLElement>('.hoja__escena')!;
-    const reverso = hoja.querySelector<HTMLElement>('.hoja__cara--reverso')!;
-    const medir = () => {
-      const w = papel.offsetWidth, h = papel.offsetHeight;
-      const centro = `${(w / 2).toFixed(1)}px ${(h / 2).toFixed(1)}px`;
-      papel.style.transformOrigin = centro;
-      reverso.style.transformOrigin = centro;
-      escenaGiro.style.perspectiveOrigin = `${(w / 2).toFixed(1)}px ${(h * 0.4).toFixed(1)}px`;
-      pista.style.setProperty('--hoja-alto', hoja.offsetHeight + 'px');
-    };
-    new ResizeObserver(() => { medir(); pedir(); }).observe(hoja);
-    medir();
+    new ResizeObserver(() => { pista.style.setProperty('--hoja-alto', hoja.offsetHeight + 'px'); pedir(); }).observe(hoja);
+    pista.style.setProperty('--hoja-alto', hoja.offsetHeight + 'px');
     pintar();
   }
 </script>
@@ -555,20 +548,22 @@ const idForma = Object.fromEntries(Object.keys(E.formas).map((c, i) => [c, `plum
   .hoja__pluma-punta { fill: #120B06; }
 
   /* Con JS y sin movimiento reducido: las dos caras son una sola hoja que se da la vuelta.
-     El giro y --canto (0 de frente o de espaldas, 1 de canto) los escribe el script de abajo. */
-  .hoja.es-viva .hoja__papel { transform-style: preserve-3d; will-change: transform; }
+     El giro, --canto (0 de frente o de espaldas, 1 de canto) y .de-espaldas los pone el script de
+     abajo. Las dos caras ocupan el mismo sitio y sólo se ve la que mira al lector: ninguna se
+     gira 180° ni depende de backface-visibility, así que no hay nada que pueda descuadrarse. */
+  .hoja.es-viva .hoja__papel { will-change: transform; }
   @media (pointer: fine) { .hoja.es-viva .hoja__escena { cursor: ew-resize; } }
   .hoja.es-viva .hoja__cara {
-    -webkit-backface-visibility: hidden; backface-visibility: hidden;
     box-shadow: 0 calc(18px + 26px * var(--canto, 0)) calc(36px + 30px * var(--canto, 0)) -22px rgba(26, 23, 20, .45);
   }
   .hoja.es-viva .hoja__cara--reverso {
-    position: absolute; inset: 0; margin: 0; transform: rotateY(180deg);
+    position: absolute; inset: 0; margin: 0; visibility: hidden;
     box-shadow: inset 0 0 0 1px rgba(92, 72, 48, .16), inset 0 0 70px rgba(120, 92, 58, .3), 0 calc(18px + 26px * var(--canto, 0)) calc(36px + 30px * var(--canto, 0)) -22px rgba(26, 23, 20, .45);
   }
+  .hoja.es-viva.de-espaldas .hoja__cara--reverso { visibility: visible; }
+  .hoja.es-viva.de-espaldas .hoja__cara--frente { visibility: hidden; }
   /* Al ponerse de canto la hoja se aparta de la luz y se oscurece */
   .hoja.es-viva .hoja__sombra { display: block; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(26, 23, 20, .7), rgba(26, 23, 20, .35)); opacity: calc(var(--canto, 0) * .85); }
-  .hoja.es-viva .hoja__cara--reverso .hoja__sombra { background: linear-gradient(270deg, rgba(26, 23, 20, .7), rgba(26, 23, 20, .35)); }
 
   /* VII · Consejo */
   .consejo__cabeza { margin-bottom: var(--s7); }
