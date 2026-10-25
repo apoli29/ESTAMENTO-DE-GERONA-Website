@@ -387,8 +387,22 @@ const idForma = Object.fromEntries(Object.keys(E.formas).map((c, i) => [c, `plum
     }
     addEventListener('scroll', pedir, { passive: true });
     addEventListener('resize', pedir);
-    new ResizeObserver(() => { pista.style.setProperty('--hoja-alto', hoja.offsetHeight + 'px'); pedir(); }).observe(hoja);
-    pista.style.setProperty('--hoja-alto', hoja.offsetHeight + 'px');
+    // Los ejes del giro, en píxeles y medidos cada vez que la hoja cambia de tamaño. En porcentaje,
+    // Safari (iOS) no los recalcula si la hoja se estrecha estando ya vuelta (la barra del navegador
+    // que se esconde, girar el teléfono): el reverso se reflejaba sobre el centro viejo y quedaba
+    // desplazado de su sitio. Las dos caras giran sobre el mismo centro, el de la hoja.
+    const escenaGiro = hoja.querySelector<HTMLElement>('.hoja__escena')!;
+    const reverso = hoja.querySelector<HTMLElement>('.hoja__cara--reverso')!;
+    const medir = () => {
+      const w = papel.offsetWidth, h = papel.offsetHeight;
+      const centro = `${(w / 2).toFixed(1)}px ${(h / 2).toFixed(1)}px`;
+      papel.style.transformOrigin = centro;
+      reverso.style.transformOrigin = centro;
+      escenaGiro.style.perspectiveOrigin = `${(w / 2).toFixed(1)}px ${(h * 0.4).toFixed(1)}px`;
+      pista.style.setProperty('--hoja-alto', hoja.offsetHeight + 'px');
+    };
+    new ResizeObserver(() => { medir(); pedir(); }).observe(hoja);
+    medir();
     pintar();
   }
 </script>
