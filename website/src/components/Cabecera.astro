@@ -201,7 +201,7 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
 
   /* Móvil y tableta: panel desplegable bajo la cabecera */
   @media (max-width: 1023px) {
-    .nav { display: none; position: absolute; left: 0; right: 0; top: calc(100% - 12px); padding-top: 12px; background: var(--castano); border-bottom: 12px solid var(--negro); max-height: calc(100vh - 100px); overflow: auto; }
+    .nav { display: none; position: absolute; left: 0; right: 0; top: calc(100% - 12px); padding-top: 12px; background: var(--castano); border-bottom: 12px solid var(--negro); max-height: calc(var(--ventana) * 100 - 100px); overflow: auto; }
     .nav.esta-abierta { display: block; }
     .nav__lista { padding: var(--s5) var(--margen) var(--s7); }
     .nav__item { border-bottom: 1px solid var(--linea-clara); }

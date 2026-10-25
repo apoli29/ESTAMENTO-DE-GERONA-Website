@@ -14,6 +14,24 @@ const nombre = 'Real Estamento Militar del Principado de Gerona';
     <title>{titulo ? `${titulo} · ${nombre}` : `${nombre} · Cofradía de San Jorge`}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="theme-color" content="#2B1F18" />
+    <script is:inline>
+      // Alto de la ventana, medido una vez (--ventana es su 1 %; ver global.css). Al desplazarse desde
+      // arriba el navegador esconde sus barras y la ventana crece; algunos (Firefox en Android, los
+      // navegadores de dentro de las apps, versiones viejas de Chrome y Samsung Internet) estiran
+      // con ella todo lo que mide en svh, y la portada y su foto se reescalaban a medio gesto, como
+      // un zoom. Sólo se vuelve a medir si cambia el ancho (girar el teléfono) o, con ratón, al
+      // redimensionar la ventana; el teclado que aparece tampoco lo mueve.
+      (function () {
+        var raiz = document.documentElement, ancho = 0;
+        var medir = function () {
+          if (innerWidth === ancho && !matchMedia('(pointer: fine)').matches) return;
+          ancho = innerWidth;
+          raiz.style.setProperty('--ventana', innerHeight / 100 + 'px');
+        };
+        medir();
+        addEventListener('resize', medir);
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;500;600;700;800&family=Thasadith:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />

@@ -409,7 +409,7 @@ const idForma = Object.fromEntries(Object.keys(E.formas).map((c, i) => [c, `plum
 
 <style>
   /* Portada */
-  .portada { position: relative; min-height: 100svh; display: grid; place-items: center; overflow: hidden; background: var(--negro); color: var(--pergamino); text-align: center; }
+  .portada { position: relative; min-height: calc(var(--ventana) * 100); display: grid; place-items: center; overflow: hidden; background: var(--negro); color: var(--pergamino); text-align: center; }
   .portada :global(.portada__foto) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
   /* Velo: oscurece la imagen para la lectura y la funde con el negro de la sección I */
   .portada__velo {
@@ -488,12 +488,12 @@ const idForma = Object.fromEntries(Object.keys(E.formas).map((c, i) => [c, `plum
 
   /* La hoja: 520 px de ancho son 710 px de alto en el formato del dibujo. En ventanas bajas
      se estrecha (0,732 es la proporción del dibujo) para caber entera bajo la cabecera, con aire. */
-  .hoja { margin: 0; width: min(100%, 520px, calc((100svh - var(--cabecera) - 56px) * .732)); container-type: inline-size; text-align: left; }
+  .hoja { margin: 0; width: min(100%, 520px, calc((var(--ventana) * 100 - var(--cabecera) - 56px) * .732)); container-type: inline-size; text-align: left; }
   .hoja-pista { width: 100%; display: grid; justify-items: center; align-content: start; }
   /* La pista: la hoja se queda fija y centrada bajo la cabecera mientras se recorre; ese
      recorrido es el que la da la vuelta (ver el script). --hoja-alto lo mide el script. */
-  .hoja-pista.es-viva { height: calc(var(--hoja-alto, 0px) + 110svh); }
-  .hoja-pista.es-viva .hoja { position: sticky; top: calc(var(--cabecera) + max(var(--s4), (100svh - var(--cabecera) - var(--hoja-alto, 0px)) / 2)); }
+  .hoja-pista.es-viva { height: calc(var(--hoja-alto, 0px) + var(--ventana) * 110); }
+  .hoja-pista.es-viva .hoja { position: sticky; top: calc(var(--cabecera) + max(var(--s4), (var(--ventana) * 100 - var(--cabecera) - var(--hoja-alto, 0px)) / 2)); }
   /* Ventanas bajas (un móvil apaisado): fijada, la hoja tendría que encogerse tanto para caber
      que el reverso no podría con el texto. Ahí no se fija ni se encoge; se vuelve igual al pasar. */
   @media (max-height: 559px) {

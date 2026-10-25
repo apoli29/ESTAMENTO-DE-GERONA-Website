@@ -68,6 +68,10 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
+/* 1 % del alto de la ventana, estable al desplazarse: lo fija Base.astro al cargar. Sin JS, svh
+   (o vh, donde no lo hay). */
+:root { --ventana: 1svh; }
+@supports not (height: 1svh) { :root { --ventana: 1vh; } }
 /* Desplazamiento suave (Lenis, ver Base.astro) */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
@@ -75,6 +79,8 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-stopped { overflow: hidden; }
 body {
   margin: 0;
+  /* Nada asoma por los lados: en el móvil, un ancho de más hace que el navegador aleje el zoom */
+  overflow-x: clip;
   background: var(--pergamino);
   color: var(--negro);
   font-family: var(--f-cuerpo);

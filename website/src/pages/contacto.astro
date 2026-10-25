@@ -25,7 +25,7 @@ import { foto } from '../lib/sitio';
 </Base>
 
 <style>
-  .contacto { position: relative; min-height: 80svh; display: grid; align-content: center; overflow: hidden; }
+  .contacto { position: relative; min-height: calc(var(--ventana) * 80); display: grid; align-content: center; overflow: hidden; }
   .contacto :global(.contacto__foto) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 30% 50%; }
   /* En estrecho la foto se recorta a lo alto: el encuadre se corre a la izquierda, a la Catedral */
   /* El velo manda: la fotografía es fondo y el texto tiene que leerse entero en cualquier punto.
