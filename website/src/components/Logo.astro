@@ -1,16 +1,23 @@
 ---
-/* Logotipo oficial: se reproduce siempre desde los archivos originales (sistema visual, VIII). */
+/* Marca oficial: se reproduce siempre desde los archivos originales.
+   Se usa "marca", la cruz de gules con las cuatro espadas. Los propietarios no registran la identidad
+   nueva: sus versiones (horizontal, sello) se conservan aquí y en Estamento-id-visual, pero no se usan. */
+import marca from '../assets/marca/marca-actual.svg?raw';
 import horizontalColor from '../assets/marca/horizontal-color.svg?raw';
 import horizontalNegativo from '../assets/marca/horizontal-negativo.svg?raw';
 import selloColor from '../assets/marca/sello-color.svg?raw';
 import selloBlanco from '../assets/marca/sello-blanco.svg?raw';
-interface Props { version?: 'horizontal' | 'horizontal-negativo' | 'sello' | 'sello-blanco'; ancho?: number; clase?: string }
-const { version = 'horizontal', ancho = 220, clase = '' } = Astro.props;
-const fuentes = { horizontal: horizontalColor, 'horizontal-negativo': horizontalNegativo, sello: selloColor, 'sello-blanco': selloBlanco };
-// Quita el manifiesto C2PA incrustado y fija tamaño/accesibilidad.
+interface Props { version?: 'marca' | 'horizontal' | 'horizontal-negativo' | 'sello' | 'sello-blanco'; ancho?: number; clase?: string }
+const { version = 'marca', ancho = 220, clase = '' } = Astro.props;
+const fuentes = { marca, horizontal: horizontalColor, 'horizontal-negativo': horizontalNegativo, sello: selloColor, 'sello-blanco': selloBlanco };
+// La marca puede salir varias veces en la página: cada instancia lleva sus propios id (patrones, recortes).
+const sufijo = Math.random().toString(36).slice(2, 7);
+// Quita el manifiesto C2PA incrustado y los comentarios, y fija tamaño/accesibilidad.
 const svg = fuentes[version]
   .replace(/<metadata>[\s\S]*?<\/metadata>/, '')
-  .replace(/\swidth="[^"]*"\s+height="[^"]*"/, ` width="${ancho}" role="img" aria-label="Real Estamento Militar del Principado de Gerona · Cofradía de San Jorge"`);
+  .replace(/<!--[\s\S]*?-->/g, '')
+  .replace(/\swidth="[^"]*"\s+height="[^"]*"/, ` width="${ancho}" role="img" aria-label="Real Estamento Militar del Principado de Gerona · Cofradía de San Jorge"`)
+  .replace(/(id="|url\(#|href="#)([\w-]+)/g, `$1$2-${sufijo}`);
 ---
 <span class:list={['logo', clase]} set:html={svg} />
 <style>

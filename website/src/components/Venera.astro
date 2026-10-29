@@ -1,31 +1,65 @@
 ---
-/* La venera de la Corporación, dibujada sobre la retícula de 100 u del sistema visual.
-   variante: color (rojo + plata), negativo (sobre negro), mono (negro + pergamino). */
+/* La venera de la Corporación: la marca actual (cruz de gules fileteada de oro, cargada de cuatro
+   espadas con las puntas al centro), el mismo dibujo que assets/marca/marca-actual.svg, pero con las
+   espadas sueltas para poder animarlas.
+   variante: color (la marca tal cual), mono (negro + pergamino, sin oro ni tracejado). */
 interface Props { tamano?: number | string; variante?: 'color' | 'mono'; animada?: boolean; titulo?: string; clase?: string }
 const { tamano = 64, variante = 'color', animada = false, titulo, clase = '' } = Astro.props;
-const cruz = variante === 'mono' ? 'var(--negro)' : 'var(--rojo)';
-const espada = variante === 'mono' ? 'var(--pergamino)' : 'var(--espada)';
-const ESPADA = 'M50 7.4a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8ZM48.9 12h2.2v5h-2.2ZM43 17h14v2.2H43ZM48.4 19.2h3.2V39L50 44l-1.6-5Z';
+const mono = variante === 'mono';
 const tam = typeof tamano === 'number' ? `${tamano}px` : tamano;
+// La venera puede salir varias veces en la página: cada una con sus propios id
+const s = Math.random().toString(36).slice(2, 7);
+const FILETE = 'M130 0H190V130H320V190H190V320H130V190H0V130H130Z';
+const GULES = 'M135.5 5.5H184.5V135.5H314.5V184.5H184.5V314.5H135.5V184.5H5.5V135.5H135.5Z';
 ---
 <svg
   class:list={['venera', clase, { 'venera--animada': animada }]}
-  viewBox="0 0 100 100" width={tam} height={tam}
+  viewBox="0 0 320 320" width={tam} height={tam}
   role={titulo ? 'img' : undefined} aria-hidden={titulo ? undefined : 'true'} aria-label={titulo}
   data-venera={animada ? '' : undefined}
 >
-  <path d="M36 4H64V36H96V64H64V96H36V64H4V36H36Z" fill={cruz} />
-  <g fill={espada}>
-    {[0, 90, 180, 270].map((r) => (
-      <g transform={`rotate(${r} 50 50)`}><path class="venera__espada" d={ESPADA} /></g>
-    ))}
-  </g>
+  <defs>
+    <pattern id={`tr-a-${s}`} width="2.8" height="2.8" patternUnits="userSpaceOnUse" patternTransform="rotate(-45 160 160)">
+      <rect width="1" height="2.8" fill="#6A0A12" fill-opacity=".6" />
+    </pattern>
+    <pattern id={`tr-b-${s}`} width="2.8" height="2.8" patternUnits="userSpaceOnUse" patternTransform="rotate(45 160 160)">
+      <rect width="1" height="2.8" fill="#6A0A12" fill-opacity=".6" />
+    </pattern>
+    <clipPath id={`cu-a-${s}`}><path d="M0 0H160V160H0ZM160 160H320V320H160Z" /></clipPath>
+    <clipPath id={`cu-b-${s}`}><path d="M160 0H320V160H160ZM0 160H160V320H0Z" /></clipPath>
+  </defs>
+  {mono ? (
+    <path d={FILETE} fill="var(--negro)" />
+  ) : (
+    <>
+      <path d={FILETE} fill="#E4B85E" />
+      <path d={GULES} fill="#C0151F" stroke="#E98F48" stroke-width="1.2" />
+      <path d={GULES} fill={`url(#tr-a-${s})`} clip-path={`url(#cu-a-${s})`} />
+      <path d={GULES} fill={`url(#tr-b-${s})`} clip-path={`url(#cu-b-${s})`} />
+      <path d={GULES} fill="none" stroke="#7E0E14" stroke-width=".7" />
+    </>
+  )}
+  {[0, 90, 180, 270].map((r) => (
+    <g transform={`rotate(${r} 160 160)`}>
+      <g class="venera__espada" stroke={mono ? 'var(--negro)' : '#3B2A2A'} stroke-width=".8" stroke-linejoin="round">
+        <path d="M157.5 39.6H162.5V136L160 141.5L157.5 136Z" fill={mono ? 'var(--pergamino)' : '#F6F2EF'} />
+        <path d="M160 42V132" stroke="#A0959A" stroke-width=".9" fill="none" />
+        <path d="M149.6 40.6Q160 37.6 170.4 40.6" fill="none" stroke-width="1.5" />
+        <circle cx="149.4" cy="40.8" r="1.9" fill={mono ? 'var(--pergamino)' : '#F3D9DA'} />
+        <circle cx="170.6" cy="40.8" r="1.9" fill={mono ? 'var(--pergamino)' : '#F3D9DA'} />
+        <rect x="158" y="22.6" width="4" height="15.6" rx="1" fill={mono ? 'var(--pergamino)' : '#F6F2EF'} />
+        <path d="M158 26.2H162M158 29.6H162M158 33H162M158 36.4H162" fill="none" stroke-width=".9" />
+        <circle cx="160" cy="19.2" r="3" fill={mono ? 'var(--pergamino)' : '#F3D9DA'} />
+        <circle cx="160" cy="19.2" r="1" fill={mono ? 'var(--negro)' : '#3B2A2A'} stroke="none" />
+      </g>
+    </g>
+  ))}
 </svg>
 
 <style>
   .venera { flex: none; overflow: visible; }
   /* Un único momento: las cuatro espadas se recogen hacia el centro al entrar en pantalla */
-  .venera--animada .venera__espada { transform: translateY(-9px); opacity: 0; transition: transform 1.1s cubic-bezier(.2, .7, .1, 1), opacity .6s ease; }
+  .venera--animada .venera__espada { transform: translateY(-29px); opacity: 0; transition: transform 1.1s cubic-bezier(.2, .7, .1, 1), opacity .6s ease; }
   .venera--animada.esta-visible .venera__espada { transform: none; opacity: 1; }
   @media (prefers-reduced-motion: reduce) {
     .venera--animada .venera__espada { transform: none; opacity: 1; }

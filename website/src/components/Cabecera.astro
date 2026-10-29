@@ -19,7 +19,8 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
   <div class="cabecera__caja">
   <div class="envoltura"><div class="cabecera__barra">
     <a class="cabecera__logo" href="/" aria-label="Inicio">
-      <Logo version="horizontal-negativo" ancho={232} />
+      <Logo ancho={56} />
+      <span class="cabecera__nombre">Real Estamento Militar<br />del Principado de Gerona</span>
     </a>
 
     <button class="cabecera__menu" type="button" aria-expanded="false" aria-controls="navegacion" data-menu>
@@ -130,10 +131,15 @@ const activo = (href: string) => href !== '/#consejo' && actual.startsWith(href)
   /* Mismo aire arriba y abajo del logotipo, hasta el filete */
   /* El relleno lateral ya lo da la envoltura: el logotipo cae a plomo con el contenido */
   .cabecera__barra { display: flex; align-items: center; justify-content: space-between; gap: var(--s5); height: var(--cabecera); }
-  .cabecera__logo { display: flex; }
+  /* La marca (la cruz) y, a su lado, el nombre en la letra de los títulos */
+  .cabecera__logo { display: flex; align-items: center; gap: var(--s3); color: var(--pergamino); text-decoration: none; }
   .cabecera__banda { position: relative; z-index: 2; }
-  .cabecera__logo :global(svg) { width: 200px; }
-  @media (min-width: 1100px) { .cabecera__logo :global(svg) { width: 232px; } }
+  .cabecera__logo :global(svg) { width: 48px; }
+  .cabecera__nombre { font: 500 16px/1.15 var(--f-titulo); letter-spacing: .02em; }
+  @media (min-width: 1100px) {
+    .cabecera__logo :global(svg) { width: 56px; }
+    .cabecera__nombre { font-size: 18px; }
+  }
 
   .cabecera__menu {
     display: inline-flex; align-items: center; gap: var(--s3); min-height: 44px; padding: 0 var(--s2);

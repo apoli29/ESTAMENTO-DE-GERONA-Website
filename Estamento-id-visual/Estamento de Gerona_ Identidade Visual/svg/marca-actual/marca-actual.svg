@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="553" height="553" viewBox="0 0 320 320">
+  <!-- Marca actual del Real Estamento Militar del Principado de Gerona: cruz de gules
+       fileteada de oro, cargada de cuatro espadas con las puntas hacia el centro.
+       Vectorizada desde el original en mapa de bits; fondo transparente. -->
+  <defs>
+    <!-- Tracejado en espiga: líneas paralelas a cada diagonal -->
+    <pattern id="tr-a" width="2.8" height="2.8" patternUnits="userSpaceOnUse" patternTransform="rotate(-45 160 160)">
+      <rect width="1" height="2.8" fill="#6A0A12" fill-opacity=".6"/>
+    </pattern>
+    <pattern id="tr-b" width="2.8" height="2.8" patternUnits="userSpaceOnUse" patternTransform="rotate(45 160 160)">
+      <rect width="1" height="2.8" fill="#6A0A12" fill-opacity=".6"/>
+    </pattern>
+    <clipPath id="cuadrantes-a"><path d="M0 0H160V160H0ZM160 160H320V320H160Z"/></clipPath>
+    <clipPath id="cuadrantes-b"><path d="M160 0H320V160H160ZM0 160H160V320H0Z"/></clipPath>
+    <path id="cruz-gules" d="M135.5 5.5H184.5V135.5H314.5V184.5H184.5V314.5H135.5V184.5H5.5V135.5H135.5Z"/>
+    <g id="espada" stroke="#3B2A2A" stroke-width=".8" stroke-linejoin="round">
+      <!-- hoja -->
+      <path d="M157.5 39.6H162.5V136L160 141.5L157.5 136Z" fill="#F6F2EF"/>
+      <path d="M160 42V132" stroke="#A0959A" stroke-width=".9" fill="none"/>
+      <!-- guarda -->
+      <path d="M149.6 40.6Q160 37.6 170.4 40.6" fill="none" stroke-width="1.5"/>
+      <circle cx="149.4" cy="40.8" r="1.9" fill="#F3D9DA"/>
+      <circle cx="170.6" cy="40.8" r="1.9" fill="#F3D9DA"/>
+      <!-- empuñadura -->
+      <rect x="158" y="22.6" width="4" height="15.6" rx="1" fill="#F6F2EF"/>
+      <path d="M158 26.2H162M158 29.6H162M158 33H162M158 36.4H162" fill="none" stroke-width=".9"/>
+      <!-- pomo -->
+      <circle cx="160" cy="19.2" r="3" fill="#F3D9DA"/>
+      <circle cx="160" cy="19.2" r="1" fill="#3B2A2A" stroke="none"/>
+    </g>
+  </defs>
+
+  <!-- Filete de oro -->
+  <path d="M130 0H190V130H320V190H190V320H130V190H0V130H130Z" fill="#E4B85E"/>
+  <!-- Campo de gules con su tracejado -->
+  <use href="#cruz-gules" fill="#C0151F" stroke="#E98F48" stroke-width="1.2"/>
+  <use href="#cruz-gules" fill="url(#tr-a)" clip-path="url(#cuadrantes-a)"/>
+  <use href="#cruz-gules" fill="url(#tr-b)" clip-path="url(#cuadrantes-b)"/>
+  <use href="#cruz-gules" fill="none" stroke="#7E0E14" stroke-width=".7"/>
+
+  <!-- Cuatro espadas, puntas al centro -->
+  <use href="#espada"/>
+  <use href="#espada" transform="rotate(90 160 160)"/>
+  <use href="#espada" transform="rotate(180 160 160)"/>
+  <use href="#espada" transform="rotate(270 160 160)"/>
+</svg>
