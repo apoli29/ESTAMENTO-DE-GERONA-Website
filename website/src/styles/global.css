@@ -9,9 +9,14 @@
   /* II. acción */
   --teja: #A3201F; /* acento de interfaz = rojo heráldico; el naranja se retiró (feedback oct. 2026) */
   /* III. soportes */
-  --pergamino: #F3EDE2;
-  --piedra: #E3D8C5;
-  --piedra-clara: #E9E1D3;
+  /* Soportes aclarados (oct. 2026): el pergamino sube a un blanco cálido y la piedra lo sigue,
+     para que el escalón entre la página y las bandas se mantenga igual de legible. */
+  --pergamino: #FBF8F3;
+  --piedra: #E9E1D3;
+  --piedra-clara: #F2ECE2;
+  /* Un escalón más leve que la piedra, para lo que se abre dentro de la propia página y no
+     debe leerse como una banda aparte */
+  --piedra-tenue: #F6F1E8;
   --plata: #C9C3B8;
   --tinta: #3A332C;
   --tinta-2: #5C534A;
@@ -21,11 +26,23 @@
   --linea-fuerte: rgba(26, 23, 20, .3);
   --linea-clara: rgba(243, 237, 226, .22);
 
-  /* Tipografía */
-  --f-display: 'Libre Caslon Display', 'Libre Caslon Text', Georgia, serif;
-  --f-texto: 'Libre Caslon Text', Georgia, serif;
-  --f-sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --f-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  /* Tipografía — kit «Abhaya Libre & Thasadith» (oct. 2026), única fuente tipográfica del sitio:
+     los títulos en Abhaya Libre (400–800, sin cursiva) y todo lo demás en Thasadith (400 y 700,
+     con cursiva). */
+  --f-titulo: 'Abhaya Libre', Georgia, serif;
+  --f-cuerpo: 'Thasadith', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Nombres heredados: lo que era serif (Caslon) es ahora título; lo que era sans o mono, cuerpo */
+  --f-display: var(--f-titulo);
+  --f-texto: var(--f-titulo);
+  --f-sans: var(--f-cuerpo);
+  --f-mono: var(--f-cuerpo);
+  /* Escala del kit (tamaño / interlineado / espaciado). En pantallas estrechas los títulos bajan
+     con clamp; desde ~1300 px rigen los valores exactos del kit. */
+  --display: clamp(44px, 5.6vw, 72px);
+  --h1: clamp(36px, 4vw, 52px);
+  --h2: clamp(28px, 2.95vw, 38px);
+  /* H3 un 10 % por debajo del kit (28 px), por indicación del cliente */
+  --h3: clamp(19.8px, 1.935vw, 25.2px);
 
   /* Espaciado — base 4 px */
   --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px;
@@ -51,6 +68,10 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
+/* 1 % del alto de la ventana, estable al desplazarse: lo fija Base.astro al cargar. Sin JS, svh
+   (o vh, donde no lo hay). */
+:root { --ventana: 1svh; }
+@supports not (height: 1svh) { :root { --ventana: 1vh; } }
 /* Desplazamiento suave (Lenis, ver Base.astro) */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
@@ -58,14 +79,20 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-stopped { overflow: hidden; }
 body {
   margin: 0;
+  /* Nada asoma por los lados: en el móvil, un ancho de más hace que el navegador aleje el zoom */
+  overflow-x: clip;
   background: var(--pergamino);
   color: var(--negro);
-  font-family: var(--f-sans);
-  font-size: 17px;
-  line-height: 1.65;
+  font-family: var(--f-cuerpo);
+  font-size: 20px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Abhaya Libre no tiene cursiva ni Thasadith seminegra: nada de versiones falsas inclinadas o engordadas */
+  font-synthesis: none;
 }
+/* [hidden] esconde siempre, aunque la clase del elemento le dé display (grid, flex…) */
+[hidden] { display: none !important; }
 img, svg { display: block; max-width: 100%; }
 img { height: auto; }
 p { margin: 0; }
@@ -97,7 +124,7 @@ a:hover { color: var(--negro); }
 /* Patrón de sección del sistema: columna de rótulo (I · Nombre) + contenido en dos columnas */
 .capitulo {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--s6) var(--s8);
   align-items: start;
 }
@@ -105,28 +132,49 @@ a:hover { color: var(--negro); }
   .capitulo { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); }
   .capitulo--fijo > .rotulo { position: sticky; top: 112px; }
 }
+/* Hueco de la columna del rótulo cuando el título ya se dio en la cabeza de página.
+   Sólo existe donde la retícula tiene dos columnas; en una sola sobraría como aire muerto. */
+.columna-vacia { display: none; }
+@media (min-width: 960px) { .columna-vacia { display: block; } }
+
 /* Rótulo: numeral romano como antetítulo + título de sección real (Caslon Display) */
 .rotulo { display: flex; flex-direction: column; gap: var(--s4); }
-.rotulo__num { display: flex; align-items: center; gap: var(--s3); font-family: var(--f-display); font-size: 22px; line-height: 1; color: var(--teja); }
+.rotulo__num { display: flex; align-items: center; gap: var(--s3); font-family: var(--f-titulo); font-weight: 500; font-size: 22px; line-height: 1; color: var(--teja); }
 .rotulo__num::after { content: ''; width: 40px; height: 1px; background: currentColor; opacity: .6; }
-.rotulo__nombre { font-family: var(--f-display); font-size: clamp(36px, 4vw, 54px); line-height: 1.08; letter-spacing: -.005em; text-wrap: balance; }
-.rotulo__etiqueta { font-size: 12px; line-height: 16px; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; }
+/* Heading 1 del kit: 52 / 1,08 / −0,03em, ExtraBold */
+.rotulo__nombre { font-family: var(--f-titulo); font-weight: 800; font-size: var(--h1); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.rotulo__etiqueta { font-size: 13px; line-height: 1.5; letter-spacing: .16em; text-transform: uppercase; }
 .rotulo--centro { align-items: center; text-align: center; }
 /* Sobre fondo oscuro el rojo no contrasta: numeral en plata */
 :is(.banda-negra, .sobre-negro) .rotulo__num { color: var(--plata); }
-.rotulo__nota { margin-top: var(--s3); font-size: 16px; line-height: 1.6; color: var(--tinta-2); max-width: 34ch; text-wrap: pretty; }
+.rotulo__nota { margin-top: var(--s3); font-size: 16px; line-height: 1.55; color: var(--tinta-2); max-width: 34ch; text-wrap: pretty; }
 .banda-negra .rotulo__nota { color: var(--plata); }
 
 /* ——— Tipografía ——— */
-.t-display { font-family: var(--f-display); font-size: clamp(44px, 5.6vw, 72px); line-height: 1.05; letter-spacing: -.005em; text-wrap: balance; }
-.t-titulo1 { font-family: var(--f-display); font-size: clamp(34px, 4vw, 48px); line-height: 1.12; text-wrap: balance; }
-.t-titulo2 { font-family: var(--f-texto); font-size: 28px; line-height: 1.28; text-wrap: balance; }
-.t-titulo3 { font-family: var(--f-texto); font-size: 22px; line-height: 1.35; }
-.t-entradilla { font-family: var(--f-texto); font-style: italic; font-size: 21px; line-height: 1.52; color: var(--tinta); max-width: 52ch; text-wrap: pretty; }
-.t-cuerpo { font-size: 17px; line-height: 1.65; color: var(--tinta); max-width: var(--medida); text-wrap: pretty; }
+/* Escala del kit: Display, Heading 1–3 en Abhaya Libre; Body, Small y Caption en Thasadith */
+.t-display { font-family: var(--f-titulo); font-weight: 800; font-size: var(--display); line-height: 1; letter-spacing: -.035em; text-wrap: balance; }
+.t-titulo1 { font-family: var(--f-titulo); font-weight: 800; font-size: var(--h1); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.t-titulo2 { font-family: var(--f-titulo); font-weight: 800; font-size: var(--h2); line-height: 1.15; letter-spacing: -.02em; text-wrap: balance; }
+.t-titulo3 { font-family: var(--f-titulo); font-weight: 500; font-size: var(--h3); line-height: 1.2; letter-spacing: -.01em; }
+/* La entradilla es cuerpo (Body del kit), en el tono de texto principal */
+.t-entradilla { font-family: var(--f-cuerpo); font-size: 20px; line-height: 1.6; color: var(--tinta); max-width: 52ch; text-wrap: pretty; }
+.t-pequeno { font-size: 16px; line-height: 1.55; }
+.t-cuerpo { font-size: 20px; line-height: 1.6; color: var(--tinta); max-width: var(--medida); text-wrap: pretty; }
 .t-cuerpo + .t-cuerpo { margin-top: 1em; }
-.t-etiqueta { font-size: 12px; line-height: 16px; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; }
-.t-dato { font-family: var(--f-mono); font-size: 13px; line-height: 18px; }
+/* Todo el texto en la letra de cuerpo va justificado, con partición silábica (la página declara
+   su lengua) para que el justificado no abra ríos entre palabras */
+.t-cuerpo, .relacion__valor, .rotulo__nota { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+.t-etiqueta { font-size: 13px; line-height: 1.5; letter-spacing: .16em; text-transform: uppercase; }
+/* Texto pequeño (13–14 px) en Thasadith: sólo tiene 400 y 700, y a este tamaño el 400 queda flojo
+   (sobre todo en versalitas y sobre fondo oscuro) mientras el 700 pesa demasiado. Un trazo finísimo
+   del mismo color engorda la letra lo justo para leerla bien, sea roja, castaña o clara.
+   Vale para todo el texto pequeño del sitio: etiquetas, datos, menú y filtros. */
+:is(.t-etiqueta, .rotulo__etiqueta, .cita-fuente, .t-dato, .boton__dato, .relacion__clave--mono,
+    .nav__enlace, .cabecera__menu, .pie__legal, .filtros__boton) {
+  -webkit-text-stroke: .35px currentColor;
+}
+/* Caption del kit: 13 / 1,5 / 0,04em */
+.t-dato { font-family: var(--f-cuerpo); font-size: 13px; line-height: 1.5; letter-spacing: .04em; }
 .t-secundario { color: var(--tinta-2); }
 .banda-negra .t-entradilla, .banda-negra .t-cuerpo { color: var(--pergamino); }
 /* Títulos sobre fondos claros: castaño (feedback oct. 2026); sobre fondos oscuros, pergamino */
@@ -134,13 +182,14 @@ a:hover { color: var(--negro); }
 :is(.banda-negra, .sobre-negro) :is(.rotulo__nombre, .t-display, .t-titulo1, .t-titulo2, .t-titulo3) { color: var(--pergamino); }
 .banda-negra .t-secundario { color: var(--plata); }
 
-.cita { font-family: var(--f-texto); font-style: italic; font-size: clamp(24px, 2.6vw, 30px); line-height: 1.3; text-wrap: balance; }
-.cita-fuente { margin-top: var(--s3); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; color: var(--tinta-2); }
+/* Cita: Abhaya Libre de pie (no tiene cursiva), como la cita del kit, a la medida del Heading 3 */
+.cita { font-family: var(--f-titulo); font-weight: 400; font-size: clamp(22px, 2.15vw, 28px); line-height: 1.25; letter-spacing: -.01em; text-wrap: balance; }
+.cita-fuente { margin-top: var(--s3); font-size: 13px; line-height: 1.5; letter-spacing: .16em; text-transform: uppercase; color: var(--tinta-2); }
 .banda-negra .cita-fuente { color: var(--plata); }
 
 /* Capitular — solo en el primer párrafo de textos históricos largos */
 .capitular::first-letter {
-  float: left; font-family: var(--f-display); color: var(--teja);
+  float: left; font-family: var(--f-titulo); font-weight: 800; color: var(--teja);
   font-size: 5.4em; line-height: .8; padding: .06em .12em 0 0;
 }
 
@@ -158,7 +207,8 @@ a:hover { color: var(--negro); }
   display: inline-flex; align-items: center; gap: var(--s3);
   min-height: 48px; padding: 0 var(--s5);
   background: var(--teja); color: var(--sobre-teja);
-  font-family: var(--f-sans); font-size: 14px; font-weight: 500; letter-spacing: .04em;
+  /* CTA: Thasadith Bold en versalitas espaciadas, para que la acción no se confunda con el cuerpo */
+  font-family: var(--f-cuerpo); font-weight: 700; font-size: 14px; line-height: 1.2; letter-spacing: .12em; text-transform: uppercase;
   text-decoration: none; border: 0; cursor: pointer;
   transition: background-color .2s ease;
 }
@@ -167,7 +217,7 @@ a:hover { color: var(--negro); }
 .boton--linea { background: transparent; color: var(--negro); box-shadow: inset 0 0 0 1px var(--negro); }
 .boton--linea:hover { background: var(--negro); color: var(--pergamino); }
 .banda-negra .boton--linea { color: var(--pergamino); box-shadow: inset 0 0 0 1px var(--linea-clara); }
-.boton__dato { font-family: var(--f-mono); font-size: 12px; opacity: .8; font-weight: 400; letter-spacing: 0; }
+.boton__dato { font-family: var(--f-cuerpo); font-weight: 400; font-size: 13px; opacity: .8; letter-spacing: .04em; text-transform: none; }
 
 /* Enlace mayor: la espada espera a la izquierda, a la altura del texto; al pasar el ratón
    lo recorre despacio hasta la derecha y va dejando detrás un trazo de tinta irregular. */
@@ -175,7 +225,12 @@ a:hover { color: var(--negro); }
   --espada-w: 42px; --hueco: 16px; --ritmo: 1.2s cubic-bezier(.65, 0, .35, 1);
   position: relative; display: inline-block;
   padding: 2px calc(var(--espada-w) + var(--hueco)) 10px;
-  font-family: var(--f-texto); font-size: 19px; line-height: 1.3; color: var(--negro); text-decoration: none;
+  /* CTA: el mismo estilo que .boton (Thasadith Bold en versalitas espaciadas), distinto del cuerpo */
+  font-family: var(--f-cuerpo); font-weight: 700; font-size: 15px; line-height: 1.6; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--negro); text-decoration: none;
+  /* A la izquierda aunque la sección esté centrada: si el rótulo parte en dos líneas, la primera
+     letra sigue junto a la espada (es donde la espada da sus toques) */
+  text-align: left; text-wrap: balance;
 }
 .enlace-mayor::before {
   content: ''; position: absolute; bottom: 1px; height: 9px;
@@ -185,12 +240,13 @@ a:hover { color: var(--negro); }
   clip-path: inset(0 100% 0 0); transition: clip-path var(--ritmo);
 }
 .enlace-mayor::after {
-  content: ''; position: absolute; left: 0; top: calc(2px + .65em - 8px); width: var(--espada-w); height: 16px; background: var(--teja);
+  content: ''; position: absolute; left: 0; top: calc(2px + .8em - 8px); width: var(--espada-w); height: 16px; background: var(--teja);
   -webkit-mask: var(--espada-h) center / contain no-repeat; mask: var(--espada-h) center / contain no-repeat;
   transition: left var(--ritmo);
 }
 .enlace-mayor:hover::before, .enlace-mayor:focus-visible::before { clip-path: inset(0 0 0 0); }
 .enlace-mayor:hover::after, .enlace-mayor:focus-visible::after { left: calc(100% - var(--espada-w)); }
+/* En reposo la espada da dos toques en la primera letra; los lleva Base.astro ("Toques de la espada") */
 /* Con JS, el subrayado lo dibujan las gotas que caen (ver Base.astro) */
 .enlace-mayor.con-tinta::before, .enlace-mayor.con-tinta:hover::before, .enlace-mayor.con-tinta:focus-visible::before {
   clip-path: inset(0 calc(100% - var(--revelado, 0px)) 0 0); transition: clip-path .08s linear;
@@ -207,33 +263,108 @@ a:hover { color: var(--negro); }
   border-bottom: 1px solid var(--linea); grid-template-columns: 1fr;
 }
 @media (min-width: 720px) { .relacion__fila { grid-template-columns: minmax(0, 180px) minmax(0, 1fr); } }
-.relacion__clave { font-family: var(--f-texto); font-size: 20px; line-height: 1.3; color: var(--teja); }
+.relacion__clave { font-family: var(--f-titulo); font-weight: 600; font-size: 21px; line-height: 1.2; letter-spacing: -.01em; color: var(--teja); }
 /* Miniatura de la cruz (símbolo) como marca de tópico */
 .relacion__clave:not(.relacion__clave--mono)::before, .con-cruz::before {
   content: ''; display: inline-block; flex: none; width: .5em; height: .5em; margin-right: .5em; vertical-align: .08em;
   background: var(--cruz) center / contain no-repeat;
 }
-.relacion__clave--mono { font-family: var(--f-mono); font-size: 13px; line-height: 1.9; color: var(--tinta-2); }
+.relacion__clave--mono { font-family: var(--f-cuerpo); font-weight: 400; font-size: 13px; line-height: 1.9; letter-spacing: .04em; color: var(--tinta-2); }
+/* Sobre el negro, el rojo heráldico se queda en 1,9:1 y no hay forma de leerlo. El acento pasa
+   entonces a la plata de las espadas, que es la otra mitad de la marca: el esmalte es para los
+   fondos claros, el metal para los oscuros. */
+:is(.banda-negra, .sobre-negro) :is(.relacion__clave:not(.relacion__clave--mono), .disp__num) {
+  color: var(--espada);
+}
 .relacion__valor { color: var(--tinta); text-wrap: pretty; max-width: var(--medida); }
-.relacion__valor .nota { display: block; margin-top: var(--s2); color: var(--tinta-2); font-size: 15px; }
+.relacion__valor .nota { display: block; margin-top: var(--s2); color: var(--tinta-2); font-size: 16px; line-height: 1.55; }
 .banda-negra .relacion { border-top-color: var(--pergamino); }
 .banda-negra .relacion__fila { border-bottom-color: var(--linea-clara); }
 .banda-negra .relacion__valor { color: var(--pergamino); }
 
+/* ——— La medalla ——— */
+/* La venera tratada como pieza física y no como dibujo: una escena con perspectiva, el emblema
+   que gira dentro de ella y un reflejo recortado con la silueta de la cruz. El giro lo lleva
+   Base.astro, que atiende a cualquier [data-giro]; aquí sólo vive la escena.
+   El tamaño lo pone cada página: la medalla ocupa lo que le dé su contenedor. */
+/* Perspectiva larga: con una corta, al girar la medalla se deforma en trapecio y parece estirada */
+.escena-medalla { perspective: 1600px; perspective-origin: 50% 46%; }
+.medalla { position: relative; transform-style: preserve-3d; will-change: transform; }
+/* La luz cae sobre el esmalte, no sobre un rectángulo alrededor de la pieza */
+.medalla__brillo {
+  position: absolute; inset: 0; pointer-events: none; opacity: var(--brillo, 0);
+  background: linear-gradient(100deg, transparent 22%, rgba(251, 248, 242, .5) 50%, transparent 78%);
+  /* La silueta exacta de la cruz de la venera (Venera.astro): con la de --cruz, de brazos más
+     anchos, el reflejo se salía por los bordes como un halo gris */
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M36 4H64V36H96V64H64V96H36V64H4V36H36Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M36 4H64V36H96V64H64V96H36V64H4V36H36Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+/* ——— Cabeza de página ——— */
+/* Las páginas interiores sin fotografía de entrada abren sobre negro, igual que las de
+   Historia abren sobre la foto: todo el sitio entra por lo oscuro y sigue en pergamino.
+   Se usa junto a .seccion .banda-negra .sobre-negro. */
+.cabeza-pagina { position: relative; padding-top: var(--s8); }
+@media (min-width: 768px) { .cabeza-pagina { padding-top: var(--s9); } }
+/* Filo rojo al pie de la banda: el mismo que cierra la cabecera */
+.cabeza-pagina::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--rojo); }
+
+/* ——— Placa ——— */
+/* Bloque destacado con el traje de la barra de la cabecera: el castaño oscuro de las bandas de
+   sección y, al pie, la banda de 12 px con el filo rojo. Sobre ese fondo la banda va un punto más
+   oscura que él, para que se lea igual que bajo la barra. Se usa con cuentagotas, en lo que
+   remata o resume una sección. */
+.placa {
+  position: relative;
+  color: var(--pergamino);
+  padding: var(--s6) var(--s6) calc(var(--s7) + 12px);
+  background:
+    linear-gradient(var(--rojo), var(--rojo)) 0 calc(100% - 5px) / 100% 2px no-repeat,
+    linear-gradient(#0E0C0A, #0E0C0A) bottom / 100% 12px no-repeat,
+    var(--negro);
+}
+@media (min-width: 768px) { .placa { padding: var(--s7) var(--s7) calc(var(--s8) + 12px); } }
+.placa :is(.cita, .t-cuerpo, .t-titulo2, .t-titulo3, p) { color: var(--pergamino); }
+.placa :is(.cita-fuente, .t-etiqueta) { color: var(--plata); }
+.placa :focus-visible { outline-color: var(--plata); }
+.placa .boton:hover { background: var(--pergamino); color: var(--negro); }
+
+/* ——— Banda a sangre ——— */
+/* Rompe la retícula para que la fotografía ocupe el ancho completo de la ventana. */
+.a-sangre { width: 100vw; max-width: 100vw; margin-left: calc(50% - 50vw); }
+
 /* ——— Figuras ——— */
 .figura { margin: 0; }
 .figura img { width: 100%; }
-.figura figcaption { margin-top: var(--s2); font-family: var(--f-mono); font-size: 12px; line-height: 1.5; color: var(--tinta-2); }
-.banda-negra .figura figcaption { color: var(--plata); }
 
 /* ——— Movimiento ——— */
-/* Aparición al entrar en pantalla (clases puestas por Base.astro; sin JS todo se ve tal cual) */
+/* El contenido no se desliza: gira sobre su canto y se asienta desde el fondo de la escena,
+   como una placa que se cuelga. El grado de giro lo marca el tipo de pieza, no la sección.
+   Las clases las pone Base.astro; sin JS todo se ve tal cual. */
 .revela:not(.revelado) { opacity: 0; }
 .revela.revelado { animation: revelar 1s cubic-bezier(.16, 1, .3, 1) var(--retraso, 0ms) backwards; }
+
+/* Texto corrido: giro mínimo sobre el eje horizontal, para que la línea base no se deforme al leer */
+@keyframes revelar { from { opacity: 0; transform: perspective(1400px) translate3d(0, 24px, -60px) rotateX(5deg); } }
+
+/* Rótulo de capítulo: bisagra sobre el canto izquierdo, como un escudo que se cuelga de la pared */
+.revela--rotulo { transform-origin: 0% 50%; }
+.revela--rotulo.revelado { animation-name: revelar-rotulo; animation-duration: 1.15s; }
+@keyframes revelar-rotulo { from { opacity: 0; transform: perspective(900px) translate3d(-14px, 0, -70px) rotateY(-16deg); } }
+
+/* Pieza suelta (tarjeta, caja, figura, felicitación): entra de más lejos y con más canto */
+.revela--pieza { transform-origin: 50% 100%; }
+.revela--pieza.revelado { animation-name: revelar-pieza; animation-duration: 1.1s; }
+@keyframes revelar-pieza { from { opacity: 0; transform: perspective(1100px) translate3d(0, 38px, -170px) rotateX(11deg); } }
+
 .figura.revela { overflow: hidden; }
 .figura.revela.revelado img { animation: revelar-foto 1.8s cubic-bezier(.16, 1, .3, 1) var(--retraso, 0ms) backwards; }
-@keyframes revelar { from { opacity: 0; transform: translateY(28px); } }
 @keyframes revelar-foto { from { transform: scale(1.08); } }
+
+/* Inclinación al puntero: la pieza responde como un objeto apoyado en la mesa, no como un cromo.
+   El ángulo lo escribe Base.astro; aquí sólo el amortiguado de la vuelta al reposo. */
+.pieza-3d { transition: transform .55s cubic-bezier(.2, .7, .1, 1); }
+.pieza-3d.esta-inclinada { transition-duration: .12s; }
 
 /* Entrada de las portadas al cargar */
 .portada__contenido > *, .hportada__contenido > * { animation: revelar 1.3s cubic-bezier(.16, 1, .3, 1) backwards; }

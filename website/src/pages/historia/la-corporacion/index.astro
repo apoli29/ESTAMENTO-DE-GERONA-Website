@@ -8,7 +8,7 @@ import Venera from '../../../components/Venera.astro';
 import ObraCajas from '../../../components/ObraCajas.astro';
 import hc from '../../../data/historia-compacta.json';
 import historia from '../../../data/historia.json';
-import { foto, CREDITOS } from '../../../lib/sitio';
+import { foto } from '../../../lib/sitio';
 const C = hc.corporacion;
 const H = historia.corporacion.es;
 const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -40,7 +40,6 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
     <div class="envoltura sede">
       <figure class="figura sede__foto">
         <Image src={foto('capilla-san-jorge.jpg')} alt="Retablo de una capilla de la Catedral de Gerona" widths={[480, 800, 1200]} sizes="(min-width: 960px) 36vw, 100vw" />
-        <figcaption>{CREDITOS['capilla-san-jorge.jpg']}</figcaption>
       </figure>
       <div class="sede__texto">
         <div class="rotulo">
@@ -71,13 +70,18 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   </section>
 
   <!-- IV · Distintivos y uniformidad -->
-  <section class="seccion banda-piedra" id="distintivos" aria-labelledby="distintivos-titulo">
+  <section class="seccion banda-negra sobre-negro" id="distintivos" aria-labelledby="distintivos-titulo">
     <div class="envoltura capitulo">
       <div class="rotulo">
         <span class="rotulo__num" aria-hidden="true">IV</span>
         <h2 id="distintivos-titulo" class="rotulo__nombre">Distintivos y uniformidad</h2>
         <div class="dist__emblema">
-          <Venera tamano={132} titulo="La venera de la Corporación" />
+          <div class="escena-medalla">
+            <div class="dist__venera medalla" data-giro>
+              <Venera tamano="100%" animada titulo="La venera de la Corporación" />
+              <span class="medalla__brillo" aria-hidden="true"></span>
+            </div>
+          </div>
           <div class="filete" aria-hidden="true"></div>
         </div>
       </div>
@@ -120,7 +124,9 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .sede__foto :global(img) { aspect-ratio: 4 / 5; object-fit: cover; }
   .sede__texto { display: grid; gap: var(--s6); }
   .obra__cabeza { margin-bottom: var(--s7); }
+  /* La venera se presenta aquí como pieza, igual que en la portada: escena, giro y reflejo */
   .dist__emblema { display: grid; gap: var(--s5); width: 132px; margin-top: var(--s6); }
+  .dist__venera { width: 132px; }
   .dist { display: grid; gap: var(--s5); }
   .dist .t-cuerpo + .t-cuerpo { margin-top: 0; }
   .dist__tabla { margin-top: var(--s5); }

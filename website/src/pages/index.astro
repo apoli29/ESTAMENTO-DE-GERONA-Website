@@ -7,13 +7,17 @@ import ActividadTarjeta from '../components/ActividadTarjeta.astro';
 import ObraCajas from '../components/ObraCajas.astro';
 import consejo from '../data/consejo.json';
 import hc from '../data/historia-compacta.json';
-import { actividades, foto, imagenActividad, ruta, CREDITOS } from '../lib/sitio';
+import escritura from '../data/escritura-hoja.json';
+import { actividades, foto, imagenActividad, ruta } from '../lib/sitio';
 
 const C = hc.corporacion;
 const F = hc.cofradia;
 const recientes = actividades.filter((a) => a.tipo !== 'navidad').slice(0, 4);
 const felicitaciones = actividades.filter((a) => a.tipo === 'navidad');
 const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+// Conclusión manuscrita del reverso de la hoja (scripts/escritura-hoja.mjs): cada forma una vez
+const E = escritura as { ancho: number; alto: number; formas: Record<string, string>; glifos: { c: string; x: number; y: number; fin?: boolean }[] };
+const idForma = Object.fromEntries(Object.keys(E.formas).map((c, i) => [c, `pluma-${i}`]));
 ---
 <Base meta={metaPagina("/")}>
   <!-- Portada: imagen a sangre que se funde con la sección I -->
@@ -48,11 +52,14 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   </section>
 
   <!-- II · Los distintivos -->
-  <section class="seccion banda-piedra" aria-labelledby="distintivos">
+  <section class="seccion banda-negra sobre-negro distintivos-seccion" aria-labelledby="distintivos">
     <div class="envoltura distintivos">
       <div class="distintivos__cabeza">
-        <div class="distintivos__emblema" data-giro>
-          <Venera tamano="100%" animada titulo="La venera: Cruz de San Jorge con cuatro espadas de plata" />
+        <div class="distintivos__escena escena-medalla">
+          <div class="distintivos__emblema medalla" data-giro>
+            <Venera tamano="100%" animada titulo="La venera: Cruz de San Jorge con cuatro espadas de plata" />
+            <span class="medalla__brillo" aria-hidden="true"></span>
+          </div>
         </div>
         <div class="rotulo rotulo--centro">
           <span class="rotulo__num" aria-hidden="true">II</span>
@@ -88,15 +95,17 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
         <p class="t-entradilla cabeza__nota">{C.proposito}</p>
       </div>
       <ObraCajas items={C.obra} id="obra-portada" />
-      <div class="obra__fotos">
-        <figure class="figura">
-          <Image src={foto('catedral-interior-tono.jpg')} alt="Interior de la Catedral de Gerona" widths={[480, 800, 1200]} sizes="(min-width: 960px) 45vw, 50vw" />
-          <figcaption>{CREDITOS['catedral-interior.jpg']}</figcaption>
-        </figure>
-        <figure class="figura">
-          <Image src={foto('capilla-san-jorge-tono.jpg')} alt="Retablo de una capilla de la Catedral de Gerona" widths={[480, 800, 1200]} sizes="(min-width: 960px) 45vw, 50vw" />
-          <figcaption>{CREDITOS['capilla-san-jorge.jpg']}</figcaption>
-        </figure>
+    </div>
+    <div class="obra__banda banda-negra sobre-negro">
+      <div class="envoltura">
+        <div class="obra__fotos">
+          <figure class="figura">
+            <Image src={foto('catedral-interior-tono.jpg')} alt="Interior de la Catedral de Gerona" widths={[400, 640, 960]} sizes="(min-width: 640px) 418px, calc(100vw - 48px)" />
+          </figure>
+          <figure class="figura">
+            <Image src={foto('capilla-san-jorge-tono.jpg')} alt="Retablo de una capilla de la Catedral de Gerona" widths={[400, 640, 960]} sizes="(min-width: 640px) 418px, calc(100vw - 48px)" />
+          </figure>
+        </div>
       </div>
     </div>
   </section>
@@ -143,25 +152,54 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
     </ul>
   </section>
 
-  <!-- VI · La Cofradía -->
+  <!-- VI · La Cofradía: todo centrado; primero el texto y debajo la hoja, que se da la vuelta
+       con el desplazamiento y en cuyo reverso se escribe a pluma la conclusión de la sección. -->
   <section class="seccion banda-piedra" aria-labelledby="cofradia">
     <div class="envoltura cofradia">
-      <figure class="figura cofradia__figura">
-        <Image src={foto('lismann-girona-1928.jpg')} alt="Dibujo de Gerona desde el río Onyar, con la torre de la Catedral al fondo" widths={[480, 800, 1200]} sizes="(min-width: 960px) 40vw, 100vw" />
-        <figcaption>{CREDITOS['lismann-girona-1928.jpg']}</figcaption>
-      </figure>
       <div class="cofradia__texto">
-        <div class="rotulo">
+        <div class="rotulo rotulo--centro">
           <span class="rotulo__num" aria-hidden="true">VI</span>
           <h2 id="cofradia" class="rotulo__nombre">La Cofradía de San Jorge</h2>
         </div>
         <p class="t-titulo2">{F.entradilla}</p>
         <p class="t-cuerpo">{F.caracter}</p>
-        <blockquote class="cofradia__cita">
-          <p class="cita">{F.conclusion}</p>
-        </blockquote>
-        <a class="enlace-mayor" href="/historia/la-cofradia/">Actas, ordinaciones y privilegios</a>
       </div>
+      <div class="hoja-pista" data-hoja-pista>
+      <figure class="hoja" data-hoja>
+        <div class="hoja__escena">
+          <div class="hoja__papel" data-hoja-papel>
+            <div class="hoja__cara hoja__cara--frente">
+              <Image src={foto('lismann-girona-1928.jpg')} alt="Dibujo de Gerona desde el río Onyar, con la torre de la Catedral al fondo" widths={[480, 800, 1200]} sizes="(min-width: 600px) 520px, calc(100vw - 48px)" />
+              <span class="hoja__sombra" aria-hidden="true"></span>
+            </div>
+            <div class="hoja__cara hoja__cara--reverso">
+              <Image class="hoja__trasluz" src={foto('lismann-girona-1928.jpg')} alt="" aria-hidden="true" widths={[480, 800]} sizes="(min-width: 600px) 520px, calc(100vw - 48px)" />
+              <span class="hoja__grano" aria-hidden="true"></span>
+              <blockquote class="hoja__cita" data-escrito>
+                <p class="visualmente-oculto">{F.conclusion}</p>
+                {/* La misma conclusión, manuscrita en Pinyon Script: cada letra es un contorno que la
+                    pluma recorre y luego se llena de tinta. Mismo lienzo y proporción que la hoja. */}
+                <svg class="hoja__manuscrito" viewBox={`0 0 ${E.ancho} ${E.alto}`} aria-hidden="true">
+                  <defs>{Object.entries(E.formas).map(([c, d]) => <path id={idForma[c]} d={d} />)}</defs>
+                  <g class="hoja__tinta">
+                    {E.glifos.map((g) => <use class="glifo" href={`#${idForma[g.c]}`} x={g.x} y={g.y} data-c={g.c} data-fin={g.fin ? '' : undefined} />)}
+                  </g>
+                  <g class="hoja__pluma" data-pluma>
+                    <g transform="translate(-1 -55)">
+                      <path class="hoja__pluma-barba" d="M13 41C15 25 28 9 47 1C44 17 32 33 13 41Z" />
+                      <path class="hoja__pluma-cana" d="M3 54L46 2" />
+                      <path class="hoja__pluma-punta" d="M1 55L5 46L9 49Z" />
+                    </g>
+                  </g>
+                </svg>
+              </blockquote>
+              <span class="hoja__sombra" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </figure>
+      </div>
+      <a class="enlace-mayor" href="/historia/la-cofradia/">Actas, ordinaciones y privilegios</a>
     </div>
   </section>
 
@@ -211,84 +249,209 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 </Base>
 
 <script>
-  // La venera gira con el desplazamiento (un cuarto de vuelta, lento) hasta quedar en su sitio.
-  // Además, si el ratón traza círculos sobre ella, la venera le sigue; al salir se asienta
-  // en el cuarto de vuelta más cercano (la cruz es simétrica, así que queda igual).
-  const emblema = document.querySelector<HTMLElement>('[data-giro]');
-  if (emblema && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    let scroll = 0, mano = 0, manoObjetivo = 0, anguloPrevio: number | null = null;
-    const calcularScroll = () => {
-      const r = emblema.getBoundingClientRect();
-      const vh = innerHeight;
-      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.65 + r.height / 2)));
-      const suave = 1 - Math.pow(1 - p, 2);
-      scroll = (1 - suave) * -90;
-      emblema.style.opacity = String(0.3 + 0.7 * Math.min(1, p * 1.4));
-      return suave;
+  // VI · La hoja se da la vuelta como quien vuelve una página. No se mueve hasta que se ve
+  // entera: entonces se queda fija en el centro de la ventana mientras se recorre su pista.
+  // El desplazamiento es el gatillo, no la mano: pasado un 30 % del recorrido la hoja se vuelve
+  // de un solo gesto (1,2 s), y si se sube por debajo del 15 % vuelve a ponerse de frente. Así
+  // nunca se queda de canto aunque el lector deje de bajar a medias.
+  // Con el ratón también se vuelve: pasarlo de un lado al otro de la hoja la gira con la mano.
+  // Regla de la mano: en cuanto el ratón sale de los límites de la hoja, ésta se posa en la
+  // cara más cercana.
+  const hoja = document.querySelector<HTMLElement>('[data-hoja]');
+  if (hoja && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const papel = hoja.querySelector<HTMLElement>('[data-hoja-papel]')!;
+    const pista = hoja.closest<HTMLElement>('[data-hoja-pista]')!;
+    hoja.classList.add('es-viva');
+    pista.classList.add('es-viva');
+    let pedido = 0;
+    // Giro que pone la mano, sumado al del desplazamiento; en reposo siempre es múltiplo de 180
+    let mano = 0, manoObjetivo = 0;
+    // Giro que pone el desplazamiento: va de una cara a la otra por tiempo, no a remolque de la rueda
+    const VUELTA = 1200;
+    let lado = -1, giroScroll = 0, desde = 0, hacia = 0, t0 = 0, previo = 0;
+    const pintar = (ahora = performance.now()) => {
+      pedido = 0;
+      // La mano sigue al ratón por tiempo, no por fotograma: se posa igual de rápido en cualquier equipo
+      const dt = previo ? Math.min(100, ahora - previo) : 16;
+      previo = ahora;
+      // p = 0 en el momento en que la hoja se fija (ya entera a la vista) y 1 al 70 % de la pista
+      const fija = parseFloat(getComputedStyle(hoja).top) || 0;
+      const recorrido = (pista.offsetHeight - hoja.offsetHeight) * 0.7;
+      // Sin pista (ventanas bajas, ver el CSS) el gatillo es la posición de la hoja en la ventana
+      const p = recorrido > 1
+        ? Math.min(1, Math.max(0, (fija - pista.getBoundingClientRect().top) / recorrido))
+        : Math.min(1, Math.max(0, (innerHeight * 0.75 - hoja.getBoundingClientRect().top) / (innerHeight * 0.5)));
+      // Con holgura entre los dos umbrales, para que un temblor de la rueda no la haga ir y venir
+      const nuevo = lado === 1 ? (p > 0.15 ? 1 : 0) : (p >= 0.3 ? 1 : 0);
+      if (lado < 0) { lado = nuevo; giroScroll = desde = hacia = -180 * lado; }
+      else if (nuevo !== lado) { lado = nuevo; desde = giroScroll; hacia = -180 * lado; t0 = ahora; }
+      const tramo = Math.abs(hacia - desde) / 180;
+      const k = tramo ? Math.min(1, (ahora - t0) / (VUELTA * tramo)) : 1;
+      giroScroll = desde + (hacia - desde) * (0.5 - 0.5 * Math.cos(Math.PI * k));
+      mano += (manoObjetivo - mano) * (1 - Math.exp(-dt / 110));
+      if (Math.abs(manoObjetivo - mano) < 0.05) mano = manoObjetivo;
+      const giro = giroScroll + mano;
+      const rad = giro * Math.PI / 180;
+      const canto = Math.abs(Math.sin(rad));
+      // Sólo se ve la cara que mira al lector, y nunca vuelta del revés: la hoja gira hasta ponerse
+      // de canto (90°), ahí cambia de cara sin que se vea, y la otra viene de canto a 0°. En reposo
+      // ninguna cara lleva giro alguno. Con una cara de espaldas girada 180° (lo de antes), Safari
+      // la reflejaba sobre un eje equivocado y el reverso quedaba desplazado a un lado.
+      const vueltas = Math.round(giro / 180);
+      const visto = giro - vueltas * 180;
+      hoja.classList.toggle('de-espaldas', vueltas % 2 !== 0);
+      // Como en un libro: la hoja se levanta hacia el lector y se tuerce un poco al ponerse de canto
+      papel.style.transform = canto < 0.0005 ? '' : `translateZ(${(canto * 70).toFixed(1)}px) rotateY(${visto.toFixed(2)}deg) rotateZ(${(canto * -1.8).toFixed(2)}deg)`;
+      hoja.style.setProperty('--canto', canto.toFixed(3));
+      if (Math.cos(rad) < -0.96) escribir();
+      if (mano !== manoObjetivo || k < 1) pedir(); else previo = 0;
     };
-    const pintar = () => {
-      const suave = calcularScroll();
-      mano += (manoObjetivo - mano) * 0.12;
-      emblema.style.transform = `rotate(${scroll + mano}deg) scale(${0.9 + 0.1 * suave})`;
-      requestAnimationFrame(pintar);
+
+    // Cuando la hoja queda de espaldas, la pluma escribe la conclusión una sola vez. Cada letra
+    // tiene su turno, más largo cuanto más largo es su contorno, con una pausa breve entre palabras
+    // y más larga tras una coma o un punto; las letras se solapan un poco, como al escribir de corrido.
+    // La punta de la pluma va sobre el punto exacto del contorno que se está trazando.
+    const ESCRITURA = 4200;
+    const escrito = hoja.querySelector<HTMLElement>('[data-escrito]')!;
+    const pluma = escrito.querySelector<SVGGElement>('[data-pluma]')!;
+    const glifos = [...escrito.querySelectorAll<SVGUseElement>('.glifo')];
+    const forma = (g: SVGUseElement) => escrito.querySelector<SVGPathElement>(g.getAttribute('href')!)!;
+    const largos = new Map<SVGPathElement, number>();
+    const largo = (f: SVGPathElement) => { if (!largos.has(f)) largos.set(f, f.getTotalLength()); return largos.get(f)!; };
+    let empezado = false;
+    const escribir = () => {
+      if (empezado) return;
+      empezado = true;
+      const datos = glifos.map((g) => {
+        const f = forma(g);
+        const l = largo(f);
+        const c = g.dataset.c!;
+        const fin = g.hasAttribute('data-fin');
+        g.style.setProperty('--l', l.toFixed(1));
+        return { g, f, l, x: +g.getAttribute('x')!, y: +g.getAttribute('y')!, pausa: fin ? (/[,;]/.test(c) ? 3 : /[.]/.test(c) ? 5 : 0.7) : 0 };
+      });
+      const media = datos.reduce((t, d) => t + d.l, 0) / datos.length;
+      const pesos = datos.map((d) => d.l / media + d.pausa);
+      const unidad = ESCRITURA / pesos.reduce((a, b) => a + b, 0);
+      let t = 0;
+      const horario = datos.map((d, i) => {
+        const inicio = t;
+        t += pesos[i] * unidad;
+        const dura = Math.max(90, (d.l / media) * unidad * 2.2);
+        d.g.style.setProperty('--d', dura.toFixed(0) + 'ms');
+        return { inicio, dura };
+      });
+      const fin = Math.max(...horario.map((h, i) => h.inicio + h.dura));
+      const t0 = performance.now();
+      let i = 0, px = datos[0].x, py = datos[0].y;
+      pluma.classList.add('escribe');
+      const paso = (ahora: number) => {
+        const tt = ahora - t0;
+        while (i < datos.length && tt >= horario[i].inicio) datos[i++].g.classList.add('trazado');
+        // La punta sigue el contorno de la última letra empezada, en la parte de la animación que lo traza
+        const k = Math.max(0, i - 1);
+        const avance = Math.min(1, Math.max(0, (tt - horario[k].inicio) / (horario[k].dura * 0.62)));
+        const pt = datos[k].f.getPointAtLength(datos[k].l * avance);
+        px += (datos[k].x + pt.x - px) * 0.6;
+        py += (datos[k].y + pt.y - py) * 0.6;
+        pluma.setAttribute('transform', `translate(${px.toFixed(1)} ${py.toFixed(1)}) rotate(${(Math.sin(tt / 45) * 4).toFixed(1)})`);
+        if (tt < fin) requestAnimationFrame(paso);
+        else { escrito.classList.add('escrito'); pluma.classList.remove('escribe'); }
+      };
+      requestAnimationFrame(paso);
     };
-    requestAnimationFrame(pintar);
-    const angulo = (e: PointerEvent) => {
-      const r = emblema.getBoundingClientRect();
-      return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI;
-    };
-    emblema.addEventListener('pointermove', (e) => {
-      const a = angulo(e);
-      if (anguloPrevio !== null) {
-        let d = a - anguloPrevio;
-        if (d > 180) d -= 360; else if (d < -180) d += 360;
-        manoObjetivo += d / 5; // giro suave: la venera gira cinco veces menos que el ratón
-      }
-      anguloPrevio = a;
-    });
-    emblema.addEventListener('pointerleave', () => {
-      anguloPrevio = null;
-      manoObjetivo = Math.round(manoObjetivo / 90) * 90;
-    });
+    const pedir = () => { if (!pedido) pedido = requestAnimationFrame(pintar); };
+
+    // La mano: el recorrido horizontal del ratón sobre la hoja, de un canto al otro, es media
+    // vuelta, en el sentido en que se mueva. Si el gesto se queda a medias (el ratón se detiene),
+    // la hoja cae hacia la cara más cercana. Los límites se comprueban contra la caja de la
+    // escena, que no gira: la hoja levantada asoma fuera de ella y el navegador no siempre avisa
+    // de que el ratón ha salido. Se comprueban al mover, al desplazar la página y al salir de la ventana.
+    if (matchMedia('(pointer: fine)').matches) {
+      const escena = hoja.querySelector<HTMLElement>('.hoja__escena')!;
+      let x0 = 0, ultimaX = 0, ultimaY = 0, base = 0, dentro = false, quieto = 0;
+      const asentar = () => { base = Math.round(manoObjetivo / 180) * 180; manoObjetivo = base; x0 = ultimaX; pedir(); };
+      const posar = () => { if (!dentro) return; dentro = false; clearTimeout(quieto); asentar(); };
+      const comprobar = () => {
+        const r = escena.getBoundingClientRect();
+        const enLaHoja = ultimaX >= r.left && ultimaX <= r.right && ultimaY >= r.top && ultimaY <= r.bottom;
+        if (enLaHoja && !dentro) { dentro = true; x0 = ultimaX; base = Math.round(manoObjetivo / 180) * 180; }
+        else if (!enLaHoja) posar();
+        return r;
+      };
+      addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        ultimaX = e.clientX; ultimaY = e.clientY;
+        const r = comprobar();
+        if (!dentro) return;
+        manoObjetivo = base + Math.max(-1, Math.min(1, (ultimaX - x0) / r.width)) * 180;
+        clearTimeout(quieto);
+        quieto = setTimeout(asentar, 420);
+        pedir();
+      }, { passive: true });
+      addEventListener('scroll', () => { if (dentro) comprobar(); }, { passive: true });
+      document.documentElement.addEventListener('pointerleave', posar);
+      addEventListener('blur', posar);
+    }
+    addEventListener('scroll', pedir, { passive: true });
+    addEventListener('resize', pedir);
+    new ResizeObserver(() => { pista.style.setProperty('--hoja-alto', hoja.offsetHeight + 'px'); pedir(); }).observe(hoja);
+    pista.style.setProperty('--hoja-alto', hoja.offsetHeight + 'px');
+    pintar();
   }
 </script>
 
 <style>
   /* Portada */
-  .portada { position: relative; min-height: 100svh; display: grid; place-items: center; overflow: hidden; background: var(--negro); color: var(--pergamino); text-align: center; }
+  .portada { position: relative; min-height: calc(var(--ventana) * 100); display: grid; place-items: center; overflow: hidden; background: var(--negro); color: var(--pergamino); text-align: center; }
   .portada :global(.portada__foto) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
   /* Velo: oscurece la imagen para la lectura y la funde con el negro de la sección I */
   .portada__velo {
     position: absolute; inset: 0;
     background: linear-gradient(180deg, rgba(26, 23, 20, .58) 0%, rgba(26, 23, 20, .4) 36%, rgba(26, 23, 20, .66) 72%, var(--negro) 100%);
   }
-  .portada__contenido { position: relative; display: grid; justify-items: center; gap: var(--s5); padding-top: var(--s9); padding-bottom: var(--s10); }
-  .portada__dato { color: var(--plata); letter-spacing: .12em; }
-  .portada__titulo { font-family: var(--f-display); font-size: clamp(52px, 8.4vw, 116px); line-height: 1; letter-spacing: -.01em; text-wrap: balance; max-width: 12ch; }
-  .portada__entradilla { font-family: var(--f-texto); font-style: italic; font-size: clamp(19px, 1.8vw, 23px); line-height: 1.5; color: var(--espada); max-width: 40ch; text-wrap: balance; }
+  /* La entrada de la portada va un 25 % por encima de la escala general (dato, título, entradilla y aire) */
+  .portada__contenido { position: relative; display: grid; justify-items: center; gap: 30px; padding-top: var(--s9); padding-bottom: var(--s10); }
+  .portada__dato { color: var(--plata); letter-spacing: .12em; font-size: 16.25px; }
+  .portada__titulo { font-family: var(--f-titulo); font-weight: 800; font-size: clamp(48px, 15vw, 90px); line-height: 1; letter-spacing: -.035em; text-wrap: balance; max-width: 12ch; }
+  .portada__entradilla { font-family: var(--f-cuerpo); font-size: 25px; line-height: 1.6; color: var(--espada); max-width: 40ch; text-wrap: balance; }
 
   /* I · Origen */
   .origen-seccion { padding-top: var(--s7); }
-  .origen__texto { font-family: var(--f-display); font-size: clamp(28px, 3.1vw, 42px); line-height: 1.24; text-wrap: pretty; color: var(--pergamino); }
+  .origen__texto { font-family: var(--f-titulo); font-weight: 500; font-size: var(--h2); line-height: 1.15; letter-spacing: -.02em; text-wrap: pretty; color: var(--pergamino); }
   .origen__pie { display: flex; flex-wrap: wrap; gap: var(--s4) var(--s7); margin-top: var(--s7); }
 
-  /* II · Distintivos: emblema y título centrados; debajo, tres columnas estrechas y largas, justificadas */
+  /* II · Distintivos: la venera expuesta como pieza, sobre negro, para que la plata de las
+     espadas coja la luz; debajo, tres columnas estrechas y largas, justificadas. */
   .distintivos { display: grid; gap: var(--s8); justify-items: center; }
   .distintivos__cabeza { display: grid; gap: var(--s5); justify-items: center; text-align: center; }
-  .distintivos__emblema { width: 152px; margin-bottom: var(--s3); will-change: transform; }
-  .distintivos__venera { max-width: 40ch; text-align: center; }
+  /* La escena y el reflejo son del sistema (.escena-medalla / .medalla); aquí sólo el tamaño */
+  .distintivos__escena { margin-bottom: var(--s4); }
+  .distintivos__emblema { width: clamp(184px, 20vw, 268px); }
+  .distintivos__venera { max-width: 40ch; text-align: center; color: var(--espada); }
   .distintivos__columnas { display: grid; gap: var(--s7); width: 100%; max-width: 30ch; }
   @media (min-width: 900px) { .distintivos__columnas { grid-template-columns: repeat(3, minmax(0, 23ch)); justify-content: center; max-width: none; gap: var(--s8); } }
-  .distintivos__col { display: grid; gap: var(--s4); align-content: start; padding-top: var(--s5); border-top: 1px solid var(--negro); }
-  .distintivos__texto { font-size: 16px; line-height: 1.7; color: var(--tinta); text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+  .distintivos__col { display: grid; gap: var(--s4); align-content: start; padding-top: var(--s5); border-top: 1px solid var(--linea-clara); }
+  .distintivos__texto { font-size: 16px; line-height: 1.7; color: var(--espada); text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
 
   /* Cabecera de sección a todo el ancho (III, IV) */
   .cabeza { margin-bottom: var(--s7); align-items: end; }
   .cabeza__nota { max-width: 46ch; }
 
-  /* III · Obra */
-  .obra__fotos { display: grid; grid-template-columns: 1fr 1fr; gap: var(--medianil); margin-top: var(--s8); }
-  .obra__fotos :global(img) { aspect-ratio: 4 / 5; object-fit: cover; }
+  /* III · Obra — la banda oscura cierra las cajas de arriba, pero las fotografías son apoyo y
+     no protagonistas: van contenidas en la retícula, a tamaño modesto y con aire alrededor. */
+  .obra__banda { margin-top: var(--s8); padding: var(--s8) 0; }
+  @media (min-width: 768px) { .obra__banda { padding: var(--s9) 0; } }
+  /* Centradas en la banda. En estrecho se apilan: a dos columnas la foto quedaría más
+     pequeña que su propio crédito. */
+  .obra__fotos {
+    display: grid; gap: var(--s6) var(--medianil);
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 860px; margin-inline: auto;
+  }
+  @media (min-width: 640px) { .obra__fotos { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s5) var(--medianil); align-items: start; } }
+  /* Cada fotografía en su formato original: no se recorta */
+  .obra__fotos :global(img) { width: 100%; height: auto; }
 
   /* IV · Actividades */
   .rejilla-tarjetas { list-style: none; display: grid; gap: var(--s7) var(--medianil); grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
@@ -297,7 +460,7 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   /* V · Navidad */
   .navidad__cabeza { display: grid; gap: var(--s6); margin-bottom: var(--s7); }
   @media (min-width: 960px) { .navidad__cabeza { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--s8); align-items: end; } }
-  .navidad__lema { font-family: var(--f-texto); font-style: italic; font-size: 21px; line-height: 1.5; color: var(--pergamino); max-width: 52ch; }
+  .navidad__lema { font-family: var(--f-cuerpo); font-style: italic; font-size: 20px; line-height: 1.6; color: var(--pergamino); max-width: 52ch; }
   .navidad__tira {
     list-style: none; display: flex; gap: var(--s5); overflow-x: auto; scroll-snap-type: x mandatory;
     padding: 0 var(--margen) var(--s4); scroll-padding: 0 var(--margen);
@@ -311,11 +474,97 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .navidad__enlace:hover :global(img) { transform: translateY(-4px); }
 
   /* VI · Cofradía */
-  .cofradia { display: grid; gap: var(--s7); align-items: start; }
-  @media (min-width: 960px) { .cofradia { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s8); } }
-  .cofradia__figura :global(img) { max-height: 760px; object-fit: contain; object-position: left top; width: auto; }
-  .cofradia__texto { display: grid; gap: var(--s5); align-content: start; }
-  .cofradia__cita { margin: var(--s3) 0; padding-left: var(--s5); border-left: 2px solid var(--teja); }
+  .cofradia { display: grid; gap: var(--s8); justify-items: center; text-align: center; }
+  .cofradia__texto { display: grid; gap: var(--s5); justify-items: center; max-width: 60ch; }
+  .cofradia__texto .t-titulo2 { max-width: 26ch; }
+  /* Justificado como todo el cuerpo, pero la última línea se centra con el resto de la sección */
+  .cofradia__texto .t-cuerpo { text-align-last: center; }
+
+  /* La hoja: 520 px de ancho son 710 px de alto en el formato del dibujo. En ventanas bajas
+     se estrecha (0,732 es la proporción del dibujo) para caber entera bajo la cabecera, con aire. */
+  .hoja { margin: 0; width: min(100%, 520px, calc((var(--ventana) * 100 - var(--cabecera) - 56px) * .732)); container-type: inline-size; text-align: left; }
+  .hoja-pista { width: 100%; display: grid; justify-items: center; align-content: start; }
+  /* La pista: la hoja se queda fija y centrada bajo la cabecera mientras se recorre; ese
+     recorrido es el que la da la vuelta (ver el script). --hoja-alto lo mide el script. */
+  .hoja-pista.es-viva { height: calc(var(--hoja-alto, 0px) + var(--ventana) * 110); }
+  .hoja-pista.es-viva .hoja { position: sticky; top: calc(var(--cabecera) + max(var(--s4), (var(--ventana) * 100 - var(--cabecera) - var(--hoja-alto, 0px)) / 2)); }
+  /* Ventanas bajas (un móvil apaisado): fijada, la hoja tendría que encogerse tanto para caber
+     que el reverso no podría con el texto. Ahí no se fija ni se encoge; se vuelve igual al pasar. */
+  @media (max-height: 559px) {
+    .hoja { width: min(100%, 520px); }
+    .hoja-pista.es-viva { height: auto; }
+    .hoja-pista.es-viva .hoja { position: static; }
+  }
+  .hoja__escena { perspective: 1800px; perspective-origin: 50% 40%; }
+  .hoja__papel { position: relative; }
+  .hoja__cara { position: relative; }
+  .hoja__cara--frente :global(img) { width: 100%; height: auto; }
+  .hoja__sombra { display: none; }
+  /* Reverso del papel: la fibra y el grano a la vista, el dibujo trasluce invertido y apagado,
+     y la conclusión va escrita en tinta ferrogálica: un sepia muy oscuro que se lee bien sobre el papel. */
+  .hoja__cara--reverso {
+    display: grid; place-items: center; overflow: hidden;
+    margin-top: var(--s5); padding: clamp(24px, 9cqi, 52px);
+    background: rgba(229, 219, 201, .82);
+    box-shadow: inset 0 0 0 1px rgba(92, 72, 48, .16), inset 0 0 70px rgba(120, 92, 58, .3);
+  }
+  .hoja__cara--reverso :global(.hoja__trasluz) {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    transform: scaleX(-1); opacity: .17; filter: grayscale(1) blur(.6px); mix-blend-mode: multiply;
+  }
+  .hoja__grano {
+    position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .34 0 0 0 0 .26 0 0 0 0 .17 1.3 0 0 0 -.52'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .32' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .31 0 0 0 0 .2 1.6 0 0 0 -.95'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"),
+      radial-gradient(ellipse 30% 22% at 82% 14%, rgba(140, 104, 60, .16), transparent 70%),
+      radial-gradient(ellipse 26% 18% at 12% 88%, rgba(140, 104, 60, .13), transparent 70%);
+  }
+  /* El manuscrito ocupa el reverso entero: mismo lienzo y proporción que la hoja (ver el script) */
+  .hoja__cara--reverso { aspect-ratio: 1903 / 2600; }
+  .hoja__cita { position: absolute; inset: 0; margin: 0; isolation: isolate; }
+  /* Un velo de papel limpio detrás del texto, para que la tinta trasluzida no lo ensucie */
+  .hoja__cita::before { content: ''; position: absolute; inset: 14% 0; z-index: -1; background: radial-gradient(closest-side, rgba(240, 233, 220, .82), rgba(240, 233, 220, 0)); }
+  .hoja__manuscrito { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .glifo { fill: #3B2716; }
+  .hoja__pluma { display: none; }
+
+  /* Escritura a pluma (ver el script): la punta recorre el contorno de cada letra con tinta húmeda,
+     casi negra; la letra se llena y la tinta seca hasta el sepia. --l es el largo del contorno y
+     --d lo que tarda la letra; los pone el script. */
+  .hoja.es-viva [data-escrito]:not(.escrito) .glifo:not(.trazado) { fill-opacity: 0; }
+  .hoja.es-viva .glifo.trazado {
+    stroke: #1A110A; stroke-width: .7; stroke-linejoin: round; stroke-dasharray: var(--l);
+    animation: trazo var(--d) linear both;
+  }
+  @keyframes trazo {
+    0% { stroke-dashoffset: var(--l); stroke-opacity: 1; fill: #120B06; fill-opacity: 0; }
+    62% { stroke-dashoffset: 0; stroke-opacity: 1; fill: #120B06; fill-opacity: .15; }
+    100% { stroke-dashoffset: 0; stroke-opacity: 0; fill: #3B2716; fill-opacity: 1; }
+  }
+  .hoja.es-viva .hoja__pluma { display: inline; opacity: 0; transition: opacity .35s ease; filter: drop-shadow(-3px 5px 3px rgba(26, 23, 20, .28)); }
+  .hoja.es-viva .hoja__pluma.escribe { opacity: 1; }
+  .hoja__pluma-barba { fill: #8C7A63; opacity: .85; }
+  .hoja__pluma-cana { stroke: #4A3826; stroke-width: 1.4; stroke-linecap: round; fill: none; }
+  .hoja__pluma-punta { fill: #120B06; }
+
+  /* Con JS y sin movimiento reducido: las dos caras son una sola hoja que se da la vuelta.
+     El giro, --canto (0 de frente o de espaldas, 1 de canto) y .de-espaldas los pone el script de
+     abajo. Las dos caras ocupan el mismo sitio y sólo se ve la que mira al lector: ninguna se
+     gira 180° ni depende de backface-visibility, así que no hay nada que pueda descuadrarse. */
+  .hoja.es-viva .hoja__papel { will-change: transform; }
+  @media (pointer: fine) { .hoja.es-viva .hoja__escena { cursor: ew-resize; } }
+  .hoja.es-viva .hoja__cara {
+    box-shadow: 0 calc(18px + 26px * var(--canto, 0)) calc(36px + 30px * var(--canto, 0)) -22px rgba(26, 23, 20, .45);
+  }
+  .hoja.es-viva .hoja__cara--reverso {
+    position: absolute; inset: 0; margin: 0; visibility: hidden;
+    box-shadow: inset 0 0 0 1px rgba(92, 72, 48, .16), inset 0 0 70px rgba(120, 92, 58, .3), 0 calc(18px + 26px * var(--canto, 0)) calc(36px + 30px * var(--canto, 0)) -22px rgba(26, 23, 20, .45);
+  }
+  .hoja.es-viva.de-espaldas .hoja__cara--reverso { visibility: visible; }
+  .hoja.es-viva.de-espaldas .hoja__cara--frente { visibility: hidden; }
+  /* Al ponerse de canto la hoja se aparta de la luz y se oscurece */
+  .hoja.es-viva .hoja__sombra { display: block; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(26, 23, 20, .7), rgba(26, 23, 20, .35)); opacity: calc(var(--canto, 0) * .85); }
 
   /* VII · Consejo */
   .consejo__cabeza { margin-bottom: var(--s7); }
@@ -326,6 +575,6 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   .consejo__nomina--dos { margin-top: var(--s4); }
   .consejo__miembro { padding: var(--s5) 0; border-top: 1px solid var(--linea); display: grid; gap: var(--s2); align-content: start; }
   .consejo__cargo { color: var(--teja); line-height: 1.5; }
-  .consejo__nombre { font-family: var(--f-texto); font-size: 19px; line-height: 1.4; text-wrap: pretty; }
+  .consejo__nombre { font-family: var(--f-titulo); font-weight: 500; font-size: 19.8px; line-height: 1.2; letter-spacing: -.01em; text-wrap: pretty; }
   .consejo__capellanes { margin-top: var(--s7); }
 </style>

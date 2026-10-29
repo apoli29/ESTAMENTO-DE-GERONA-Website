@@ -34,6 +34,7 @@ import contacto from '../data/contacto.json';
       <li><a href="/privacidad/">{sitio.legal.privacidad}</a></li>
     </ul>
   </div></div>
+  <div class="pie__firma" aria-hidden="true"><Logo version="horizontal-negativo" ancho={1480} /></div>
 </footer>
 
 <style>
@@ -43,7 +44,7 @@ import contacto from '../data/contacto.json';
   .pie__columnas { display: grid; gap: var(--s6); grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
   .pie__sello { display: inline-flex; }
   .pie__titulo { color: var(--plata); margin-bottom: var(--s4); }
-  .pie__email { font-family: var(--f-texto); font-size: 19px; overflow-wrap: anywhere; color: var(--pergamino); text-decoration-color: var(--teja); word-break: break-word; }
+  .pie__email { font-family: var(--f-cuerpo); font-size: 20px; overflow-wrap: anywhere; color: var(--pergamino); text-decoration-color: var(--teja); word-break: break-word; }
   .pie__email:hover { color: var(--plata); }
   .pie__lista { list-style: none; display: grid; gap: var(--s2); }
   .pie a { color: var(--pergamino); }
@@ -52,4 +53,16 @@ import contacto from '../data/contacto.json';
   .pie__base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s3) var(--s6); padding-top: var(--s5); padding-bottom: var(--s6); border-top: 1px solid var(--linea-clara); color: var(--plata); }
   .pie__legal { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); font-size: 13px; }
   .pie__legal a { text-decoration: none; }
+  /* Firma: el logotipo a escala de rótulo cerrando la página, cortado por el canto inferior
+     como la chapa grabada al pie de una pieza. Repite la marca, no añade información. */
+  .pie__firma {
+    display: flex; justify-content: center; overflow: hidden;
+    /* El margen negativo recorta el aire propio del dibujo; el relleno de abajo dobla lo que
+       queda bajo la cruz, para que la firma no se apoye en el canto de la ventana */
+    padding: 0 var(--margen) var(--s6); margin-bottom: -1.65%;
+    pointer-events: none; user-select: none;
+  }
+  /* El 60 % del ancho que tendría a sangre: la firma acompaña, no tapa el pie */
+  .pie__firma :global(.logo) { width: 60%; max-width: 888px; }
+  .pie__firma :global(svg) { width: 100%; }
 </style>

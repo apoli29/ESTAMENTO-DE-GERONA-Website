@@ -52,7 +52,7 @@ const ESPADA = 'M50 7.4a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8ZM48.9 12h2.2v5h-
     content: ''; position: absolute; left: 0; right: 0; top: -1px; height: 2px; background: var(--teja);
     transform: scaleX(0); transform-origin: left; transition: transform .6s cubic-bezier(.2, .7, .1, 1);
   }
-  .caja.esta-abierta { background: var(--piedra-clara); }
+  .caja.esta-abierta { background: var(--piedra-tenue); }
   .caja.esta-abierta::before { transform: scaleX(1); }
 
   .caja__boton {
@@ -60,8 +60,8 @@ const ESPADA = 'M50 7.4a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8ZM48.9 12h2.2v5h-
     gap: var(--s4); align-items: center; text-align: left;
     padding: var(--s5) var(--s5); background: none; border: 0; cursor: pointer; color: var(--negro);
   }
-  .caja__num { grid-area: num; min-width: 2.2em; font-family: var(--f-display); font-size: 18px; line-height: 1; color: var(--teja); }
-  .caja__clave { grid-area: clave; color: var(--castano); font-family: var(--f-texto); font-size: 22px; line-height: 1.25; transition: color .3s ease; }
+  .caja__num { grid-area: num; min-width: 2.2em; font-family: var(--f-titulo); font-weight: 600; font-size: 18px; line-height: 1; color: var(--teja); }
+  .caja__clave { grid-area: clave; color: var(--castano); font-family: var(--f-titulo); font-weight: 500; font-size: 19.8px; line-height: 1.2; letter-spacing: -.01em; transition: color .3s ease; }
   .caja__boton:hover .caja__clave { color: var(--teja); }
 
   /* La espada: en reposo, horizontal apuntando a la derecha; al abrir, gira y se clava hacia abajo. */
@@ -75,11 +75,13 @@ const ESPADA = 'M50 7.4a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8ZM48.9 12h2.2v5h-
 
   .caja__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s cubic-bezier(.2, .7, .1, 1); }
   .caja.esta-abierta .caja__panel { grid-template-rows: 1fr; }
-  .caja__interior { overflow: hidden; }
+  /* El panel no aparece: se abate sobre su canto superior, como la tapa de la caja */
+  .caja__interior { overflow: hidden; perspective: 900px; }
   .caja__texto {
-    padding: 0 var(--s5) var(--s6); font-family: var(--f-texto); font-size: 19px; line-height: 1.5; color: var(--tinta);
+    padding: 0 var(--s5) var(--s6); font-family: var(--f-cuerpo); font-size: 20px; line-height: 1.6; color: var(--tinta);
     text-align: justify; hyphens: auto; -webkit-hyphens: auto;
-    opacity: 0; transform: translateY(-6px); transition: opacity .4s ease, transform .6s cubic-bezier(.2, .7, .1, 1);
+    opacity: 0; transform-origin: 50% 0; transform: rotateX(-16deg) translateY(-6px);
+    transition: opacity .4s ease, transform .6s cubic-bezier(.2, .7, .1, 1);
   }
   .caja.esta-abierta .caja__texto { opacity: 1; transform: none; transition-delay: .15s; }
 </style>

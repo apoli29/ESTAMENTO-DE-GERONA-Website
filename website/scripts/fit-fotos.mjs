@@ -6,8 +6,7 @@ const dst = path.resolve('src/assets/fotos');
 const jobs = [
   ['unsplash-catedral-desde-muralla.jpg', 'hero.jpg', 3200],
   ['unsplash-iglesia-interior-girona.jpg', 'catedral-interior.jpg', 2800],
-  ['unsplash-catedral-jardin-angel-pi.jpg', 'catedral-jardin.jpg', 2800],
-  ['unsplash-onyar-catedral.jpg', 'onyar-catedral.jpg', 2800],
+  ['unsplash-catedral-jardin-angel-pi.jpg', 'catedral-jardin.jpg', 3200],
   ['commons-capilla-sant-jordi-catedral.jpg', 'capilla-san-jorge.jpg', 2048],
   ['commons-catedral-claustre-pou-1890-1910.jpg', 'claustro-catedral-1900.jpg', 1024],
   ['commons-sant-domenec-claustre-1922.jpg', 'claustro-sant-domenec-1922.jpg', 1556],
@@ -22,3 +21,4 @@ for (const [i, o, max] of jobs) {
   const info = await sharp(path.join(src, i)).rotate().resize({ width: max, height: max, fit: 'inside', withoutEnlargement: true }).jpeg({ quality: 86, mozjpeg: true }).toFile(path.join(dst, o));
   console.log(o, info.width + 'x' + info.height, Math.round(info.size / 1024) + 'KB');
 }
+

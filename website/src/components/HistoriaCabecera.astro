@@ -17,14 +17,15 @@ const { titulo, imagen, alt, posicion = '50% 45%' } = Astro.props;
 <div class="hcab-franja banda-negra" aria-hidden="true"></div>
 
 <style>
-  /* Sube por detrás de la cabecera (barra + filete; los márgenes negativos colapsan, no se suman) */
-  .hportada { margin-top: calc(-1 * var(--cabecera) - 12px); position: relative; min-height: 100svh; display: grid; place-items: center; overflow: hidden; background: var(--negro); color: var(--pergamino); text-align: center; }
+  /* En estas páginas la cabecera flota sobre la foto (no ocupa sitio en el flujo), así que la
+     portada arranca pegada al borde superior: tirar de ella hacia arriba le cortaría el cielo. */
+  .hportada { position: relative; min-height: calc(var(--ventana) * 100); display: grid; place-items: center; overflow: hidden; background: var(--negro); color: var(--pergamino); text-align: center; }
   .hportada :global(.hportada__foto) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   /* Como en la portada: la imagen se oscurece y se funde con el negro de la franja siguiente */
   .hportada__velo { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(26, 23, 20, .5) 0%, rgba(26, 23, 20, .32) 36%, rgba(26, 23, 20, .42) 66%, rgba(26, 23, 20, .78) 88%, var(--negro) 100%); }
   .hportada__contenido { position: relative; display: grid; justify-items: center; gap: var(--s5); padding-top: var(--s8); padding-bottom: var(--s8); }
   .hportada__antetitulo { color: var(--plata); }
-  .hportada__titulo { font-family: var(--f-display); font-size: clamp(52px, 8vw, 112px); line-height: 1; letter-spacing: -.01em; text-wrap: balance; max-width: 14ch; }
+  .hportada__titulo { font-family: var(--f-titulo); font-weight: 800; font-size: clamp(48px, 6.4vw, 72px); line-height: 1; letter-spacing: -.035em; text-wrap: balance; max-width: 14ch; }
 
   /* Misma altura que tenía la entrada de La Corporación (relleno + dos líneas de texto) */
   .hcab-franja { height: 90px; }

@@ -6,7 +6,7 @@ import HistoriaCabecera from '../../../components/HistoriaCabecera.astro';
 import TextoIntegroBanda from '../../../components/TextoIntegroBanda.astro';
 import hc from '../../../data/historia-compacta.json';
 import historia from '../../../data/historia.json';
-import { foto, CREDITOS } from '../../../lib/sitio';
+import { foto } from '../../../lib/sitio';
 const F = hc.cofradia;
 const H = historia.cofradia.es;
 const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -21,7 +21,7 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
       <div class="entrada__texto">
         <p class="t-titulo2">{F.entradilla}</p>
         <p class="t-cuerpo">{F.origen}</p>
-        <blockquote class="latin">
+        <blockquote class="latin placa">
           <p class="cita" lang="la">{F.encabezamiento}</p>
           <p class="cita-fuente">{F.encabezamiento_fuente}</p>
         </blockquote>
@@ -76,7 +76,6 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
         <div class="fiesta__general">
           <figure class="figura">
             <Image src={foto('claustro-catedral-1900.jpg')} alt="Claustro de la Catedral de Gerona, con un pozo en el centro, hacia 1900" widths={[480, 1024]} sizes="(min-width: 960px) 30vw, 100vw" />
-            <figcaption>{CREDITOS['claustro-catedral-1900.jpg']}</figcaption>
           </figure>
           <div class="fiesta__general-texto">
             <p class="t-cuerpo">{F.casa_general}</p>
@@ -169,7 +168,7 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
         <p class="t-cuerpo">{F.generosidad.definicion}</p>
         <p class="t-cuerpo">{F.generosidad.linea_hembra}</p>
 
-        <div class="registro">
+        <div class="registro placa">
           <div class="registro__cabeza">
             <h3 class="t-etiqueta">Registro de concesiones</h3>
             <label class="registro__buscar">
@@ -249,14 +248,16 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 <style>
   .entrada__texto { display: grid; gap: var(--s5); }
-  .latin { margin: var(--s3) 0 0; padding-left: var(--s5); border-left: 2px solid var(--teja); }
+  /* El encabezamiento latino es el momento ceremonial de la página: va en placa */
+  .latin { margin: var(--s4) 0 0; }
 
   .libros { list-style: none; border-top: 1px solid var(--negro); }
   .libros__item { display: grid; gap: var(--s2) var(--s6); padding: var(--s5) 0; border-bottom: 1px solid var(--linea); }
   @media (min-width: 720px) { .libros__item { grid-template-columns: 200px minmax(0, 1fr); } .libros__nota { grid-column: 2; } }
-  .libros__periodo { font-family: var(--f-mono); font-size: 22px; color: var(--teja); letter-spacing: -.01em; }
+  .libros__periodo { font-family: var(--f-titulo); font-weight: 600; font-size: 22px; color: var(--teja); letter-spacing: -.01em; }
   .libros__texto { color: var(--tinta); }
-  .libros__nota { font-size: 15px; color: var(--tinta-2); }
+  .libros__nota { font-size: 16px; line-height: 1.55; color: var(--tinta-2); }
+  .libros__texto, .libros__nota, .disp__texto, .clases__texto { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
   .lagunas { display: grid; gap: var(--s4); margin-top: var(--s7); max-width: var(--medida); }
   .lagunas .t-cuerpo + .t-cuerpo { margin-top: 0; }
 
@@ -270,50 +271,77 @@ const may = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   @media (min-width: 960px) { .disp__cabeza { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--s8); } }
   .disp { list-style: none; display: grid; gap: 1px; background: var(--linea-clara); border: 1px solid var(--linea-clara); grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
   .disp__item { background: var(--negro); padding: var(--s6) var(--s5); display: grid; gap: var(--s4); align-content: start; }
-  .disp__num { font-family: var(--f-display); font-size: 48px; line-height: 1; color: var(--teja); }
-  .disp__texto { color: var(--pergamino); font-size: 16px; line-height: 1.6; text-wrap: pretty; }
+  .disp__num { font-family: var(--f-titulo); font-weight: 800; font-size: 48px; line-height: 1; letter-spacing: -.03em; color: var(--teja); }
+  .disp__texto { color: var(--pergamino); font-size: 16px; line-height: 1.55; text-wrap: pretty; }
   .disp__pie { display: grid; gap: var(--s4); margin-top: var(--s7); max-width: var(--medida); margin-left: auto; }
   .disp__pie .t-cuerpo + .t-cuerpo { margin-top: 0; }
 
   .cofrades { display: grid; gap: var(--s6); }
   .cofrades .t-cuerpo + .t-cuerpo { margin-top: 0; }
   .clases { list-style: none; display: grid; gap: var(--medianil); grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
-  .clases__item { padding: var(--s5); border: 1px solid var(--linea); display: grid; gap: var(--s3); align-content: start; }
-  .clases__nombre { color: var(--teja); }
-  .clases__texto { font-size: 15px; line-height: 1.6; color: var(--tinta); }
-  .cofrades__cita { margin: 0; padding-left: var(--s5); border-left: 2px solid var(--teja); }
+  /* Las clases de cofrades, en castaño como la barra y con su espada: al apuntar al cuadro, bajo
+     el título se dibuja la línea con la espada delante, como el tema activo del menú; al salir
+     la espada vuelve y la línea se recoge. */
+  .clases__item { padding: var(--s5); background: var(--castano); color: var(--pergamino); display: grid; gap: var(--s4); align-content: start; }
+  .clases__nombre { position: relative; justify-self: start; padding-bottom: var(--s2); color: var(--pergamino); }
+  .clases__nombre::after {
+    content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px; background: var(--pergamino);
+    transform: scaleX(0); transform-origin: left; transition: transform .9s cubic-bezier(.65, 0, .35, 1);
+  }
+  .clases__nombre::before {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -5px; height: 11px; background: var(--pergamino);
+    -webkit-mask: var(--espada-h) left center / 22px 11px no-repeat; mask: var(--espada-h) left center / 22px 11px no-repeat;
+    opacity: 0;
+    transition: -webkit-mask-position .9s cubic-bezier(.65, 0, .35, 1), mask-position .9s cubic-bezier(.65, 0, .35, 1), opacity .25s ease .65s;
+  }
+  .clases__item:hover .clases__nombre::after { transform: scaleX(1); }
+  .clases__item:hover .clases__nombre::before {
+    -webkit-mask-position: right center; mask-position: right center; opacity: 1;
+    transition: -webkit-mask-position .9s cubic-bezier(.65, 0, .35, 1), mask-position .9s cubic-bezier(.65, 0, .35, 1), opacity .15s ease;
+  }
+  .clases__texto { font-size: 16px; line-height: 1.55; color: var(--pergamino); }
+  /* Cita secundaria: sólo un filo fino, para no competir con la chapa de la entrada */
+  .cofrades__cita { margin: 0; padding-left: var(--s5); border-left: 1px solid var(--linea-fuerte); }
   .cofrades__sub { margin-top: var(--s5); }
 
   .desplegable { border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
-  .desplegable summary { cursor: pointer; padding: var(--s4) 0; font-family: var(--f-texto); font-size: 18px; list-style: none; display: flex; gap: var(--s3); align-items: baseline; }
-  .desplegable summary::before { content: '+'; color: var(--teja); font-family: var(--f-mono); }
+  .desplegable summary { cursor: pointer; padding: var(--s4) 0; font-family: var(--f-cuerpo); font-size: 20px; list-style: none; display: flex; gap: var(--s3); align-items: baseline; }
+  .desplegable summary::before { content: '+'; color: var(--teja); font-family: var(--f-cuerpo); }
   .desplegable[open] summary::before { content: '−'; }
   .desplegable summary::-webkit-details-marker { display: none; }
   .desplegable .nombres { padding-bottom: var(--s5); }
 
   .nombres { list-style: none; columns: 2 220px; column-gap: var(--s6); }
-  .nombres li { break-inside: avoid; padding: 6px 0; border-bottom: 1px solid var(--linea); font-family: var(--f-texto); font-size: 17px; }
+  .nombres li { break-inside: avoid; padding: 6px 0; border-bottom: 1px solid var(--linea); font-family: var(--f-cuerpo); font-size: 16px; line-height: 1.55; }
   .nombres--familias { columns: 1; }
 
   .gen { display: grid; gap: var(--s5); }
   .gen .t-cuerpo + .t-cuerpo { margin-top: 0; }
-  .registro { margin-top: var(--s6); background: var(--pergamino); padding: var(--s6) var(--s5); border-top: 2px solid var(--teja); }
-  @media (min-width: 720px) { .registro { padding: var(--s6); } }
+  /* El registro va en placa (el traje de la barra, ver global.css): sobre el castaño oscuro, los
+     años pasan del rojo a la plata de las espadas y las líneas, la búsqueda y el resaltado se
+     aclaran para leerse igual que sobre el pergamino. */
+  .registro { margin-top: var(--s6); padding: var(--s6) var(--s5) calc(var(--s6) + 12px); }
+  @media (min-width: 720px) { .registro { padding: var(--s6) var(--s6) calc(var(--s6) + 12px); } }
   .registro__cabeza { display: flex; flex-wrap: wrap; gap: var(--s4); justify-content: space-between; align-items: center; margin-bottom: var(--s5); }
   .registro__buscar input {
     min-height: 44px; width: min(320px, 100%); padding: 0 var(--s4);
-    font: 400 16px var(--f-sans); color: var(--negro); background: #fff; border: 1px solid var(--linea-fuerte); border-radius: 0;
+    font: 400 16px var(--f-cuerpo); color: var(--pergamino); background: rgba(243, 237, 226, .06); border: 1px solid rgba(243, 237, 226, .35); border-radius: 0;
   }
-  .registro__buscar input:focus { outline: 2px solid var(--teja); outline-offset: 0; }
-  .registro__anio { display: grid; gap: var(--s3) var(--s6); padding: var(--s5) 0; border-top: 1px solid var(--negro); }
+  /* color-scheme: el aspa nativa del buscador y la selección se dibujan para fondo oscuro */
+  .registro__buscar input { color-scheme: dark; }
+  .registro__buscar input::placeholder { color: var(--plata); opacity: 1; }
+  .registro__buscar input:focus { outline: 2px solid var(--plata); outline-offset: 0; }
+  .registro__anio { display: grid; gap: var(--s3) var(--s6); padding: var(--s5) 0; border-top: 1px solid rgba(243, 237, 226, .4); }
   @media (min-width: 720px) { .registro__anio { grid-template-columns: 90px minmax(0, 1fr); } }
-  .registro__ano { font-family: var(--f-mono); font-size: 22px; color: var(--teja); }
-  .registro__encabezado { color: var(--tinta-2); font-size: 15px; margin-bottom: var(--s3); }
+  .registro__ano { font-family: var(--f-titulo); font-weight: 600; font-size: 22px; color: var(--espada); }
+  .registro__encabezado { color: var(--plata); font-size: 16px; line-height: 1.55; margin-bottom: var(--s3); }
   .registro__grupos { list-style: none; }
-  .registro__grupo { display: grid; gap: var(--s1); padding: var(--s3) 0; border-bottom: 1px solid var(--linea); }
-  .registro__nombres { font-family: var(--f-texto); font-size: 17px; line-height: 1.5; }
-  .registro__lugar { color: var(--tinta-2); }
-  .es-coincidencia { background: rgba(163, 32, 31, .07); }
+  .registro__grupo { display: grid; gap: var(--s1); padding: var(--s3) 0; border-bottom: 1px solid var(--linea-clara); }
+  .registro__nombres { font-family: var(--f-cuerpo); font-size: 16px; line-height: 1.55; }
+  .registro__lugar { color: var(--plata); }
+  .registro .nombres li { border-bottom-color: var(--linea-clara); }
+  .registro .registro__vacio { color: var(--plata); }
+  .es-coincidencia { background: rgba(243, 237, 226, .1); }
   .nobles { display: grid; gap: var(--s4); margin-top: var(--s6); }
   .nobles .t-cuerpo + .t-cuerpo { margin-top: 0; }
 

@@ -23,20 +23,28 @@ let capitulo = 0;
 const bloques = texto.blocks.map((b: { type: string; text: string }) => (b.type === 'h' ? { ...b, num: romano(++capitulo) } : b));
 ---
 <Base meta={metaTextoIntegro(obra, edicion)}>
-  <div class="pergamino">
-    <article class="envoltura libro">
-      <header class="libro__cabeza">
+  <article>
+    <!-- La portada del texto entra sobre negro, como el resto del sitio; el papel empieza después -->
+    <header class="banda-negra sobre-negro cabeza-pagina libro__banda">
+      <div class="envoltura libro libro__cabeza">
         <nav class="libro__nav t-dato" aria-label="Edición">
           <a href={rutaObra(obra)} lang="es">← {R.volver}</a>
           <a href={rutaEdicion(obra, otra)} hreflang={lang === 'ca' ? 'es' : 'ca'} lang={lang === 'ca' ? 'es' : 'ca'}>{R.otra}</a>
         </nav>
-        <Venera tamano={56} />
+        <div class="escena-medalla">
+          <div class="libro__venera medalla" data-giro>
+            <Venera tamano="100%" animada />
+            <span class="medalla__brillo" aria-hidden="true"></span>
+          </div>
+        </div>
         <p class="t-etiqueta libro__etiqueta">{R.etiqueta}</p>
         <h1 class="t-display libro__titulo">{texto.title}</h1>
         {texto.intro && <p class="t-entradilla libro__intro">{texto.intro}</p>}
         <div class="filete filete--medio libro__filete" aria-hidden="true"></div>
-      </header>
+      </div>
+    </header>
 
+    <div class="pergamino"><div class="envoltura libro">
       <div class="libro__cuerpo">
         {bloques.map((b: any, i: number) =>
           b.type === 'h' ? (
@@ -51,8 +59,8 @@ const bloques = texto.blocks.map((b: { type: string; text: string }) => (b.type 
         {texto.signature.map((l: string) => <p>{l}</p>)}
         <p class="t-dato libro__fin">{R.fin}</p>
       </footer>
-    </article>
-  </div>
+    </div></div>
+  </article>
 </Base>
 
 <style>
@@ -64,25 +72,27 @@ const bloques = texto.blocks.map((b: { type: string; text: string }) => (b.type 
     padding: var(--entre-secciones) 0 var(--s10);
   }
   .libro { max-width: calc(68ch + 2 * var(--margen)); }
-  .libro__cabeza { display: grid; justify-items: center; text-align: center; gap: var(--s4); margin-bottom: var(--s8); }
+  .libro__banda { padding-bottom: var(--s8); }
+  .libro__cabeza { display: grid; justify-items: center; text-align: center; gap: var(--s4); }
+  .libro__venera { width: 56px; }
   .libro__nav { width: 100%; display: flex; justify-content: space-between; gap: var(--s4); margin-bottom: var(--s7); }
-  .libro__nav a { color: var(--tinta-2); }
-  .libro__nav a:hover { color: var(--teja); }
-  .libro__etiqueta { color: var(--teja); margin-top: var(--s3); }
+  .libro__nav a { color: var(--plata); }
+  .libro__nav a:hover { color: var(--pergamino); }
+  .libro__etiqueta { color: var(--plata); margin-top: var(--s3); }
   .libro__titulo { font-size: clamp(40px, 5vw, 64px); }
   .libro__intro { text-align: center; }
   .libro__filete { width: 120px; margin-top: var(--s4); }
 
-  .libro__cuerpo { font-family: var(--f-texto); font-size: 19px; line-height: 1.75; color: var(--tinta); hyphens: auto; }
+  .libro__cuerpo { font-family: var(--f-cuerpo); font-size: 20px; line-height: 1.6; color: var(--tinta); hyphens: auto; }
   .libro__parrafo { text-wrap: pretty; text-align: justify; }
   .libro__parrafo + .libro__parrafo { text-indent: 1.6em; margin-top: .2em; }
   .libro__capitulo {
     display: grid; justify-items: center; gap: var(--s2); text-align: center;
-    margin: var(--s8) 0 var(--s6); font-family: var(--f-display); font-size: 30px; line-height: 1.2; color: var(--castano);
+    margin: var(--s8) 0 var(--s6); font-family: var(--f-titulo); font-weight: 800; font-size: var(--h2); line-height: 1.15; letter-spacing: -.02em; color: var(--castano);
   }
   .libro__num { font-size: 22px; color: var(--teja); }
   .libro__capitulo + .libro__parrafo { text-indent: 0; }
-  .libro__firma { margin-top: var(--s8); text-align: right; font-family: var(--f-texto); font-style: italic; color: var(--tinta); display: grid; gap: var(--s1); }
+  .libro__firma { margin-top: var(--s8); text-align: right; font-family: var(--f-cuerpo); font-style: italic; color: var(--tinta); display: grid; gap: var(--s1); }
   .libro__fin { margin-top: var(--s7); text-align: center; font-style: normal; color: var(--tinta-2); }
   @media (max-width: 600px) { .libro__parrafo { text-align: left; } .libro__cuerpo { font-size: 18px; } }
 </style>

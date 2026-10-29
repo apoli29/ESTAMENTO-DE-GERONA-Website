@@ -19,11 +19,17 @@ for (const b of bloques) {
   } else piezas.push({ kind: 'p', text: lineas.join(' ') });
 }
 ---
-<section class="seccion">
+<section class="seccion banda-negra sobre-negro cabeza-pagina">
   <div class="envoltura capitulo">
     <div class="rotulo"><span class="rotulo__etiqueta">Información legal</span></div>
+    <h1 class="t-titulo1">{titulo}</h1>
+  </div>
+</section>
+
+<section class="seccion">
+  <div class="envoltura capitulo">
+    <div class="columna-vacia" aria-hidden="true"></div>
     <div class="legal">
-      <h1 class="t-titulo1">{titulo}</h1>
       {piezas.map((p) =>
         p.kind === 'h' ? <h2 class="t-titulo3 legal__h">{p.text}</h2>
         : p.kind === 'ul' ? <ul class="legal__lista">{p.items!.map((i) => <li>{i}</li>)}</ul>
@@ -34,7 +40,8 @@ for (const b of bloques) {
 </section>
 
 <style>
-  .legal { display: grid; gap: var(--s4); }
+  /* La columna no se ensancha por la palabra más larga (un correo, a 20 px, es más ancho que un móvil) */
+  .legal { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s4); overflow-wrap: break-word; }
   .legal .t-cuerpo + .t-cuerpo { margin-top: 0; }
   .legal__h { margin-top: var(--s5); }
   .legal__lista { padding-left: var(--s5); display: grid; gap: var(--s2); color: var(--tinta); max-width: var(--medida); }
